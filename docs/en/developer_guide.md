@@ -88,35 +88,20 @@ int32 code # Error code when exception occurs
 
 ```js
 int32 motion_id #Robot motion control posture
-
 int32 cmd_source #Command source,
-
                             # 0: App, 1: Audio, 2: Vis, 3: BluTele 4: Algo
-
 float32[3] vel_des # Currently not available. x y (maximum value 1.5, m/s) yaw (maximum value 2.0, rad/s)
-
 float32[3] rpy_des # roll pitch yaw (maximum value 0.4) rad
-
 float32[3] pos_des # x y (maximum value 0.2) z (maximum value 0.3) m
-
 float32[3] acc_des # Currently not available. acc for jump m^2/s
-
 float32[3] ctrl_point # Currently not available. pose ctrl point m
-
 float32[3] foot_pose # Currently not open. front/back foot pose x,y,z m
-
 float32[2] step_height # Leg lifting height, currently can be set by 0.05m
-
 int32 duration # Expectations set when performing incremental position control, incremental force control, and absolute force control posture control
-
                             # Complete time
-
 ---
-
 int32 motion_id #Robot motion control posture
-
 bool result #Execution result
-
 int32 code # module code
 ```
 
@@ -128,57 +113,32 @@ int32 code # module code
 
 ```Go
 uint8 SET_PARAMETERS = 0
-
 uint8 TAKE_PICTURE = 1
-
 uint8 START_RECORDING = 2
-
 uint8 STOP_RECORDING = 3
-
 uint8 GET_STATE = 4
-
 uint8 DELETE_FILE = 5
-
 uint8 GET_ALL_FILES = 6
-
 uint8 START_LIVE_STREAM = 7
-
 uint8 STOP_LIVE_STREAM = 8
-
 uint8 START_IMAGE_PUBLISH = 9
-
 uint8 STOP_IMAGE_PUBLISH = 10
-
-
-
 uint8 command
 
 # command arguments
-
 string args
-
 uint16 width
-
 uint16 height
-
 uint16 fps
 
 ---
-
 uint8 RESULT_SUCCESS = 0
-
 uint8 RESULT_INVALID_ARGS = 1
-
 uint8 RESULT_UNSUPPORTED = 2
-
 uint8 RESULT_TIMEOUT = 3
-
 uint8 RESULT_BUSY = 4
-
 uint8 RESULT_INVALID_STATE = 5
-
 uint8 RESULT_INNER_ERROR = 6
-
 uint8 RESULT_UNDEFINED_ERROR = 255
 
 
@@ -198,26 +158,16 @@ int32 code
 ros2 launch camera_test stereo_camera.py
 
 #View name space
-
 ros2 node list
-
 
 
 ###If it starts automatically at boot, please add the namespace before the topic.
 
-
-
 ros2 lifecycle set /stereo_camera configure
-
-
 
 ros2 lifecycle set /stereo_camera activate
 
-
-
 ros2 lifecycle set /stereo_camera deactivate
-
-
 
 ros2 lifecycle set /stereo_camera cleanup
 ```
@@ -235,11 +185,11 @@ Topic name:
 
 
 
-#left鱼eye
+#left eye
 
 /image_left
 
-#right鱼eye
+#right eye
 
 /image_right
 
@@ -261,16 +211,10 @@ Image data topic content: sensor_msgs::msg::Image
 ```Bash
 ros2 run camera_test camera_server
 
-
-
 ##Enable AI camera command
-
 ros2 service call /camera_service protocol/srv/CameraService "{command: 9, width: 640, height: 480, fps: 0}"
 
-
-
 ##Close camera command
-
 ros2 service call /camera_service protocol/srv/CameraService "{command: 10, args: ''}"
 ```
 
