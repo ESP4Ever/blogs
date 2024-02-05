@@ -190,20 +190,20 @@ string msg
 int32 code
 ```
 
-#### RGB和鱼眼相机 
+#### RGB and fisheye cameras
 
-- 打开、关闭camera
+- Turn on and off camera
 
 ```Bash
 ros2 launch camera_test stereo_camera.py
 
-#查看name space
+#View name space
 
-ros2 node list 
+ros2 node list
 
 
 
-###如果是开机自启，注意topic前加上命名空间
+###If it starts automatically at boot, please add the namespace before the topic.
 
 
 
@@ -222,75 +222,75 @@ ros2 lifecycle set /stereo_camera deactivate
 ros2 lifecycle set /stereo_camera cleanup
 ```
 
-- 获取图像
+- Get images
 
-接口形式：ros topic  
+Interface form: ros topic
 
-接口名称：camera_server 
+Interface name: camera_server
 
-话题名称： 
+Topic name:
 
 ```Bash
-#使用topic订阅rgb相机、左鱼眼相机，右鱼眼相机
+#Use topic to subscribe to rgb camera, left fisheye camera, right fisheye camera
 
 
 
-#左鱼眼
+#left鱼eye
 
-/image_left  
+/image_left
 
-#右鱼眼  
+#right鱼eye
 
 /image_right
 
-#rgb相机 
+#rgbcamera
 
-/image_rgb 
+/image_rgb
 ```
 
  
 
-图像数据话题内容:  sensor_msgs::msg::Image 
+Image data topic content: sensor_msgs::msg::Image
 
  
 
-#### AI相机 
+#### AI Camera
 
-- 打开、关闭camera
+- Turn on and off camera
 
 ```Bash
 ros2 run camera_test camera_server
 
 
 
-##开启AI相机指令
+##Enable AI camera command
 
 ros2 service call /camera_service protocol/srv/CameraService "{command: 9, width: 640, height: 480, fps: 0}"
 
 
 
-##关闭相机指令
+##Close camera command
 
 ros2 service call /camera_service protocol/srv/CameraService "{command: 10, args: ''}"
 ```
 
-- 获取图像
+- Get images
 
-接口形式：ros topic  
+Interface form: ros topic
 
-接口名称：camera_server 
+Interface name: camera_server
 
-话题名称： 
+Topic name:
 
 ```Bash
-#使用topic订阅AI相机
+#Use topic to subscribe to AI camera
 
-#AI相机topic
+#AIcameratopic
 
 topic: /image
 ```
 
-图像数据话题内容:  sensor_msgs::msg::Image 
+Image data topic content: sensor_msgs::msg::Image
 
  
 
@@ -298,106 +298,106 @@ topic: /image
 
 #### Realsense 
 
-- 通过lifecycle状态机控制RealSense数据的开启关闭
+- Control the opening and closing of RealSense data through the lifecycle state machine
 
 ```Bash
-  # /camera/camera节点启动指令
+   #/camera/camera node startup command
 
-  ros2 launch realsense2_camera on_dog.py
-
-  
-
-  #初始化
-
-  ros2 lifecycle set /camera/camera configure 
+   ros2 launch realsense2_camera on_dog.py
 
   
 
-  #开启数据
+   #initialization
 
-  ros2 lifecycle set /camera/camera activate
-
-  
-
-  #关闭数据
-
-  ros2 lifecycle set /camera/camera deactivate
+   ros2 lifecycle set /camera/camera configure
 
   
 
-  #重置节点
+   #Open data
 
-  ros2 lifecycle set /camera/camera cleanup
-
-  
-
-  #/camera/camera_align节点启动指令
-
-  ros2 launch realsense2_camera realsense_align_node.launch.py
+   ros2 lifecycle set /camera/camera activate
 
   
 
-  #初始化
+   #Close data
 
-  ros2 lifecycle set /camera/camera_align configure 
-
-  
-
-  #开启数据
-
-  ros2 lifecycle set /camera/camera_align activate
+   ros2 lifecycle set /camera/camera deactivate
 
   
 
-  #关闭数据
+   #Reset node
 
-  ros2 lifecycle set /camera/camera_align deactivate
+   ros2 lifecycle set /camera/camera cleanup
 
   
 
-  #重置节点
+   #/camera/camera_align node startup command
 
-  ros2 lifecycle set /camera/camera_align cleanup
+   ros2 launch realsense2_camera realsense_align_node.launch.py
+
+  
+
+   #initialization
+
+   ros2 lifecycle set /camera/camera_align configure
+
+  
+
+   #Open data
+
+   ros2 lifecycle set /camera/camera_align activate
+
+  
+
+   #Close data
+
+   ros2 lifecycle set /camera/camera_align deactivate
+
+  
+
+   #Reset node
+
+   ros2 lifecycle set /camera/camera_align cleanup
 ```
 
-- 获取图像
+- Get images
 
-接口形式：ros topic  
+Interface form: ros topic
 
-接口名称：realsense2_camera_node、realsense_align_node 
+Interface name: realsense2_camera_node, realsense_align_node
 
-话题名称： 
+Topic name:
 
 ```Bash
----开机自启动需要加域名
+---You need to add a domain name to start automatically at boot.
 
-#左目图像
-
-/camera/infra1/image_rect_raw
-
-#右目图像
+#lefteyeimage
 
 /camera/infra1/image_rect_raw
 
-#深度图
+#righteyeimage
+
+/camera/infra1/image_rect_raw
+
+#Depth map
 
 /camera/depth/image_rect_raw
 
-#IMU数据
+#IMUdata
 
 /camera/imu
 
-#align深度图
+#aligndepth map
 
 /camera/aligned_depth_to_extcolor/image_raw
 ```
 
-图像数据话题内容 
+Image data topic content
 
 ```js
-# Header （timestamp and frame)
+# Header (timestamp and frame)
 
-std_msgs/Header header 
+std_msgs/Header header
 
 
 
@@ -407,147 +407,147 @@ uint32 height
 
 
 
-# image width, that is, number of columns 
+# image width, that is, number of columns
 
-uint32 width 
+uint32 width
 
 
 
 # Encoding of pixels -- channel meaning, ordering, size
 
-string encoding 
+string encoding
 
 
 
 # is this data bigendian?
 
-uint8 is_bigendian 
+uint8 is_bigendian
 
 
 
 # Full row length in bytes
 
-#uint32 step 
+#uint32 step
 
 
 
 # actual matrix data, size is (step * rows)
 
-#uint8[] data 
+#uint8[] data
 
  
 ```
 
-IMU数据话题内容 
+IMU data topic content
 
 ```Bash
-#Header （timestamp and frame)
+#Header (timestamp and frame)
 
-std_msgs/Header header  
+std_msgs/Header header
 
   
 
-#orientation 
+#orientation
 
-geometry_msgs/Quaternion orientation 
+geometry_msgs/Quaternion orientation
 
 
 
 #orientation_covariance
 
-double[9] orientation_covariance 
+double[9] orientation_covariance
 
 
 
-# angular_velocity 
+#angular_velocity
 
-geometry_msgs/Vector3 angular_velocity 
-
-
-
-#angular_velocity_covariance 
-
-float64[9] angular_velocity_covariance 
+geometry_msgs/Vector3 angular_velocity
 
 
 
-#linear_acceleration 
+#angular_velocity_covariance
 
-geometry_msgs/Vector3 linear_acceleration 
+float64[9] angular_velocity_covariance
 
 
 
-#linear_acceleration_covariance 
+#linear_acceleration
 
-float64[9] linear_acceleration_covariance 
+geometry_msgs/Vector3 linear_acceleration
+
+
+
+#linear_acceleration_covariance
+
+float64[9] linear_acceleration_covariance
 ```
 
-### 人脸录入和识别 
+### Face entry and recognition
 
-- 指定录入昵称，通过语音交互录入人脸。
-- 在合适的角度和距离下，可识别已录入数据库中人脸。
+- Specify the input nickname and input the face through voice interaction.
+- At the appropriate angle and distance, faces entered in the database can be recognized.
 
-#### 人脸录入 
+#### Face entry
 
-- 具体功能：通过语音交互，录入指定昵称的人脸，录入人脸的信息唯一。
-- 接口形式：ros service/topic  当前人脸录入模块提供一个service和一个topic，service用于激活人脸录入功能，激活后，在规定的timeout时间内，该节点会发布是否成功录入人脸的topic。
-- 接口名称：
+- Specific functions: Through voice interaction, enter a face with a specified nickname, and the information entered on the face is unique.
+- Interface form: ros service/topic The current face entry module provides a service and a topic. The service is used to activate the face entry function. After activation, within the specified timeout, the node will publish the topic whether the face has been successfully entered. .
+- Interface name:
 
-service："cyberdog_face_entry_srv" 
+service: "cyberdog_face_entry_srv"
 
-topic： "face_entry_msg" 
+topic: "face_entry_msg"
 
-- 服务文件：protocol/srv/FaceEntry.srv
-- 服务文件内容
+- Service file: protocol/srv/FaceEntry.srv
+- Service file content
 
 ```Go
 # request
 
-int32  ADD_FACE = 0                      #添加人脸
+int32 ADD_FACE = 0 #Add face
 
-int32  CANCLE_ADD_FACE = 1               #取消添加人脸
+int32 CANCEL_ADD_FACE = 1 #Cancel adding face
 
-int32  CONFIRM_LAST_FACE = 2             #确认上次人脸
+int32 CONFIRM_LAST_FACE = 2 #Confirm the last face
 
-int32  UPDATE_FACE_ID = 3                #更新人脸ID
+int32 UPDATE_FACE_ID = 3 #Update face ID
 
-int32  DELETE_FACE = 4                   #删除人脸
+int32 DELETE_FACE = 4 #Delete face
 
-int32  GET_ALL_FACES = 5                 #获取所有人脸
+int32 GET_ALL_FACES = 5 #Get all faces
 
 
 
-int32  command                           #人脸录入命令
+int32 command #Face input command
 
-string username                          #用户名字
+string username #User name
 
-string oriname                           #用户原始名字
+string origine #User’s original name
 
-bool   ishost                            #是否为主人
+bool ishost #Whether it is the owner
 
 ---
 
-int32  RESULT_SUCCESS = 0                #请求录入服务成功
+int32 RESULT_SUCCESS = 0 #Request for entry service successful
 
-int32  RESULT_INVALID_ARGS = 5910        #录入参数为无效参数
+int32 RESULT_INVALID_ARGS = 5910 #The input parameters are invalid parameters
 
-int32  RESULT_UNSUPPORTED = 5908         #不支持录入
+int32 RESULT_UNSUPPORTED = 5908 #Does not support entry
 
-int32  RESULT_TIMEOUT = 5907             #录入超时
+int32 RESULT_TIMEOUT = 5907 #Input timeout
 
-int32  RESULT_BUSY = 5911                #录入繁忙
+int32 RESULT_BUSY = 5911 #Input busy
 
-int32  RESULT_INVALID_STATE = 5903       #录入无效状态
+int32 RESULT_INVALID_STATE = 5903 #Input invalid status
 
-int32  RESULT_INNER_ERROR = 5904         #内部错误
+int32 RESULT_INNER_ERROR = 5904 #Internal error
 
-int32  RESULT_UNDEFINED_ERROR = 5901     #未知错误
+int32 RESULT_UNDEFINED_ERROR = 5901 #Unknown error
 
 
 
-int32  result                            #请求录入服务结果
+int32 result #Request entry service result
 
-string allfaces                          #获取所有人脸
+string allfaces #Get all faces
 ```
 
 - 消息文件：protocol/msg/FaceEntryResult.msg
