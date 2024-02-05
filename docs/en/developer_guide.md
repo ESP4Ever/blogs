@@ -19,10 +19,10 @@
 
 
 ```js
-int32 motion_id            #Robot motion control posture
+int32 motion_id            # Robot motion control posture
 int32 cmd_type             # Instruction type constraints, 1: Data, 2: End;
                            # The Data frame writes the following parameters according to the control requirements, and the End frame does not need to fill in the parameters.
-int32 cmd_source           #Command source,
+int32 cmd_source           # Command source,
                            # 0: App, 1: Audio, 2: Vis, 3: BluTele 4: Algo
 int32 value                # 0, inward gait, 2, vertical gait
 float32[3] vel_des         # x y (maximum value 1.5) yaw (maximum value 2.0) speed m/s
@@ -71,8 +71,8 @@ int32 code               # Error code when exception occurs
 - Service Content:
 
 ```js
-int32 motion_id           #Robot motion control posture
-int32 cmd_source          #Command source,
+int32 motion_id           # Robot motion control posture
+int32 cmd_source          # Command source,
                           # 0: App, 1: Audio, 2: Vis, 3: BluTele 4: Algo
 float32[3] vel_des        # Currently not available. x y (maximum value 1.5, m/s) yaw (maximum value 2.0, rad/s)
 float32[3] rpy_des        # roll pitch yaw (maximum value 0.4) rad
@@ -84,8 +84,8 @@ float32[2] step_height    # Leg lifting height, currently can be set by 0.05m
 int32 duration            # Expectations set when performing incremental position control, incremental force control, and absolute force control posture control
                           # Complete time
 ---
-int32 motion_id           #Robot motion control posture
-bool result               #Execution result
+int32 motion_id           # Robot motion control posture
+bool result               # Execution result
 int32 code                # module code
 ```
 
@@ -165,11 +165,7 @@ Topic name:
 /image_rgb
 ```
 
- 
-
 Image data topic content: sensor_msgs::msg::Image
-
- 
 
 #### AI Camera
 
@@ -201,9 +197,6 @@ topic: /image
 Image data topic content: sensor_msgs::msg::Image
 
  
-
- 
-
 #### Realsense 
 
 - Control the opening and closing of RealSense data through the lifecycle state machine
