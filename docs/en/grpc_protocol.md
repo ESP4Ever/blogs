@@ -1,102 +1,101 @@
-# cyberdog_grpc协议
+#cyberdog_grpcprotocol
 
-## 摘要
+## Summary
 
-### 名词约定
+### Noun convention
 
-- 下行指令/下行：指APP发送到NV板的指令或方向；
-- 上行指令/上行：指NV板发送到APP的指令或方向；
+- Downward command/download: refers to the command or direction sent by the APP to the NV board;
+- Uplink command/uplink: refers to the command or direction sent by the NV board to the APP;
 
-### 方案设计
+### Design
 
-[cyberdog_grpc设计文档](/cn/cyberdog_grpc_cn.md) 
+[cyberdog_grpc design document](/cn/cyberdog_grpc_cn.md)
 
 
-## 运动控制
+## sport control
 
-### 伺服控制（摇杆功能）
+### Servo control (joystick function)
 
-#### 下行指令
+####Download command
 
-ros接口： topic，类型：protocol/msg/MotionServoCmd，话题名："motion_servo_cmd"
+ros interface: topic, type: protocol/msg/MotionServoCmd, topic name: "motion_servo_cmd"
 
 ```Nginx
-nameCode = 1002；
+nameCode = 1002;
 
 params
 {
-    int32 motion_id;     # 需查阅上述接口文档
-    int32 cmd_type;      # 指令类型约束 0或1: Data, 2: End；（最后一帧发2）
-    int32 cmd_source;    # 指令来源，app填0
-    float32 vel_des[3];  # x方向， y方向， 旋转, "vel_des": [x, y, z]   
-    float32 pos_des[3];  # [1]值有效, "pos_des": [0, value, 0] 
-    float32 rpy_des[3];  # [2]值有效, "rpy_des": [0, 0, value]
-    float32 step_height[2];  # 行走时有效， 推荐值[0.05, 0.05]
-    int32 value;         # 0 - 内八步态， 2 - 垂直步态， 4 - 运控开始标定
+     int32 motion_id; # Please refer to the above interface document
+     int32 cmd_type; # Instruction type constraints 0 or 1: Data, 2: End; (2 is sent in the last frame)
+     int32 cmd_source; #Command source, app fills in 0
+     float32 vel_des[3]; # x direction, y direction, rotation, "vel_des": [x, y, z]
+     float32 pos_des[3]; # [1] value is valid, "pos_des": [0, value, 0]
+     float32 rpy_des[3]; # [2] value is valid, "rpy_des": [0, 0, value]
+     float32 step_height[2]; # Valid when walking, recommended value [0.05, 0.05]
+     int32 value; # 0 - inner eight gait, 2 - vertical gait, 4 - movement control start calibration
 }
 ```
 
-#### 上行数据
+#### Uplink data
 
-ros接口：topic， "motion_servo_response"
+ros interface: topic, "motion_servo_response"
 
 ```Nginx
 nameCode = 1003
 
 params
 {
-    int32  motion_id    # 下发的motion_id原路返回
-    int32  cmd_id       # 如果下发有该字段，则返回该字段
-    bool   result       # true： 正常执行； false： 执行失败，继续下发也不会执行                
-    int32  code                
+     int32 motion_id # Return the issued motion_id to the original path
+     int32 cmd_id # If this field is delivered, return this field
+     bool result # true: Normal execution; false: Execution failed, and the delivery will not be executed if it continues.
+     int32 code
 }
 ```
 
 
+### Result command control
 
-### 结果指令控制
+####Download command
 
-#### 下行指令
-
-ros接口：service，"motion_result_cmd"
+ros interface: service, "motion_result_cmd"
 
 ```Nginx
 nameCode = 1004
 
 params
 {
-    int32 motion_id;
-    int32 cmd_source;    # 指令来源，app填0
-    float32 vel_des[3];  # x方向， y方向， 旋转, "vel_des": [x, y, z]
-    float32 pos_des[3];  # [1]值有效, "pos_des": [0, value, 0]
-    float32 rpy_des[3];  # [2]值有效, "rpy_des": [0, 0, value]
-    float32 ctrl_point[3];  # 当前暂不开放。pose ctrl point  m
-    float32 foot_pose[3];  # 当前暂不开放。front/back foot pose x,y,z  m
-    float32 step_height[3];  # 抬腿高度，，最大值运控组不确定，当前可按0.06m设定
-    int32 contact;
-    int32 duration       # 执行时间
-    int32 value
-}  
+     int32 motion_id;
+     int32 cmd_source; #Command source, app fills in 0
+     float32 vel_des[3]; # x direction, y direction, rotation, "vel_des": [x, y, z]
+     float32 pos_des[3]; # [1] value is valid, "pos_des": [0, value, 0]
+     float32 rpy_des[3]; # [2] value is valid, "rpy_des": [0, 0, value]
+     float32 ctrl_point[3]; # Currently not open. pose ctrl point m
+     float32 foot_pose[3]; # Currently not open. front/back foot pose x,y,z m
+     float32 step_height[3]; # Leg lifting height, the maximum value of the operation control group is uncertain, currently it can be set to 0.06m
+     int32 contact;
+     int32 duration # execution time
+     int32 value
+}
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
 nameCode = 1004
 
 data
 {
-    int32  motion_id  # 下发的motion_id原路返回
-    bool   result     # true： 执行成功； false： 执行失败；
-    int32  code       # 运动模块的结果编码， 用于调试及快速定位问题
+     int32 motion_id # Return the issued motion_id to the original path
+     bool result # true: execution successful; false: execution failed;
+     int32 code # The result code of the motion module, used for debugging and quickly locating problems
 }
 ```
 
 ## OTA
 
-### 状态上报
+### Status reporting
 
-#### 下行指令
+####Download command
 
 ```Nginx
 nameCode = 5001
@@ -107,124 +106,122 @@ params
 
 
 
-#### 上行指令
+#### Uplink command
 
-ros接口：topic， "ota_status" ？？？
+ros interface: topic, "ota_status"? ? ?
 
 ```Nginx
 nameCode = 5001
 
 params
 {
-    string status    # idle: 空闲状态
-                     # update： 升级中状态
-                     # download： 下载中状态
-    int32  code      # 0正常，其它值为错误码
+     string status # idle: idle status
+                      # update: Upgrading status
+                      # download: downloading status
+     int32 code # 0 is normal, other values are error codes
 }
 ```
 
 
-### 开始下载 
+### start download 
 
-#### 下行指令
+####Download command
 
-ros接口：service，"ota_service_start_download"
+ros interface: service, "ota_service_start_download"
 
 ```C%23
 nameCode = 5003
 
 params
 {
-    {
-            "modules": [{
-                "product": "l91",
-                "device": "l91.NX",
-                "module": "l91.NX.OTA",
-                "current": {
-                    "version": null,
-                    "versionSerial": null,
-                    "packages": null,
-                    "logInfo": null,
-                    "historyLogInfo": null,
-                    "forceUpdateFlag": false
-                },
-                "latest": {
-                    "version": "1.0.0.4",
-                    "versionSerial": 1655173627000,
-                    "packages": [{
-                        "version": "1.0.0.4",
-                        "type": "FULL_PACKAGE",
-                        "md5": "b7e2a750b0",
-                        "fileSize": 0,
-                        "fileName": "L91%2FNX%2Fdaily-release%2F2022-06-14%2F122441%2Fcarpo_galactic_V1.0.0.1.20220614.102737_release_b7e2a750b0.tgz",
-                        "description": null,
-                        "downloadOption": {
-                            "mirrors": ["https://cnbj2m.fds.api.xiaomi.com/version-release/L91%2FNX%2Fdaily-release%2F2022-06-14%2F122441%2Fcarpo_galactic_V1.0.0.1.20220614.102737_release_b7e2a750b0.tgz?Expires=1970540922760&GalaxyAccessKeyId=AKKF3F5Z2NCBBWT7IL&Signature=vPoyrIZTvJbpsRtS4PKFfrBJXlI="]
-                        }
-                    }],
-                    "logInfo": null,
-                    "historyLogInfo": [],
-                    "forceUpdateFlag": false
-                }
-            }]
-        }
+     {
+             "modules": [{
+                 "product": "l91",
+                 "device": "l91.NX",
+                 "module": "l91.NX.OTA",
+                 "current": {
+                     "version": null,
+                     "versionSerial": null,
+                     "packages": null,
+                     "logInfo": null,
+                     "historyLogInfo": null,
+                     "forceUpdateFlag": false
+                 },
+                 "latest": {
+                     "version": "1.0.0.4",
+                     "versionSerial": 1655173627000,
+                     "packages": [{
+                         "version": "1.0.0.4",
+                         "type": "FULL_PACKAGE",
+                         "md5": "b7e2a750b0",
+                         "fileSize": 0,
+                         "fileName": "L91%2FNX%2Fdaily-release%2F2022-06-14%2F122441%2Fcarpo_galactic_V1.0.0.1.20220614.102737_release_b7e2a750b0.tgz",
+                         "description": null,
+                         "downloadOption": {
+                             "mirrors": ["https://cnbj2m.fds.api.xiaomi.com/version-release/L91%2FNX%2Fdaily-release%2F2022-06-14%2F122441%2Fcarpo_galactic_V1.0.0.1.20220614.102737_release_b7e2a750b0.tgz? Expires=1970540922760&GalaxyAccessKeyId=AKKF3F5Z2NCBBWT7IL&Signature=vPoyrIZTvJbpsRtS4PKFfrBJXlI="]
+                         }
+                     }],
+                     "logInfo": null,
+                     "historyLogInfo": [],
+                     "forceUpdateFlag": false
+                 }
+             }]
+         }
 }
 ```
 
 
 
-#### 上行指令
+#### Uplink command
 
 ```Nginx
 nameCode = 5003
 
 params
 {
-    bool response    # true : OTA执行开始下载命令成功
-                    # false: OTA执行开始下载命令失败
-    int32  code      # 0正常，其它值为错误码
+     bool response # true: OTA executes the download command successfully
+                     # false: OTA failed to execute the start download command
+     int32 code # 0 is normal, other values ​​are error codes
 }
 ```
 
+### Start upgrading
 
+####Download command
 
-### 开始升级
-
-#### 下行指令
-
-ros接口：service，"ota_service_start_upgrade"
-
-```Nginx
-nameCode = 5004
-
-params
-{    
-    "md5":xxxxxx
-}
-```
-
-
-
-#### 上行指令
+ros interface: service, "ota_service_start_upgrade"
 
 ```Nginx
 nameCode = 5004
 
 params
 {
-    bool reponse    # true : OTA执行开始升级命令成功
-                    # false: OTA执行开始升级命令失败
-    int32  code     # 0正常，其它值为错误码
+     "md5":xxxxxx
 }
 ```
 
 
 
-### 进度上报
+#### Uplink command
 
-#### 下行指令
+```Nginx
+nameCode = 5004
 
-ros接口：service，"ota_service_process"
+params
+{
+     bool response # true: OTA executes the start upgrade command successfully
+                     # false: OTA failed to execute the start upgrade command
+     int32 code # 0 is normal, other values are error codes
+}
+```
+
+
+
+### Progress reporting
+
+####Download command
+
+ros interface: service, "ota_service_process"
 
 ```Nginx
 nameCode = 5005
@@ -234,24 +231,24 @@ params
 }
 ```
 
-#### 上行指令
+#### Uplink command
 
 ```Nginx
 nameCode = 5005
 
 params
 {
-    int32  download_progress # 进度 下载失败: -1,  剩余空间小于2G: -2
-    int32  upgrade_progress # 升级 升级 失败: -1,  剩余空间小于2G: -2
-    int32  code             # 0正常，其它值为错误码
+     int32 download_progress # Progress download failed: -1, remaining space is less than 2G: -2
+     int32 upgrade_progress # Upgrade upgrade failed: -1, remaining space is less than 2G: -2
+     int32 code # 0 is normal, other values are error codes
 }
 ```
 
-### 预计升级时间查询
+### Estimated upgrade time query
 
-#### 下行指令
+####Download command
 
-ros接口：topic，"ota_topic_estimate_upgrade_time"
+ros interface: topic, "ota_topic_estimate_upgrade_time"
 
 ```Nginx
 nameCode = 5006
@@ -263,22 +260,22 @@ params
 
 
 
-#### 上行指令
+#### Uplink command
 
 ```Nginx
 nameCode = 5006
 
 params
 {
-    int32 time     # 预估升级总时间 -1： 计算失败  -2：当前状态无法获取
+     int32 time # Estimated total upgrade time -1: Calculation failed -2: Current status cannot be obtained
 }
 ```
 
 
 
-### NX重启
+### NX restart
 
-#### 上行指令(主动上报)
+#### Uplink command (active reporting)
 
 ```Nginx
 nameCode = 5007
@@ -288,91 +285,91 @@ params
 }
 ```
 
-### 升级结果
+### Upgrade results
 
-#### 上行指令(主动上报)
+#### Uplink command (active reporting)
 
 ```Nginx
 nameCode = 5008
 
 params
 {
-    bool success     # true : 成功； false : 失败
-    int32 code       # 错误码，0-无错误
+     bool success # true: success; false: failure
+     int32 code # Error code, 0-no error
 }
 ```
 
 ## AUDIO
 
-### 鉴权请求
+### Authentication request
 
-#### 下行指令
+####Download command
 
-ros接口：service，"get_authenticate_didsn"
-
-```Bash
-nameCode = 3001
-
-params
-{
-}
-```
-
-#### 上行指令
+ros interface: service, "get_authenticate_didsn"
 
 ```Bash
 nameCode = 3001
 
 params
 {
-    string did
-    string sn
 }
 ```
 
-### 鉴权回复
+#### Uplink command
 
-#### 下行指令
+```Bash
+nameCode = 3001
 
-ros接口：service，"set_authenticate_token"
+params
+{
+     string did
+     string sn
+}
+```
+
+### Authentication reply
+
+####Download command
+
+ros interface: service, "set_authenticate_token"
 
 ```Bash
 nameCode = 3002
 
 params
 {
-    uint64 uid
-    string token_access
-    string token_fresh
-    string token_expires_in
+     uint64 uid
+     string token_access
+     string token_fresh
+     string token_expires_in
 }
 ```
 
-#### 上行指令
+#### Uplink command
 
 ```Bash
 nameCode = 3002
 params
 {
-    bool result
+     bool result
 }
 ```
 
-### 声纹训练开始
+### Voiceprint training begins
 
-#### 下行指令
+####Download command
 
 ```Bash
 nameCode = 3011
 
 params
 {
-    string nick_name
-    string voiceprint_id
+     string nick_name
+     string voiceprint_id
 }
 ```
 
-#### 上行指令
+#### Uplink command
 
 ```Bash
 nameCode = 3011
@@ -381,9 +378,9 @@ params
 }
 ```
 
-### 声纹训练取消
+### Voiceprint training canceled
 
-#### 下行指令
+####Download command
 
 ```Bash
 nameCode = 3012
@@ -393,7 +390,7 @@ params
 }
 ```
 
-#### 上行指令
+#### Uplink command
 
 ```Bash
 nameCode = 3012
@@ -403,23 +400,23 @@ params
 }
 ```
 
-### 声纹训练结果通知
+### Voiceprint training result notification
 
-#### 上行指令
+#### Uplink command
 
 ```Bash
 nameCode = 3013
 
 params
 {
-    int32 code # 0正常，非0异常
-    string voiceprint_id # 声纹id
+     int32 code # 0 is normal, non-0 is abnormal
+     string voiceprint_id # Voiceprint id
 }
 ```
 
-### 声纹信息查询
+### Voiceprint information query
 
-#### 上行指令
+#### Uplink command
 
 ```Bash
 nameCode = 3014
@@ -429,422 +426,422 @@ params
 }
 ```
 
-#### 下行指令
+####Download command
 
 ```Bash
 nameCode = 3014
 
 params
 {
-    string voiceprints_data
+     string voiceprints_data
 }
 ```
 
-## 机器人状态
+## Robot status
 
-### 心跳
+### Heartbeat
 
 ```ProtoBuf
 Ticks
 {
-    string ip = 1;
-    fixed32 wifi_strength = 2;
-    fixed32 battery_power = 3;
-    bool internet = 4;
-    string sn = 5;
-    MotionStatus motion_status = 6;
-    TaskStatus task_status = 7;
-    SelfCheckStatus self_check_status = 8;
-    StateSwitchStatus state_switch_status = 9;
-    ChargingStatus charging_status = 10;
-    bool audio = 11;
+     string ip = 1;
+     fixed32 wifi_strength = 2;
+     fixed32 battery_power = 3;
+     bool internet = 4;
+     string sn = 5;
+     MotionStatus motion_status = 6;
+     TaskStatus task_status = 7;
+     SelfCheckStatus self_check_status = 8;
+     StateSwitchStatus state_switch_status = 9;
+     ChargingStatus charging_status = 10;
+     bool audio = 11;
 }
 ```
 
-### 信息查询
+### Information query
 
-##### 下行指令
+#####Download command
 
 ```C%2B%2B
 nameCode = 1001
 
 params
 {
-    bool is_version               # 是否返回当前版本信息， true: 是； false: 否；
-    bool is_sn                    # 是否返回sn，true: 是； false: 否；
-    bool is_nick_name             # 是否返回昵称，true: 是； false: 否；
-    bool is_volume                # 是否返回音量，true: 是； false: 否；
-    bool is_mic_state             # 是否返回MIC状态，true: 是； false: 否；
-    bool is_voice_control         # 是否返回语音控制状态，true：是； false：否；
-    bool is_wifi                  # 是否返回wifi信息
-    bool is_bat_info              # 是否返回电池信息，true: 是； false: 否；
-    bool is_motor_temper          # 是否返回电机温度
-    bool is_audio_state           # 是否返回音箱板激活状态
-    bool is_device_model          # 是否返回设备型号
-    bool is_stand                 # 是否站立
-    bool is_lowpower_control      # 是否返回低功耗状态
-    string uid                    # 当前用户uid
+     bool is_version # Whether to return the current version information, true: yes; false: no;
+     bool is_sn # Whether to return sn, true: yes; false: no;
+     bool is_nick_name # Whether to return the nickname, true: yes; false: no;
+     bool is_volume # Whether to return the volume, true: yes; false: no;
+     bool is_mic_state # Whether to return MIC state, true: yes; false: no;
+     bool is_voice_control # Whether to return voice control status, true: yes; false: no;
+     bool is_wifi # Whether to return wifi information
+     bool is_bat_info # Whether to return battery information, true: yes; false: no;
+     bool is_motor_temper # Whether to return the motor temperature
+     bool is_audio_state # Whether to return the speaker board activation state
+     bool is_device_model # Whether to return the device model
+     bool is_stand # Whether to stand
+     bool is_lowpower_control # Whether to return to low power state
+     string uid # Current user uid
 }
 
-# 在配置is_audio_state获取音箱板激活状态时，传uid数据
+# When configuring is_audio_state to obtain the activation status of the speaker board, pass the uid data
 ```
 
-##### 上行指令
+##### Uplink command
 
 ```C%2B%2B
 nameCode = 1001
 
-params    # json字符串。
+params # json string.
 {
-    string  version # 当前版本信息。包含所有板子软件的当前版本信息还有服务端最新版本信息
-    string  sn      # 机器sn
-    string  nick_name     # 昵称
-    int     volume        # 音量
-    bool    mic_state     # 当前麦客状态。true: enable； false: disable；
-    bool    voice_control # 语音控制状态。true: enable； false: disable；
-    bool    wifi          # WiFi信息
-    string  bat_info      # 电池相关信息
-    string  motor_temper  # 电机温度
-    bool    audio_state   # 当前音箱板是否已激活。true:已激活；false:未激活
-    string  device_model  # 设备型号，字符串
-    bool    stand         # 是否站立
-    bool    lowpower_control # 低功耗开关状态。true: enable； false: disable；
+     string version #Current version information. Contains the current version information of all board software and the latest version information of the server
+     string sn # machine sn
+     string nick_name # Nickname
+     int volume # volume
+     bool mic_state # Current mic status. true: enable; false: disable;
+     bool voice_control # Voice control status. true: enable; false: disable;
+     bool wifi # WiFi information
+     string bat_info #Battery related information
+     string motor_temper # Motor temperature
+     bool audio_state # Whether the current speaker board is activated. true: activated; false: not activated
+     string device_model #Device model, string
+     bool stand # Whether to stand
+     bool lowpower_control # Low power switch status. true: enable; false: disable;
 }
-例：
+example:
 {
-    # 当前版本具体内容如下：
-    "version": {
-          "new_version":"1.0.0.0.2020202",
-          "nx_debs": {
-            "sw-version" : "1.0.6"  # NX的版本
-          },
-          "nx_mcu" : {
-            "MCU_HEAD_MINILED" : "0.0.0.1_20220712",   #mini-led的版本
-            "MCU_HEAD_TOF" : "0.0.0.1_20220712",       #头部的tof版本
-            "MCU_IMU" : "0.0.0.1_20220712",            #imu版本
-            "MCU_POWER" : "0.0.0.1_20220712",          #电源版本
-            "MCU_REAR_TOF" : "0.0.0.1_20220712"        #尾部tof版本
-          },
-          "r329" : {
-            "l91_audio" : "1.0.0.1.20220712.112619"   #语音板版本
-          },
-          "mr813" : {
-            "l91_loco" : "1.0.0.1.20220712.022049"   #运控板版本
-          },
-          "mr813_mcu" : {
-            "MCU_SPIE0" : "0.0.0.1_20220712",    #
-            "MCU_SPIE1" : "0.0.0.1_20220712"    #
-          },
-          "motors" : {
-            "MCU_Motor" : "0.2.1.2_20220606"     #电机版本
-          }
-    }，    
-    "sn": "zxw88****166",
-    "nick_name": {
-          "default_name" : "铁蛋",
-          "current_name" : "旺财" 
-    },
-    "volume": 50，
-    "mic_state": true，
-    "voice_control": true，
-    "wifi": {
-        "name": "***",
-        "ip": "***",
-        "mac": "***",
-        "strength": 50
-    },
-    "bat_info": {
-        "capacity": 97，      # 电池容量
-        "power": 97，         # 电池电量
-        "voltage": 220,       # 电池电压
-        "temperature": 100    # 电池温度
-        "is_charging": true   # 充电状态，true: 在充电； false: 未充电；
-        "discharge_time": 120 # 放电时长，单位分钟。
-    }，
-    "motor_temper": {
-        "hip": [97, 97, 97, 97],     # [髋部左前, 髋部右前, 髋部左后, 髋部右后]
-        "thigh": [97, 97, 97, 97],   # [大腿左前, 大腿右前, 大腿左后, 大腿右后]
-        "crus": [97, 97, 97, 97]     # [小腿左前, 小腿右前, 小腿左后, 小腿右后]           
-    },
-    "audio_state": false，
-    "device_model": "MS2241CN"，
-    "stand": true，
-    "lowpower_control": true               
+     # The specific contents of the current version are as follows:
+     "version": {
+           "new_version":"1.0.0.0.2020202",
+           "nx_debs": {
+             "sw-version" : "1.0.6" # NX version
+           },
+           "nx_mcu" : {
+             "MCU_HEAD_MINILED" : "0.0.0.1_20220712", #mini-led version
+             "MCU_HEAD_TOF" : "0.0.0.1_20220712", #TOF version of the head
+             "MCU_IMU" : "0.0.0.1_20220712", #imu version
+             "MCU_POWER" : "0.0.0.1_20220712", #Power version
+             "MCU_REAR_TOF" : "0.0.0.1_20220712" #Tail tof version
+           },
+           "r329" : {
+             "l91_audio" : "1.0.0.1.20220712.112619" #Voice board version
+           },
+           "mr813" : {
+             "l91_loco" : "1.0.0.1.20220712.022049" #Operation control board version
+           },
+           "mr813_mcu" : {
+             "MCU_SPIE0" : "0.0.0.1_20220712", #
+             "MCU_SPIE1" : "0.0.0.1_20220712" #
+           },
+           "motors" : {
+             "MCU_Motor" : "0.2.1.2_20220606" #Motor version
+           }
+     },
+     "sn": "zxw88****166",
+     "nick_name": {
+           "default_name" : "Iron Egg",
+           "current_name" : "Wangcai"
+     },
+     "volume": 50,
+     "mic_state": true，
+     "voice_control": true，
+     "wifi": {
+         "name": "***",
+         "ip": "***",
+         "mac": "***",
+         "strength": 50
+     },
+     "bat_info": {
+         "capacity": 97, # battery capacity
+         "power": 97, # battery power
+         "voltage": 220, # battery voltage
+         "temperature": 100 # Battery temperature
+         "is_charging": true #Charging status, true: charging; false: not charging;
+         "discharge_time": 120 # Discharge time, in minutes.
+     },
+     "motor_temper": {
+         "hip": [97, 97, 97, 97], # [Hip left front, hip right front, hip left back, hip right back]
+         "thigh": [97, 97, 97, 97], # [front left thigh, front right thigh, rear left thigh, right rear thigh]
+         "crus": [97, 97, 97, 97] # [Left front of calf, Front right of calf, Back left of calf, Back right of calf]
+     },
+     "audio_state": false，
+     "device_model": "MS2241CN"，
+     "stand": true，
+     "lowpower_control": true
 }
 ```
 
-### 昵称开关
+### Nickname switch
 
-##### 下行指令
+#####Download command
 
 ```C%2B%2B
 nameCode = 1010
 
 params
 {
-    bool enable         # 开：true，关：false
+     bool enable #On: true, off: false
 }
 ```
 
-##### 上行指令
+##### Uplink command
 
 ```C%2B%2B
 nameCode = 1010
 
 params
 {
-    bool success        # 成功：true，失败：false
+     bool success # Success: true, failure: false
 }
 ```
 
-### 设置昵称
+### Set nickname
 
-##### 下行指令
+#####Download command
 
 ```C%2B%2B
 nameCode = 1011
 
 params
 {
-    string nick_name    # 昵称
-    string wake_name    # 唤醒词。昵称2个、3个字，唤醒词=昵称*2；昵称3个字以上，唤醒词=昵称。
+     string nick_name # Nickname
+     string wake_name # Wake word. If the nickname is 2 or 3 characters, the wake-up word = nickname*2; if the nickname is more than 3 characters, the wake-up word = nickname.
 }
 ```
 
-##### 上行指令
+##### Uplink command
 
 ```C%2B%2B
 nameCode = 1011
 
 params
 {
-    bool success        # 成功：true，失败：false
+     bool success # Success: true, failure: false
 }
 ```
 
-### 设置音量
+### Set volume
 
-##### 下行指令
+#####Download command
 
 ```C%2B%2B
 nameCode = 1012
 
 params
 {
-    int volume    # 音量
+     int volume # volume
 }
 ```
 
-##### 上行指令
+##### Uplink command
 
 ```C%2B%2B
 nameCode = 1012
 
 params
 {
-    bool success        # 成功：true，失败：false
+     bool success # Success: true, failure: false
 }
 ```
 
-### 设置麦克风状态
+### Set microphone status
 
-##### 下行指令
+#####Download command
 
 ```C%2B%2B
 nameCode = 1013
 
 params
 {
-    bool enable    # true: enable； false: disable；
+     bool enable # true: enable; false: disable;
 }
 ```
 
-##### 上行指令
+##### Uplink command
 
 ```C%2B%2B
 nameCode = 1013
 
 params
 {
-    bool success        # 成功：true，失败：false
+     bool success # Success: true, failure: false
 }
 ```
 
-### 设置语音控制开关
+### Set voice control switch
 
-##### 下行指令
+#####Download command
 
 ```C%2B%2B
 nameCode = 1014
 
 params
 {
-    bool enable    # true: enable； false: disable；
+     bool enable # true: enable; false: disable;
 }
 ```
 
-##### 返回结果
+##### Return results
 
 ```C%2B%2B
 nameCode = 1014
 
 data
 {
-    bool success        # 成功：true，失败：false
+     bool success # Success: true, failure: false
 }
 ```
 
-### 设置眼灯
+### Set up the eye light
 
-#### 下行指令
+####Download command
 
 ```C%2B%2B
 nameCode = 1015
 
 params
 {
-    int  eyelight   # 亮度
+     int eyelight # brightness
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```C%2B%2B
 nameCode = 1015
 
 data
 {
-    bool success        # 成功：true，失败：false
+     bool success # Success: true, failure: false
 }
 ```
 
 
 
-### 成员添加
+### Member addition
 
-##### 下行指令
+#####Download command
 
 ```C%2B%2B
 nameCode = 1020
 
 params
 {
-    string member
+     string member
 }
 ```
 
-##### 上行指令
+##### Uplink command
 
 ```C%2B%2B
 nameCode = 1020
 
 params
 {
-    bool success        # 成功：true，失败：false
+     bool success # Success: true, failure: false
 }
 ```
 
-### 成员查询
+### Member query
 
-##### 下行指令
+#####Download command
 
 ```C%2B%2B
 nameCode = 1021
 params
 {
-    string account    # 空: 返回所有成员信息； 具体某一成员: 此成员信息；
+     string account # Empty: return all member information; specific member: this member information;
 }
 ```
 
-##### 上行指令
+##### Uplink command
 
 ```Bash
 nameCode = 1021
 
 params
 {
-    string accounts
+     string accounts
 }
 
-{  
-    "code": 0, 
+{
+     "code": 0,
     
-    "accounts": [
-        {
-            "name": "xiao_ming",
-            "face_state": 0,  # 0-未录入，1-已录入，2-正在录入中
-            "voice_state" 0   # 0-未录入，1-已录入，2-正在录入中
-        },
-        {
-            "name": "da_qiang",
-            "face_state": 0,
-            "voice_state" 0
-        }      
-    ]
+     "accounts": [
+         {
+             "name": "xiao_ming",
+             "face_state": 0, # 0-not entered, 1-entered, 2-in progress
+             "voice_state" 0 # 0-not entered, 1-entered, 2-in progress
+         },
+         {
+             "name": "da_qiang",
+             "face_state": 0,
+             "voice_state" 0
+         }
+     ]
 }
 
-# code = 0 查询成功; code = 121  用户查询失败，当前用户不存在，请删除后重新添加用户
-# "accounts"：查询到的用户信息
+# code = 0 query successful; code = 121 user query failed, the current user does not exist, please delete and re-add the user
+# "accounts": Queryed user information
 ```
 
-### 成员删除
+### Member deletion
 
-##### 下行指令
+#####Download command
 
 ```C%2B%2B
 nameCode = 1022
 
 params
 {
-    string member
+     string member
 }
 ```
 
-##### 上行指令
+##### Uplink command
 
 ```C%2B%2B
 nameCode = 1022
 
 params
 {
-    bool success        # 成功：true，失败：false
+     bool success # Success: true, failure: false
 }
 ```
 
-### 成员同步
+### Member synchronization
 
 nameCode = 1023
 
-### 成员修改昵称
+### Member changes nickname
 
-##### 下行指令
-
-```C%2B%2B
-nameCode = 1024
-
-params
-{
-    string pre_name
-    string new_name
-}
-```
-
-##### 上行指令
+#####Download command
 
 ```C%2B%2B
 nameCode = 1024
 
 params
 {
-    bool success        # 成功：true，失败：false
+     string pre_name
+     string new_name
 }
 ```
 
-### 停止声音播放
+##### Uplink command
 
-ros接口：service，类型：std_srvs/srv/Empty，服务名："stop_play"
+```C%2B%2B
+nameCode = 1024
 
-#### 下行指令
+params
+{
+     bool success # Success: true, failure: false
+}
+```
+
+### Stop sound playback
+
+ros interface: service, type: std_srvs/srv/Empty, service name: "stop_play"
+
+####Download command
 
 ```Nginx
 nameCode = 1025
@@ -854,7 +851,7 @@ params
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
 nameCode = 1025
@@ -864,17 +861,17 @@ data
 }
 ```
 
-## 图传
+## Image transmission
 
-### 启动图传
+### Start image transmission
 
-webrtc的信令握手
+webrtc signaling handshake
 
-grpc服务：GrpcApp.sendMsg
+grpc service: GrpcApp.sendMsg
 
-ros接口：topic，类型：std_msgs/msg/String，上行名称："img_trans_signal_out"，下行名称："img_trans_signal_in"
+ros interface: topic, type: std_msgs/msg/String, upstream name: "img_trans_signal_out", downstream name: "img_trans_signal_in"
 
-#### 下行指令
+####Download command
 
 sdp:
 
@@ -883,15 +880,15 @@ nameCode = 4001
 
 params
 {
-    string offer_sdp或者answer_sdp #其中包含type和sdp字段
-    string uid #app端的一个标识名称，如果只连接一个app，可以不要此项
-    int32 height #手机分辨率高，不填默认为1280
-    int32 width #手机分辨率宽，不填默认为720
-    string alignment #对齐方式，top顶对齐，middle水平中线对齐，bottom底对齐，不填默认为水平中线对齐
+     string offer_sdp or answer_sdp #Contains type and sdp fields
+     string uid #An identification name on the app side. If you only connect to one app, you don’t need this item.
+     int32 height #The mobile phone resolution is high, if not filled in, the default is 1280
+     int32 width #Mobile phone resolution width, if not filled in, the default is 720
+     string alignment #Alignment method, top top alignment, middle horizontal midline alignment, bottom bottom alignment, if not filled in, the default is horizontal midline alignment
 }
 ```
 
-##### offer_sdp和answer_sdp
+##### offer_sdp and answer_sdp
 
 ```Nginx
 string type
@@ -905,8 +902,8 @@ nameCode = 4001
 
 params
 {
-    string c_sdp #其中包含sdpMid、sdpMLineIndex和candidate字段
-    string uid #app端的一个标识名称，如果只连接一个app，可以不要此项
+     string c_sdp #Contains sdpMid, sdpMLineIndex and candidate fields
+     string uid #An identification name on the app side. If you only connect to one app, you don’t need this item.
 }
 ```
 
@@ -918,198 +915,198 @@ int32 sdpMLineIndex
 string candidate
 ```
 
-#### 上行指令
+#### Uplink command
 
-与上行指令相同，如果app端没设置uid项，则上行指令的uid为“default_uid”
+The same as the uplink command, if the uid item is not set on the app side, the uid of the uplink command is "default_uid"
 
-### 停止图传
+### Stop image transmission
 
-grpc服务：GrpcApp.sendMsg
+grpc service: GrpcApp.sendMsg
 
-ros接口：topic，类型：std_msgs/msg/String，上行名称："img_trans_signal_out"，下行名称：“img_trans_signal_in”
+ros interface: topic, type: std_msgs/msg/String, upstream name: "img_trans_signal_out", downstream name: "img_trans_signal_in"
 
-#### 下行指令
+####Download command
 
 ```Nginx
 nameCode = 4001
 
 params
 {
-    string uid #app端的一个标识名称，如果只连接一个app，可以不要此项
+     string uid #An identification name on the app side. If you only connect to one app, you don’t need this item.
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
 nameCode = 4001
 
 data
 {
-    bool is_closed #是否已断开PeerConnection
-    string uid #app端的一个标识名称，如果只连接一个app，可以不要此项
+     bool is_closed #Whether PeerConnection has been disconnected
+     string uid #An identification name on the app side. If you only connect to one app, you don’t need this item.
 }
 ```
 
-## 拍照
+## Photograph
 
-grpc服务：GrpcApp.getFile
+grpc service: GrpcApp.getFile
 
-ros接口：service，类型protocol/srv/CameraService，名称："camera_service"
+ros interface: service, type protocol/srv/CameraService, name: "camera_service"
 
-#### 下行指令
+####Download command
 
 ```Nginx
 nameCode = 4002
 
 params
 {
-    uint8 command; #1为拍照
+     uint8 command; #1 is to take pictures
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-fixed32 error_code #错误码，0为正常，其它值为错误
-string file_name #文件名
-fixed32 file_size #文件大小（字节）
-bytes buffer #文件数据块（最大为4MB）
+fixed32 error_code #Error code, 0 is normal, other values ​​are errors
+string file_name #File name
+fixed32 file_size #File size (bytes)
+bytes buffer #File data block (maximum 4MB)
 ```
 
-## 录像
+## Video
 
-ros接口：service，类型protocol/srv/CameraService，名称："camera_service"
+ros interface: service, type protocol/srv/CameraService, name: "camera_service"
 
-### 启动录像
+### Start recording
 
-grpc服务：GrpcApp.sendMsg
+grpc service: GrpcApp.sendMsg
 
-#### 下行指令
+####Download command
 
 ```Nginx
 nameCode = 4002
 
 params
 {
-    uint8 command; #2为开始录像
+     uint8 command; #2 is to start recording
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
 nameCode = 4002
 
 data
 {
-    uint8 result #启动录像结果，0为成功，其它值为失败
+     uint8 result #Start recording result, 0 means success, other values mean failure
 }
 ```
 
-### 停止录像
+### Stop recording
 
-grpc服务：GrpcApp.getFile
+grpc service: GrpcApp.getFile
 
-#### 下行指令
+####Download command
 
 ```Nginx
 nameCode = 4002
 
 params
 {
-    uint8 command; #3为停止录像
+     uint8 command; #3 is to stop recording
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-fixed32 error_code #错误码，0为正常，其它值为错误
-string file_name #文件名
-fixed32 file_size #文件大小（字节）
-bytes buffer #文件数据块（最大为4MB）
+fixed32 error_code #Error code, 0 is normal, other values ​​are errors
+string file_name #File name
+fixed32 file_size #File size (bytes)
+bytes buffer #File data block (maximum 4MB)
 ```
 
-### 未完成传送的录像和拍照文件
+### Unfinished transfer of video and photo files
 
-如果在文件传输过程中grpc中断连接，则在重新连接后nx将上发此请求，app需要按照此请求重新获取文件
+If grpc interrupts the connection during file transfer, nx will send this request after reconnecting, and the app needs to follow this request to re-obtain the file.
 
-grpc服务：GrpcApp.sendMsg
+grpc service: GrpcApp.sendMsg
 
-#### 上行指令
+#### Uplink command
 
 ```Nginx
 nameCode = 4003
 
 params
 {
-    string file_name[]  # 需要重新上传的文件列表
+     string file_name[] # List of files that need to be re-uploaded
 }
 ```
 
-### 获取已保存的录像和拍照文件
+### Get saved video and photo files
 
-APP在连接成功如果收到4003消息，说明上次连接有未传输完的文件或者录像过程中app断连自动保存的文件，需要重新传输，此时每一个文件都调用此请求
+If the APP receives a 4003 message after the connection is successful, it means that there are untransmitted files in the last connection or files that were automatically saved by the app during the recording process and need to be retransmitted. At this time, each file calls this request.
 
-grpc服务：GrpcApp.getFile
+grpc service: GrpcApp.getFile
 
-#### 下行指令
+####Download command
 
 ```Nginx
 nameCode = 4004
 
 params
 {
-    string file_name  # 需要重新上传的文件
+     string file_name # File that needs to be re-uploaded
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-fixed32 error_code #错误码，0为正常，其它值为错误
-string file_name #文件名
-fixed32 file_size #文件大小（字节）
-bytes buffer #文件数据块（最大为4MB）
+fixed32 error_code #Error code, 0 is normal, other values ​​are errors
+string file_name #File name
+fixed32 file_size #File size (bytes)
+bytes buffer #File data block (maximum 4MB)
 ```
 
-### 空间不足警告
+### Insufficient space warning
 
-在nx板的磁盘空间低于某一预设值（暂定500MB）时，nx会上发此提示，app在接到此提示时应提示用户或立即停止录像
+When the disk space of nx board is lower than a certain preset value (tentatively 500MB), nx will send this prompt. When receiving this prompt, the app should prompt the user or stop recording immediately.
 
-grpc服务：GrpcApp.sendMsg
+grpc service: GrpcApp.sendMsg
 
-#### 上行指令
+#### Uplink command
 
 ```Nginx
 nameCode = 4005
 
 params
 {
-    int remain_size #剩余空间字节
+     int remain_size #remaining space bytes
 }
 ```
 
 ## AI
 
-### 人脸录入请求
+### Face input request
 
-##### 下行指令
+#####Download command
 
 ```C%23
 nameCode = 7001 #FACE_ENTRY_REQUEST
 
 params
 {
-    int32 command
-    string username //当前名字
-    string oriname  // 老名字
-    bool ishost //是不是主人
+     int32 command
+     string username //Current name
+     string origine // old name
+     bool ishost //Is it the owner?
 }
 /* int32 command
 int32 ADD_FACE = 0
-int32 CANCLE_ADD_FACE = 1
+int32 CANCEL_ADD_FACE = 1
 int32 CONFIRM_LAST_FACE = 2
 int32 UPDATE_FACE_ID = 3
 int32 DELETE_FACE = 4
@@ -1117,37 +1114,37 @@ int32 GET_ALL_FACES = 5
 */
 ```
 
-##### 上行指令
+##### Uplink command
 
 ```C%2B%2B
 nameCode = 7001
 params
 {
-    int32 result
-    string allfaces // 暂留
+     int32 result
+     string allfaces // temporary
 }
 /*
-int32 RESULT_SUCCESS = 0 // 除了add，其余的就是真实的返回结果
-int32 RESULT_INVALID_ARGS = 5910    //参数不合法
-int32 RESULT_UNSUPPORTED = 5908    //不支持参数
+int32 RESULT_SUCCESS = 0 // Except for add, the rest are the real return results
+int32 RESULT_INVALID_ARGS = 5910 //The parameters are illegal
+int32 RESULT_UNSUPPORTED = 5908 //Parameters not supported
 int32 RESULT_TIMEOUT = 5907
-int32 RESULT_BUSY = 5911   //不支持同时进行人脸录入和人脸识别功能，请关闭图形化编程中人脸识别功能
+int32 RESULT_BUSY = 5911 //The simultaneous face entry and face recognition functions are not supported. Please turn off the face recognition function in graphical programming.
 int32 RESULT_INVALID_STATE = 5903
 int32 RESULT_INNER_ERROR = 5904
 int32 RESULT_UNDEFINED_ERROR = 5901
 */
 ```
 
-### 人脸录入结果
+### Face entry results
 
-#### 上行指令
+#### Uplink command
 
 ```C%2B%2B
-nameCode = 7003  #FACE_ENTRY_RESULT_PUBLISH 
+nameCode = 7003 #FACE_ENTRY_RESULT_PUBLISH
 params
 {
-    int32 result
-    string username //添加人脸的名字
+     int32 result
+     string username //Add the name of the face
 }
 /*
 int32 RESULT_SUCCESS =0
@@ -1156,19 +1153,19 @@ int32 RESULT_FACE_ALREADY_EXIST = 5921
 */
 ```
 
-### 人脸识别请求
+### Face recognition request
 
-#### 下行指令
+####Download command
 
 ```Go
-nameCode = 7002 #FACE_RECORDING_REQUEST  
+nameCode = 7002 #FACE_RECORDING_REQUEST
 
 params
 {
-    int32 command
-    string username //待识别人姓名
-    int32 id
-    int32 timeout #有效时间1～300，default = 60 
+     int32 command
+     string username //Name of person to be identified
+     int32id
+     int32 timeout #valid time 1～300, default = 60
 }
 /* int32 command
 int32 COMMAND_RECOGNITION_ALL = 0
@@ -1176,13 +1173,13 @@ int32 COMMAND_RECOGNITION_SINGLE = 1
 */
 ```
 
-#### 上行指令
+#### Uplink command
 
 ```C%2B%2B
 nameCode = 7002
 params
 {
-    int32 result
+     int32 result
 }
 /*
 int32 ENABLE_SUCCESS = 0
@@ -1190,1352 +1187,1352 @@ int32 ENABLE_FAIL = 5901
 */
 ```
 
-### 人脸识别结果
+### Face recognition results
 
-#### 上行指令
+#### Uplink command
 
 ```Go
-nameCode = 7004  #FACE_RECOGNITION_RESULT_PUBLISH
+nameCode = 7004 #FACE_RECOGNITION_RESULT_PUBLISH
 params
 {
-    string username
-    int32 result
-    int32 id
-    float32 age
-    float32 emotion
+     string username
+     int32 result
+     int32id
+     float32 age
+     float32 emotion
 }
 /*
 int32 RESULT_SUCCESS =0
-int32 RESULT_TIMEOUT =5907   
+int32 RESULT_TIMEOUT =5907
 */
 ```
 
-## SLAM相关
+## SLAM related
 
-无法复制加载中的内容
+Unable to copy loading content
 
-### 获取地图列表
+### Get map list
 
 ![](./image/grpc_protocol/grpc_slam.svg)
 
-### 地图数据上报
+### Map data reporting
 
-ros接口：topic，类型：nav_msgs/msg/OccupancyGrid，名称："map"
+ros interface: topic, type: nav_msgs/msg/OccupancyGrid, name: "map"
 
-#### 上行指令
+#### Uplink command
 
 ```Nginx
 nameCode = 6001
 
 params
 {
-    float32 resolution #地图分辨率
-    uint32 width #地图宽度
-    uint32 height #地图高度
-    float64 px #地图原点x
-    float64 py #地图原点y
-    float64 pz #地图原点z
-    float64 qx #地图原点四元数x
-    float64 qy #地图原点四元数y
-    float64 qz #地图原点四元数z
-    float64 qw #地图原点四元数w
-    int8 data[] #地图数据
+     float32 resolution #map resolution
+     uint32 width #map width
+     uint32 height #map height
+     float64 px #Map origin x
+     float64 py #map origin y
+     float64 pz #Map origin z
+     float64 qx #Map origin quaternion x
+     float64 qy #Map origin quaternion y
+     float64 qz #Map origin quaternion z
+     float64 qw #Map origin quaternion w
+     int8 data[] #map data
 }
 ```
 
-### 设置标签
+### Set label
 
-ros接口：service，类型：protocol/srv/SetMapLabel，名称："set_label"
+ros interface: service, type: protocol/srv/SetMapLabel, name: "set_label"
 
-#### 下行指令
+####Download command
 
 ```Nginx
 nameCode = 6002
 
 params
 {
-  string mapName #地图名称
-  uint64 map_id  # 地图唯一标识码
-  bool is_outdoor #是否是室外建图
-  label locationLabelInfo[] #标签列表
+   string mapName #map name
+   uint64 map_id # Map unique identification code
+   bool is_outdoor #Whether it is outdoor mapping
+   label locationLabelInfo[] #label list
 }
 ```
 
-##### label结构
+##### label structure
 
 ```Nginx
-string labelName #标签名称
-float64 physicX #X坐标
-float64 physicY #Y坐标
+string labelName #label name
+float64 physicX #X coordinate
+float64 physicY #Y coordinate
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 6002
+NameCode=6002
 
 data
 {
-  uint8 success  #0为成功，1为失败
+   uint8 success #0 means success, 1 means failure
 }
 ```
 
-### 删除地图
+### Delete map
 
-ros接口：service，类型：protocol/srv/SetMapLabel，名称："set_label"
+ros interface: service, type: protocol/srv/SetMapLabel, name: "set_label"
 
-#### 下行指令
+####Download command
 
 ```Nginx
 nameCode = 6002
 
 params
 {
-  string mapName #地图名称
-  uint64 map_id
-  bool only_delete #此值为真时删除目标地图
+   string mapName #map name
+   uint64 map_id
+   bool only_delete #Delete the target map when this value is true
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 6002
+NameCode=6002
 
 data
 {
-  uint8 success  #0为成功，1为失败
+   uint8 success #0 means success, 1 means failure
 }
 ```
 
-### 删除标签
+### Delete tag
 
-ros接口：service，类型：protocol/srv/SetMapLabel，名称："set_label"
+ros interface: service, type: protocol/srv/SetMapLabel, name: "set_label"
 
-#### 下行指令
+####Download command
 
 ```Nginx
 nameCode = 6002
 
 params
 {
-  string mapName #地图名称
-  uint64 map_id
-  label locationLabelInfo[] #要删除的标签列表，如果只删一个就填一个，如果不填则认为是删除地图和所属标签
-  bool only_delete #此值为真时删除目标标签
+   string mapName #map name
+   uint64 map_id
+   label locationLabelInfo[] #List of labels to be deleted. If you only want to delete one, fill in one. If not, it will be considered as deleting the map and its label.
+   bool only_delete #Delete the target label when this value is true
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 6002
+NameCode=6002
 
 data
 {
-  uint8 success  #0为成功，1为失败
+   uint8 success #0 means success, 1 means failure
 }
 ```
 
-### 获取标签和地图数据
+### Get labels and map data
 
-ros接口：service，类型：protocol/srv/GetMapLabel，名称："get_label"
+ros interface: service, type: protocol/srv/GetMapLabel, name: "get_label"
 
-#### 下行指令
+####Download command
 
 ```Nginx
 nameCode = 6003
 
 params
 {
-  string mapName #地图名称
-  uint64 map_id
+   string mapName #map name
+   uint64 map_id
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
 nameCode = 6003
 
 data
 {
-    string mapName #地图名称
-    uint8 success  #0为成功，1为失败
-    bool is_outdoor #是否是室外建图
-    label locationLabelInfo[] #标签列表，标签结构同上
-    Map map
+     string mapName #map name
+     uint8 success #0 means success, 1 means failure
+     bool is_outdoor #Whether it is outdoor mapping
+     label locationLabelInfo[] #Label list, the label structure is the same as above
+     Map map
 }
 ```
 
-##### Map结构
+##### Map structure
 
 ```Nginx
-float32 resolution #地图分辨率
-uint32 width #地图宽度
-uint32 height #地图高度
-float64 px #地图原点x
-float64 py #地图原点y
-float64 pz #地图原点z
-float64 qx #地图原点四元数x
-float64 qy #地图原点四元数y
-float64 qz #地图原点四元数z
-float64 qw #地图原点四元数w
-int8 data[] #地图数据
+float32 resolution #map resolution
+uint32 width #map width
+uint32 height #map height
+float64 px #Map origin x
+float64 py #map origin y
+float64 pz #Map origin z
+float64 qx #Map origin quaternion x
+float64 qy #Map origin quaternion y
+float64 qz #Map origin quaternion z
+float64 qw #Map origin quaternion w
+int8 data[] #map data
 ```
 
-label结构同上
+The label structure is the same as above
 
-### 建图任务
+### Mapping task
 
-开始建图，但不会立即返回结果，会有中间反馈
+Start building a map, but the results will not be returned immediately, there will be intermediate feedback
 
-ros接口：action，类型：protocol/action/Navigation，名称："start_algo_task"
+ros interface: action, type: protocol/action/Navigation, name: "start_algo_task"
 
-所有6004开启的任务都可由6009进行手动停止
+All tasks started by 6004 can be manually stopped by 6009
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 params
 {
-    uint8 type   # 5 开始建图
-    bool outdoor  #启动建图时确定是否为室外建图，true为室外建图，false为室内建图
+     uint8 type # 5 starts mapping
+     bool outdoor #When starting mapping, determine whether it is outdoor mapping. true means outdoor mapping, false means indoor mapping.
 }
 ```
 
-#### 请求被接受
+#### Request accepted
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  uint8 accepted #请求被接受时为1且任务继续运行；请求未被接受时为2且任务终止
+   uint8 accepted #When the request is accepted, it is 1 and the task continues to run; when the request is not accepted, it is 2 and the task is terminated
 }
 ```
 
-#### 中间反馈
+#### Intermediate feedback
 
-这三个反馈码适用于所有6004任务：1000正在激活依赖节点，1001激活依赖节点成功，1002激活依赖节点失败
+These three feedback codes apply to all 6004 tasks: 1000 is activating the dependent node, 1001 activates the dependent node successfully, and 1002 fails to activate the dependent node.
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  int32 feedback_code #反馈码，6启动成功，7启动失败，8重定位成功，9重定位失败
-  string feedback_msg # 额外消息，目前冗余
+   int32 feedback_code #Feedback code, 6 starts successfully, 7 starts fails, 8 relocation succeeds, 9 relocation fails
+   string feedback_msg # Additional message, currently redundant
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-    uint8 result #建图结果，0成功，非0失败
+     uint8 result #Mapping result, 0 success, non-0 failure
 }
 ```
 
-### 机器狗位姿上报
+### Robot dog position reporting
 
-ros接口：topic，类型：geometry_msgs/msg/PoseStamped，名称："dog_pose"
+ros interface: topic, type: geometry_msgs/msg/PoseStamped, name: "dog_pose"
 
-#### 上行指令
+#### Uplink command
 
 ```Nginx
 nameCode = 6005
 
 params
 {
-  float64 px #位置x坐标
-  float64 py #位置y坐标
-  float64 pz #位置z坐标
-  float64 qx #位置四元数x
-  float64 qy #位置四元数y
-  float64 qz #位置四元数z
-  float64 qw #位置四元数w
+   float64 px #Position x coordinate
+   float64 py #Position y coordinate
+   float64 pz #Position z coordinate
+   float64 qx #position quaternion x
+   float64 qy #position quaternion y
+   float64 qz #position quaternion z
+   float64 qw #position quaternion w
 }
 ```
 
-## 导航
+## Navigation
 
 ![](./image/grpc_protocol/grpc_nav.svg)
 
-### 重定位任务
+### Relocation task
 
-所有6004开启的任务都可由6009进行手动停止
+All tasks started by 6004 can be manually stopped by 6009
 
-此请求在使用AB点导航之前务必调用（即进入导航页面时）。调用此请求后不会立即返回结果，机器狗会开启重定位功能，重定位过程中可能会上发反馈信息，重定位结束后会返回请求的结果，如果重定位成功则定位功能会开启并一直持续至退出导航页面。
+This request must be called before using AB point navigation (that is, when entering the navigation page). The result will not be returned immediately after calling this request. The robot dog will enable the relocation function. Feedback information may be sent during the relocation process. After the relocation is completed, the requested result will be returned. If the relocation is successful, the positioning function will be enabled and will continue. Continue until you exit the navigation page.
 
-ros接口：action，类型：protocol/action/Navigation，名称："start_algo_task"
+ros interface: action, type: protocol/action/Navigation, name: "start_algo_task"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 params
 {
-  uint8 type #7是启动重定位任务
-  bool outdoor  #是否是室外
+   uint8 type #7 is to start the relocation task
+   bool outdoor #Whether it is outdoor
 }
 ```
 
-#### 请求被接受
+#### Request accepted
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  uint8 accepted #请求被接受时为1且任务继续运行；请求未被接受时为2且任务终止
+   uint8 accepted #When the request is accepted, it is 1 and the task continues to run; when the request is not accepted, it is 2 and the task is terminated
 }
 ```
 
-#### 中间反馈
+#### Intermediate feedback
 
-这三个反馈码适用于所有6004任务：1000正在激活依赖节点，1001激活依赖节点成功，1002激活依赖节点失败
+These three feedback codes apply to all 6004 tasks: 1000 is activating the dependent node, 1001 activates the dependent node successfully, and 1002 fails to activate the dependent node.
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  int32 feedback_code #反馈码，0成功，100失败继续尝试，遥控狗向前走一段距离，200失败，提示未在地图内或者地图错误，8传感器开启成功，9传感器开启失败
-  string feedback_msg # 额外消息，目前冗余
+   int32 feedback_code #Feedback code, 0 success, 100 failure, continue to try, the remote control dog moves forward for a certain distance, 200 failure, prompting that it is not in the map or the map is wrong, 8 sensors are turned on successfully, 9 sensors fail to turn on
+   string feedback_msg # Additional message, currently redundant
 }
 ```
 
-地图检查服务feedback_code ：
+Map check service feedback_code:
 
-- 正在检查地图：3100
-- 地图检查成功： 3101
-- 地图检查不可用，请重新建图： 3102
-- 地图后台构建中，请稍后： 3110
-- 地图检查服务出现异常，请重启机器狗： 3111
+- Checking map: 3100
+- Map check successful: 3101
+- Map check is unavailable, please rebuild the map: 3102
+- The map background is under construction, please wait: 3110
+- The map check service is abnormal, please restart the robot dog: 3111
 
-启动视觉SLAM相关服务feedback_code ：
+Start visual SLAM related service feedback_code:
 
-- 正在启动重定位依赖服务：3103
-- 启动重定位依赖服务成功： 3104
-- 启动重定位依赖服务失败，请重新尝试导航功能： 3105
+- Starting relocation dependent services: 3103
+- Successfully started the relocation dependent service: 3104
+- Failed to start the relocation dependent service, please try the navigation function again: 3105
 
-启动依赖节点feedback_code：
+Start dependent node feedback_code:
 
-- 正在启动传感器依赖节点： 1000
-- 启动传感器依赖节点成功： 1001
-- 启动传感器依赖节点失败： 1002
+- Starting sensor dependent nodes: 1000
+- Started sensor dependent node successfully: 1001
+- Failed to start sensor dependent node: 1002
 
-重定位feedback_code：
+Relocation feedback_code:
 
-- 重定位功能超时，请重试导航功能： 3106
-- 重定位功能失败继续尝试，遥控狗向前走一段距离： 3107
-- 重定位功能定位成功，点击地图或地图中的标签进行导航：3108
-- 重定位功能定位失败，请重试导航功能：3109
+- The relocation function timed out, please try the navigation function again: 3106
+- If the relocation function fails, try again and the remote-controlled dog moves forward a certain distance: 3107
+- The relocation function is successfully located. Click on the map or the label in the map to navigate: 3108
+- The relocation function failed to locate, please try the navigation function again: 3109
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  uint8 result #启动导航结果，即重定位结果，0成功，非0失败
+   uint8 result #Start navigation result, that is, relocation result, 0 success, non-0 failure
 }
 ```
 
-### AB点导航任务
+### AB point navigation task
 
-所有6004开启的任务都可由6009进行手动停止
+All tasks started by 6004 can be manually stopped by 6009
 
-ros接口：action，类型：protocol/action/Navigation，名称："start_algo_task"
+ros interface: action, type: protocol/action/Navigation, name: "start_algo_task"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 params
 {
-  uint8 type #1是AB点导航
-  float64 goalX #X坐标
-  float64 goalY #Y坐标
-  float64 theta #偏航角[-π，π)，如果此目标点没有角度，不要出现这个字段
+   uint8 type #1 is AB point navigation
+   float64 goalX #X coordinate
+   float64 goalY #Y coordinate
+   float64 theta #Yaw angle [-π, π), if this target point has no angle, do not appear in this field
 }
 ```
 
-#### 请求被接受
+#### Request accepted
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  uint8 accepted #请求被接受时为1且任务继续运行；请求未被接受时为2且任务终止
+   uint8 accepted #When the request is accepted, it is 1 and the task continues to run; when the request is not accepted, it is 2 and the task is terminated
 }
 ```
 
-#### 中间反馈
+#### Intermediate feedback
 
-这三个反馈码适用于所有6004任务：1000正在激活依赖节点，1001激活依赖节点成功，1002激活依赖节点失败
+These three feedback codes apply to all 6004 tasks: 1000 is activating the dependent node, 1001 activates the dependent node successfully, and 1002 fails to activate the dependent node.
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  int32 feedback_code #反馈码，成功，失败，正在运行（持续发送）,路径规划失败
-  string feedback_msg # 额外消息，目前冗余
+   int32 feedback_code #Feedback code, success, failure, running (continuous sending), path planning failure
+   string feedback_msg # Additional message, currently redundant
 }
 ```
 
-- 成功 
-  - 导航启动成功，设置目标点成功，正在规划路径： 300
-  - 正在导航中： 307
-  - 到达目标点：308
-- 失败
-  - 底层导航失败：
-    - 底层导航功能服务连接失败，请重新发送目标：302
-    - 发送目标点失败，请重新发送目标：303
-    - 底层导航功能失败，请重新发送目标：304
-    - 目标点为空，请重新选择目标：305
-    - 规划路径失败，请重新选择目标： 306
-- 地图检查服务feedback_code ：
-  - 正在检查地图：309
-  - 地图检查成功： 310
-  - 地图不存在，请重新建图： 311
+- success 
+   - The navigation is started successfully, the target point is set successfully, and the path is being planned: 300
+   - Navigating: 307
+   - Target point reached: 308
+- fail
+   - Underlying navigation failed:
+     - The underlying navigation function service connection failed, please resend the target: 302
+     - Failed to send target point, please resend target: 303
+     - The underlying navigation function failed, please resend the target: 304
+     - The target point is empty, please select another target: 305
+     - Path planning failed, please select the target again: 306
+- Map check service feedback_code:
+   - Checking map: 309
+   - Map check successful: 310
+   - The map does not exist, please create it again: 311
 
 
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  uint8 result #导航结果，0成功，3失败，4拒绝，5取消，2未获取到，10超时没到终点
+   uint8 result #Navigation result, 0 success, 3 failure, 4 rejection, 5 cancellation, 2 not obtained, 10 timeout and not reaching the end point
 }
 ```
 
-### 路径上传
+### Path upload
 
-用于AB点导航期间APP显示规划的路径
+The APP is used to display the planned path during AB point navigation.
 
-ros接口：topic，类型：nav_msgs/msg/Path，名称：“plan”
+ros interface: topic, type: nav_msgs/msg/Path, name: "plan"
 
-#### 上行指令
+#### Uplink command
 
 ```Nginx
 nameCode = 6006
 
 params
 {
-  Point2D path_point[]  #二维点的数组
+   Point2D path_point[] #Array of two-dimensional points
 }
 ```
 
-Point2D结构
+Point2D structure
 
 ```Nginx
-float64 px #位置x坐标
-float64 py #位置y坐标
+float64 px #Position x coordinate
+float64 py #Position y coordinate
 ```
 
-### 激光点上报
+### Laser point reporting
 
-ros接口：topic，类型：sensor_msgs/msg/LaserScan，名称："scan"
+ros interface: topic, type: sensor_msgs/msg/LaserScan, name: "scan"
 
-#### 上行指令
+#### Uplink command
 
 ```Nginx
 nameCode = 6011
 
 params
 {
-  Point2D laser_point[]  #二维点的数组
+   Point2D laser_point[] #array of two-dimensional points
 }
 ```
 
-## 充电
+## Charge
 
-### 自动上桩任务
+### Automatic staking tasks
 
-所有6004开启的任务都可由6009进行手动停止
+All tasks started by 6004 can be manually stopped by 6009
 
-ros接口：action，类型：protocol/action/Navigation，名称："start_algo_task"
+ros interface: action, type: protocol/action/Navigation, name: "start_algo_task"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 params
 {
-  uint8 type #9是自动上桩
+   uint8 type #9 is automatic staking
 }
 ```
 
-#### 请求被接受
+#### Request accepted
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  uint8 accepted #请求被接受时为1且任务继续运行；请求未被接受时为2且任务终止
+   uint8 accepted #When the request is accepted, it is 1 and the task continues to run; when the request is not accepted, it is 2 and the task is terminated
 }
 ```
 
-#### 中间反馈
+#### Intermediate feedback
 
-暂时未定义，可能会反馈自动上桩的中间状态、阶段信息
+It is temporarily undefined. It may feedback the intermediate status and stage information of automatic staking.
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  uint8 result #上桩结果，0成功，非0失败
+   uint8 result #Stake result, 0 success, non-0 failure
 }
 ```
 
-## 视觉跟随
+## Visual follow
 
 ![](./image/grpc_protocol/grpc_vision_tracking.svg)
 
-### 视觉跟随任务
+### Visual following task
 
-所有6004开启的任务都可由6009进行手动停止
+All tasks started by 6004 can be manually stopped by 6009
 
-分为人体跟随和万物跟随，中间有反馈，正常运行时永远不会返回结果。
+It is divided into human body following and all things following. There is feedback in the middle, and the result will never be returned during normal operation.
 
-ros接口：action，类型：protocol/action/Navigation，名称："start_algo_task"
+ros interface: action, type: protocol/action/Navigation, name: "start_algo_task"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 params
 {
-  uint8 type #13是启动视觉识别
-  bool object_tracking #true为万物跟随，false为人体目标跟随
-  uint8 relative_pos # 相对方位，200自主选择跟随位置，201在目标后侧跟随，202在目标的左侧跟随，203在目标的右侧跟随
-  float32 keep_distance # 与跟随目标所保持的距离
+   uint8 type #13 is to start visual recognition
+   bool object_tracking #true means everything follows, false means human targets follow
+   uint8 relative_pos # Relative orientation, 200 chooses the following position independently, 201 follows behind the target, 202 follows on the left side of the target, 203 follows on the right side of the target
+   float32 keep_distance #The distance to keep from the following target
 }
 ```
 
-#### 请求被接受
+#### Request accepted
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  uint8 accepted #请求被接受时为1且任务继续运行；请求未被接受时为2且任务终止
+   uint8 accepted #When the request is accepted, it is 1 and the task continues to run; when the request is not accepted, it is 2 and the task is terminated
 }
 ```
 
-#### 中间反馈
+#### Intermediate feedback
 
-这三个反馈码适用于所有6004任务：1000正在激活依赖节点，1001激活依赖节点成功，1002激活依赖节点失败
+These three feedback codes apply to all 6004 tasks: 1000 is activating the dependent node, 1001 activates the dependent node successfully, and 1002 fails to activate the dependent node.
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  int32 feedback_code #反馈码，表示跟随任务的状态, 500表示视觉跟随功能启动中，501表示人体识别已启动，等待用户选择跟随目标，502表示跟随目标启动中，503表示跟随中，504暂时跟丢目标，尝试寻找原目标，504人体与万物跟随目标丢失, 寻找目标，505人体与万物跟随目标彻底丢失，重启跟随
-  string feedback_msg # 额外消息，目前冗余
+   int32 feedback_code #Feedback code, indicating the status of the following task, 500 means that the visual following function is started, 501 means that human body recognition has been started, waiting for the user to choose to follow the target, 502 means that the following target is started, 503 means following, 504 means that the target is temporarily lost , try to find the original target, 504 Human Body and All Things Follow the target and lose it, find the target, 505 Human Body and All Things follow the target and completely lose it, restart following
+   string feedback_msg # Additional message, currently redundant
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  uint8 result #视觉跟随任务结果，0为成功（不会出现），非0为其它
+   uint8 result #Visual following task result, 0 means success (will not appear), non-0 means other
 }
 ```
 
-### 跟随目标框列表
+### Follow target box list
 
-在开启人体识别任务请求成功后会上发跟随目标列表（万物跟随时不会上发），选中目标后跟随过程中会上发选中的目标框
+After the human body recognition task request is successfully started, the following target list will be posted (it will not be posted when everything is following). After selecting the target, the selected target box will be posted during the following process.
 
-#### 坐标转换
+#### Coordinate conversion
 
-框的坐标是以640×480作为图像全尺寸的，与图传和手机分辨率不同，需要转换
+The coordinates of the frame are based on 640×480 as the full size of the image, which is different from the image transmission and mobile phone resolutions and needs to be converted.
 
-ros接口：topic，类型：protocol/msg/Person，名称："person"
+ros interface: topic, type: protocol/msg/Person, name: "person"
 
-#### 上行指令
+#### Uplink command
 
 ```Nginx
-NameCode = 6007
+NameCode=6007
 
 param
 {
-  SelectTrackObject body_info_roi[]  #视觉人体跟随的人体候选目标框列表
-  RegionOfInterest track_res_roi  #视觉跟随的目标框，如果未成功选中目标则高宽为0
+   SelectTrackObject body_info_roi[] #List of human body candidate target boxes for visual human tracking
+   RegionOfInterest track_res_roi #Target frame for visual following. If the target is not successfully selected, the height and width will be 0.
 }
 ```
 
-##### SelectTrackObject结构
+##### SelectTrackObject structure
 
 ```Nginx
-RegionOfInterest roi # 识别的框
-string reid # 识别号
+RegionOfInterest roi #Identified frame
+string reid # identification number
 ```
 
-##### RegionOfInterest结构
+##### RegionOfInterest structure
 
 ```Nginx
-uint32 x_offset # 框的起始像素坐标x
-uint32 y_offset # 框的起始像素坐标y
-uint32 height   # 框的像素高
-uint32 width    # 框的像素宽
+uint32 x_offset # The starting pixel coordinate x of the box
+uint32 y_offset # The starting pixel coordinate y of the box
+uint32 height # Pixel height of the box
+uint32 width # Pixel width of the box
 ```
 
-### 选中跟随目标框
+### Check the follow target box
 
-6007上发的过程中，且还没有选择成功时，调用此请求，目标框的参数与上发的参数一致
+6007 During the uploading process and the selection has not yet been successful, this request is called. The parameters of the target box are consistent with the uploaded parameters.
 
-ros接口：service，类型：protocol/srv/BodyRegion，名称："tracking_object_srv"
+ros interface: service, type: protocol/srv/BodyRegion, name: "tracking_object_srv"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 6008
+NameCode=6008
 
 param
 {
-  RegionOfInterest roi #选中的视觉跟随目标
+   RegionOfInterest roi #Selected visual following target
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 6008
+NameCode=6008
 
 data
 {
-  bool success #是否成功选中，大概需要20~30秒
+   bool success #Whether the selection is successful, it will take about 20~30 seconds
 }
 ```
 
-## UWB跟随
+## UWB Follow
 
 ![](./image/grpc_protocol/grpc_uwb.svg)
 
-### UWB跟随任务
+### UWB follow mission
 
-所有6004开启的任务都可由6009进行手动停止
+All tasks started by 6004 can be manually stopped by 6009
 
-在机器狗和手环连接后（蓝牙连接后手环的UWB会自动和机器狗上的UWB连接）调用此请求
+This request is called after the robot dog is connected to the bracelet (the UWB of the bracelet will automatically connect to the UWB on the robot dog after Bluetooth connection)
 
-ros接口：action，类型：protocol/action/Navigation，名称："start_algo_task"
+ros interface: action, type: protocol/action/Navigation, name: "start_algo_task"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 params
 {
-  uint8 type #11是启动UWB跟随
-  uint8 relative_pos # 相对方位，200自主选择跟随位置，201在目标后侧跟随，202在目标的左侧跟随，203在目标的右侧跟随
-  float32 keep_distance # 与跟随目标所保持的距离
+   uint8 type #11 is to start UWB following
+   uint8 relative_pos # Relative orientation, 200 chooses the following position independently, 201 follows behind the target, 202 follows on the left side of the target, 203 follows on the right side of the target
+   float32 keep_distance #The distance to keep from the following target
 }
 ```
 
-#### 请求被接受
+#### Request accepted
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  uint8 accepted #请求被接受时为1且任务继续运行；请求未被接受时为2且任务终止
+   uint8 accepted #When the request is accepted, it is 1 and the task continues to run; when the request is not accepted, it is 2 and the task is terminated
 }
 ```
 
-#### 中间反馈
+#### Intermediate feedback
 
-这三个反馈码适用于所有6004任务：1000正在激活依赖节点，1001激活依赖节点成功，1002激活依赖节点失败
+These three feedback codes apply to all 6004 tasks: 1000 is activating the dependent node, 1001 activates the dependent node successfully, and 1002 fails to activate the dependent node.
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  int32 feedback_code #反馈码，表示跟随任务的状态, 10正常，11检测器异常，12坐标转换异常，13规划器异常，14控制器异常，15UWB启动时目标为空，16UWB跟随中触发了跳台阶，17UWB跟随中触发了自主行为，18UWB跟随中的自主行为异常
-  string feedback_msg # 额外消息，目前冗余
+   int32 feedback_code #Feedback code, indicating the status of the following task, 10 is normal, 11 detector is abnormal, 12 coordinate conversion is abnormal, 13 planner is abnormal, 14 controller is abnormal, 15 the target is empty when UWB is started, 16 the step jump is triggered during UWB following, 17UWB following triggered autonomous behavior, 18UWB following autonomous behavior was abnormal
+   string feedback_msg # Additional message, currently redundant
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 6004
+NameCode=6004
 
 data
 {
-  uint8 result #视觉跟随任务结果，0为成功（不会出现），非0为其它
+   uint8 result #Visual following task result, 0 means success (will not appear), non-0 means other
 }
 ```
 
-## 接入进行中的任务（接入6004启动的任务）
+## Access ongoing tasks (access tasks started by 6004)
 
-6004开启的任务，如果中间APP退出，再次进入时如果任务仍然在进行，则可以通过此请求接入，接口与6004类似
+For tasks started by 6004, if the intermediate APP exits and the task is still in progress when re-entering, you can access through this request. The interface is similar to 6004.
 
-ros接口：action，类型：protocol/action/Navigation，名称："start_algo_task"
+ros interface: action, type: protocol/action/Navigation, name: "start_algo_task"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 6010
+NameCode=6010
 
 params
 {
-  uint8 type # 任务的类型
+   uint8 type #type of task
 }
 ```
 
-#### 请求被接受
+#### Request accepted
 
 ```Nginx
-NameCode = 6010
+NameCode=6010
 
 data
 {
-  uint8 accepted #1为接受，如果为3，则说明接入时任务已结束，或没有记录此类型任务（可能在之前app连接状态时已结束）
+   uint8 accepted #1 is accepted. If it is 3, it means that the task has ended when connecting, or this type of task is not recorded (it may have ended in the previous app connection state)
 }
 ```
 
-#### 中间反馈
+#### Intermediate feedback
 
-与执行的任务一致
+Consistent with the task performed
 
 ```Nginx
-NameCode = 6010
+NameCode=6010
 
 data
 {
-  int32 feedback_code
-  string feedback_msg
+   int32 feedback_code
+   string feedback_msg
 }
 ```
 
-#### 返回结果
+#### Return results
 
-与执行的任务一致
+Consistent with the task performed
 
 ```Nginx
-NameCode = 6010
+NameCode=6010
 
 data
 {
-  uint8 result
+   uint8 result
 }
 ```
 
-## 停止任务（停止6004启动的任务）
+## Stop the task (stop the task started by 6004)
 
-所有6004开启的任务都可由6009进行手动停止
+All tasks started by 6004 can be manually stopped by 6009
 
-ros接口：service，类型：protocol/srv/StopAlgoTask，名称：“stop_algo_task”
+ros interface: service, type: protocol/srv/StopAlgoTask, name: "stop_algo_task"
 
-### 停止当前任务
+### Stop the current task
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 6009
+NameCode=6009
 
 params
 {
-  uint8 type #与对应任务启动时的type一致，如果停止所有任务就填0
-  string map_name #如果是建图任务，则停止时需要写入地图名
+   uint8 type # is consistent with the type when the corresponding task is started. If all tasks are stopped, fill in 0
+   string map_name #If it is a mapping task, the map name needs to be written when stopping.
 }
 ```
 
-类型定义参考：[算法任务管理接口](https://xiaomi.f.mioffice.cn/docs/dock4nE0rvOLin8zA5xjN1MSlpc) 
+Type definition reference: [Algorithm Task Management Interface](https://xiaomi.f.mioffice.cn/docs/dock4nE0rvOLin8zA5xjN1MSlpc)
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 6009
+NameCode=6009
 
 data
 {
-  int8 result #停止指令是否被接受，0已停止，1停止失败，10请求超时无响应
+   int8 result #Whether the stop command is accepted, 0 has stopped, 1 stops failed, 10 request timed out and no response
 }
 ```
 
-## 蓝牙和UWB
+## Bluetooth and UWB
 
-UWB的连接需要通过蓝牙来建立，此处提供对蓝牙的操作，蓝牙连接和中断会包括UWB的相应操作
+The UWB connection needs to be established through Bluetooth. The operations on Bluetooth are provided here. Bluetooth connection and interruption will include the corresponding operations of UWB.
 
-### 扫描蓝牙设备
+### Scan for Bluetooth devices
 
-扫描低功耗蓝牙设备，并返回设备信息列表（没有名称的设备不会返回），蓝牙已连接状态下调此请求会返回上一次扫描的结果（因为实验过连接状态下扫描会导致之后蓝牙断开时异常）
+Scan low-power Bluetooth devices and return the device information list (devices without names will not be returned). When the Bluetooth connected state is lowered, this request will return the results of the last scan (because experiments have shown that scanning in the connected state will cause Bluetooth to be disconnected later. exception)
 
-ros接口：service，类型：protocol/srv/BLEScan，名称："scan_bluetooth_device"
+ros interface: service, type: protocol/srv/BLEScan, name: "scan_bluetooth_device"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 8001
+NameCode=8001
 
 param
 {
-  float64 scan_seconds #扫描时间（秒）
+   float64 scan_seconds #Scan time (seconds)
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 8001
+NameCode=8001
 
 data
 {
-  DeviceInfo device_info_list[] #扫描结果信息列表
+   DeviceInfo device_info_list[] #Scan result information list
 }
 ```
 
-##### DeviceInfo结构
+##### DeviceInfo structure
 
 ```Nginx
-string mac #mac地址
-string name #蓝牙设备名
-string addr_type #mac地址类型，可能为random或者public
-uint8 device_type #uwb设备类型，0未知，16手环，17充电桩，未连接过的设备类型未知
-string firmware_version #固件版本，已连接的设备才有正确的版本读数
-float battery_level #电池电量，已连接的设备才有正确读数，范围：0~1
+string mac #mac address
+string name #Bluetooth device name
+string addr_type #mac address type, may be random or public
+uint8 device_type #uwb device type, 0 unknown, 16 bracelet, 17 charging pile, unconnected device type unknown
+string firmware_version #Firmware version, connected devices have correct version readings
+float battery_level #Battery power, connected devices can have correct readings, range: 0~1
 ```
 
-### 获取记录连接过的蓝牙设备信息
+### Obtain the information of connected Bluetooth devices
 
-ros接口：service，类型：protocol/srv/BLEScan，名称："scan_bluetooth_device"
+ros interface: service, type: protocol/srv/BLEScan, name: "scan_bluetooth_device"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 8001
+NameCode=8001
 
 param
 {
-  float64 scan_seconds #填0为获取历史记录
+   float64 scan_seconds #Fill in 0 to obtain history records
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 8001
+NameCode=8001
 
 data
 {
-  DeviceInfo device_info_list[] #历史设备信息列表
+   DeviceInfo device_info_list[] #Historical device information list
 }
 ```
 
-### 连接蓝牙设备
+### Connect Bluetooth device
 
-在扫描了蓝牙设备之后，连接选中的蓝牙设备，连接上蓝牙设备后会进行UWB设备连接
+After scanning the Bluetooth device, connect the selected Bluetooth device. After connecting the Bluetooth device, the UWB device connection will be made.
 
-ros接口：service，类型：protocol/srv/BLEConnect，名称："connect_bluetooth_devices"
+ros interface: service, type: protocol/srv/BLEConnect, name: "connect_bluetooth_devices"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 8002
+NameCode=8002
 
 param
 {
-  DeviceInfo selected_device #选中的设备名称
+   DeviceInfo selected_device #Selected device name
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 8002
+NameCode=8002
 
 data
 {
-  uint8 result #连接结果，0成功，1蓝牙连接失败，2UWB连接失败，3获取UWB的mac和session id失败
+   uint8 result #Connection result, 0 successful, 1 Bluetooth connection failed, 2 UWB connection failed, 3 failed to obtain UWB mac and session id
 }
 ```
 
-### 断开蓝牙设备
+### Disconnect Bluetooth device
 
-断开蓝牙设备，会一并断开对应的UWB设备
+Disconnecting the Bluetooth device will also disconnect the corresponding UWB device.
 
-ros接口：service，类型：protocol/srv/BLEConnect，名称："connect_bluetooth_device"
+ros interface: service, type: protocol/srv/BLEConnect, name: "connect_bluetooth_device"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 8002
+NameCode=8002
 
 param
 {
- #为空表示断开设备
+  #Empty means disconnecting the device
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 8002
+NameCode=8002
 
 data
 {
-  uint8 result #断开结果，0成功，1蓝牙通信错误，2UWB断开失败，3当前蓝牙未连接
+   uint8 result #Disconnection result, 0 success, 1 Bluetooth communication error, 2UWB disconnection failure, 3 current Bluetooth is not connected
 }
 ```
 
-### 连接状态更新
+### Connection status update
 
-蓝牙外设异常断开和自动重连，上报出来
+Abnormal disconnection and automatic reconnection of Bluetooth peripherals are reported.
 
-ros接口：topic，类型：std_msgs/msg/Bool，名称："bluetooth_disconnected_unexpected"
+ros interface: topic, type: std_msgs/msg/Bool, name: "bluetooth_disconnected_unexpected"
 
-#### 上发指令
+#### Upload instructions
 
 ```Nginx
-NameCode = 8003
+NameCode=8003
 
 param
 {
-    bool disconnected #true为异常断开，false为自动回连成功
+     bool disconnected #true means abnormal disconnection, false means automatic reconnection is successful
 }
 ```
 
-### 获取当前连接的设备
+### Get the currently connected device
 
-ros接口：service，类型：protocol/srv/BLEScan，名称："get_connected_bluetooth_info"
+ros interface: service, type: protocol/srv/BLEScan, name: "get_connected_bluetooth_info"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 8004
+NameCode=8004
 
 param
 {
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 8004
+NameCode=8004
 
 data
 {
-  DeviceInfo device_info_list[] #目前只支持连接一个设备，所以此列表只有一个或零个元素
+   DeviceInfo device_info_list[] #Currently only supports connecting to one device, so this list has only one or zero elements.
 }
 ```
 
-### 获取当前连接的设备固件版本
+### Get the currently connected device firmware version
 
-ros接口：service，类型：std_srvs/srv/Trigger，名称："ble_device_firmware_version"
+ros interface: service, type: std_srvs/srv/Trigger, name: "ble_device_firmware_version"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 8005
+NameCode=8005
 
 param
 {
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 8005
+NameCode=8005
 
 data
 {
-  bool success #true表示成功获取，false表示未连接设备
-  string message #版本号
+   bool success #true means successful acquisition, false means the device is not connected
+   string message #version number
 }
 ```
 
-### 获取当前连接设备电量
+### Get the current power of the connected device
 
-ros接口：service，类型：protocol/srv/GetBLEBatteryLevel，名称："ble_device_battery_level"
+ros interface: service, type: protocol/srv/GetBLEBatteryLevel, name: "ble_device_battery_level"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 8006
+NameCode=8006
 
 param
 {
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 8006
+NameCode=8006
 
 data
 {
-  bool connected #true表示已连接设备，false表示未连接设备
-  float32 persentage #电量：0.0~1.0
+   bool connected #true means the device is connected, false means the device is not connected
+   float32 presentage #Battery: 0.0~1.0
 }
 ```
 
-### 删除历史连接记录
+### Delete historical connection records
 
-ros接口：service，类型：nav2_msgs/srv/SaveMap，名称："delete_ble_devices_history"
+ros interface: service, type: nav2_msgs/srv/SaveMap, name: "delete_ble_devices_history"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 8007
+NameCode=8007
 
 param
 {
-    string mac #要删除设备的mac地址，如果不填写则为删除所有记录
+     string mac #To delete the mac address of the device, if not filled in, all records will be deleted
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 8007
+NameCode=8007
 
 data
 {
-  bool success #是否删除成功
+   bool success #Whether the deletion was successful
 }
 ```
 
-### 蓝牙固件升级提示
+### Bluetooth firmware upgrade tips
 
-在蓝牙外设连接且手机APP连接的状态下会检查是否有适配的固件，如果有则上发此提示
+When the Bluetooth peripheral is connected and the mobile APP is connected, it will check whether there is adapted firmware, and if so, this prompt will be sent.
 
-ros接口：topic，类型：std_msgs/msg/String，名称："ble_firmware_update_notification"
+ros interface: topic, type: std_msgs/msg/String, name: "ble_firmware_update_notification"
 
-#### 上行指令
+#### Uplink command
 
 ```Nginx
-NameCode = 8008
+NameCode=8008
 
 param
 {
-  string data  # 格式为“旧版本 新版本”，中间用空格隔开
+   string data # The format is "old version new version", separated by spaces.
 }
 ```
 
-### 更新蓝牙固件
+### Update Bluetooth firmware
 
-收到提示后可以下发升级确认，启动升级流程
+After receiving the prompt, you can issue an upgrade confirmation and start the upgrade process.
 
-ros接口：service，类型：std_srvs/srv/Trigger，名称："update_ble_firmware"
+ros interface: service, type: std_srvs/srv/Trigger, name: "update_ble_firmware"
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 8009
+NameCode=8009
 
 param
 {
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 8009
+NameCode=8009
 
 data
 {
-  bool success  # 是否升级成功
-  string message  # 错误信息
+   bool success # Whether the upgrade was successful
+   string message # Error message
 }
 ```
 
-### 蓝牙固件更新进度
+### Bluetooth firmware update progress
 
-在蓝牙固件升级过程中持续上发此信息
+Continue to send this information during the Bluetooth firmware upgrade process
 
-ros接口：topic，类型：protocol/msg/BLEDFUProgress，名称："ble_dfu_progress"
+ros interface: topic, type: protocol/msg/BLEDFUProgress, name: "ble_dfu_progress"
 
-#### 上行指令
+#### Uplink command
 
 ```Nginx
-NameCode = 8010
+NameCode=8010
 
 param
 {
-  uint8 status  # 状态：0正在升级，1升级成功，2升级失败，3正在解压文件，4解压文件失败，5正在发送初始化包，6发送初始化包失败，7正在发送固件镜像，8发送固件镜像失败，9正在更新固件并等待重启，10未重启成功
-  float64 progress  # 进度：0~1
-  string message  # 状态信息，和状态相关的消息，比如：具体的升级步骤，失败原因等，如果不需要可以忽略
+   uint8 status # Status: 0 is being upgraded, 1 is upgraded successfully, 2 is upgraded failed, 3 is decompressing the file, 4 fails to decompress the file, 5 is sending the initialization package, 6 fails to send the initialization package, 7 is sending the firmware image, 8 fails to send the firmware image , 9 is updating firmware and waiting for restart, 10 failed to restart successfully
+   float64 progress # Progress: 0~1
+   string message # Status information, status-related messages, such as: specific upgrade steps, failure reasons, etc. You can ignore it if not needed
 }
 ```
 
-### 蓝牙遥控器速度挡位相关
+### Bluetooth remote control speed gear related
 
-#### 设置遥控器速度挡位
+#### Set the remote control speed gear
 
-ros接口：topic，类型：std_msgs/msg/Int8，名称："set_bluetooth_tread"
+ros interface: topic, type: std_msgs/msg/Int8, name: "set_bluetooth_tread"
 
-##### 下行指令
+#####Download command
 
 ```Nginx
 NameCode = 8011
 
 param
 {
-    int8 data #0低挡，1中挡，2高挡
+     int8 data #0 low gear, 1 mid gear, 2 high gear
 }
 ```
 
-#### 遥控器修改挡位上报通知
+#### Notification of remote control gear change report
 
-ros接口：topic，类型：std_msgs/msg/Int8，名称："update_bluetooth_tread"
+ros interface: topic, type: std_msgs/msg/Int8, name: "update_bluetooth_tread"
 
-##### 上行指令
+##### Uplink command
 
 ```Nginx
-NameCode = 8012
+NameCode=8012
 
 param
 {
-    int8 data #0低挡，1中挡，2高挡
+     int8 data #0 low gear, 1 mid gear, 2 high gear
 }
 ```
 
-#### 查询遥控器速度挡位
+#### Query the speed gear of the remote control
 
-ros接口：service，类型：std_srvs/srv/Trigger，名称："get_bluetooth_tread"
+ros interface: service, type: std_srvs/srv/Trigger, name: "get_bluetooth_tread"
 
-##### 下行指令
+#####Download command
 
 ```Nginx
-NameCode = 8013
+NameCode=8013
 
 param
 {
 }
 ```
 
-##### 返回结果
+##### Return results
 
 ```Nginx
-NameCode = 8013
+NameCode=8013
 
 data
 {
-    int8 data #0低挡，1中挡，2高挡
+     int8 data #0 low gear, 1 mid gear, 2 high gear
 }
 ```
 
-## 机器人状态
+## Robot status
 
-### 状态查询
+### Status Query
 
-心跳中包含的状态可通过此接口以查询的形式获得，心跳的格式请参考
+The status included in the heartbeat can be obtained in the form of query through this interface. Please refer to the format of the heartbeat.
 
-此请求只涉及grpc节点，所以没有ros接口
+This request only involves grpc nodes, so there is no ros interface
 
-#### 下行指令
+####Download command
 
 ```Nginx
-NameCode = 10001
+NameCode=10001
 
 param
 {
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
-NameCode = 10001
+NameCode=10001
 
 data
 {
-  MotionStatus motion_status
-  TaskStatus task_status
-  SelfCheckStatus self_check_status
-  StateSwitchStatus state_switch_status
-  ChargingStatus charging_status
+   MotionStatus motion_status
+   TaskStatus task_status
+   SelfCheckStatus self_check_status
+   StateSwitchStatus state_switch_status
+   ChargingStatus charging_status
 }
 ```
 
-其中：
+in:
 
-##### MotionStatus结构
+##### MotionStatus structure
 
 ```Nginx
 int32 motion_id
 ```
 
-##### TaskStatus结构
+##### TaskStatus structure
 
 ```Go
 uint32 task_status
 int32 task_sub_status
 ```
 
-##### SelfCheckStatus结构
+##### SelfCheckStatus structure
 
 ```Go
 int32 code
 string description
 ```
 
-##### StateSwitchStatus结构
+##### StateSwitchStatus structure
 
 ```Go
 int32 state
 int32 code
 ```
 
-##### ChargingStatus结构
+##### ChargingStatus structure
 
 ```C%2B%2B
 bool wired_charging
 bool wireless_charging
 ```
 
-### 低功耗
+### Low power consumption
 
-#### 退出低功耗
+#### Exit low power consumption
 
-APP可以手动退出低功耗而不用唤醒的方式退出，注意：此请求返回时低功耗彻底退出，建议超时设置15秒
+APP can manually exit low power consumption without waking up. Note: Low power consumption will completely exit when this request returns. It is recommended to set the timeout to 15 seconds.
 
-ros接口：service，类型：std_srvs/srv/Trigger，名称："low_power_exit"
+ros interface: service, type: std_srvs/srv/Trigger, name: "low_power_exit"
 
-##### 下行指令
+#####Download command
 
 ```Nginx
-NameCode = 10002
+NameCode=10002
 
 param
 {
 }
 ```
 
-##### 返回结果
+##### Return results
 
 ```Nginx
-NameCode = 10002
+NameCode=10002
 
 data
 {
-    bool success #是否退出成功
+     bool success #Whether the exit was successful
 }
 ```
 
-#### 开启/关闭自动进入低功耗
+#### Turn on/off automatic entry into low power consumption
 
-关闭之后，机器狗趴下不会自动进入低功耗模式
+After shutting down, the robot dog will not automatically enter low-power mode when lying down.
 
-ros接口：service，类型：std_srvs/srv/SetBool，名称："low_power_onoff"
+ros interface: service, type: std_srvs/srv/SetBool, name: "low_power_onoff"
 
-##### 下行指令
+#####Download command
 
 ```Nginx
-NameCode = 10003
+NameCode=10003
 
 param
 {
-    bool data #true为开启，false为关闭
+     bool data #true means on, false means off
 }
 ```
 
-##### 返回结果
+##### Return results
 
 ```Nginx
-NameCode = 10003
+NameCode=10003
 
 data
 {
-    bool success #是否设置成功
+     bool success #Whether the setting is successful
 }
 ```
 
-## 环境切换
+## Environment switching
 
-ros接口：service，类型：bridge/protocol/ros/srv/Trigger.srv，名称：“set_work_environment”
+ros interface: service, type: bridge/protocol/ros/srv/Trigger.srv, name: "set_work_environment"
 
-### 下行指令
+###Download command
 
 ```Nginx
-NameCode = 10004
+NameCode=10004
 
 param
 {
-    string data # 生产环境：pro；测试环境：test
+     string data #Production environment: pro; test environment: test
 }
 ```
 
-### 返回结果
+### Return results
 
 ```Nginx
-NameCode = 10004
+NameCode=10004
 
 data
 {
-    bool success # true：成功；false：失败
-    string message
+     bool success # true: success; false: failure
+     string message
 }
 ```
 
-## Syslog日志上报
+## Syslog log reporting
 
-ros接口：service，类型：bridge/protocol/ros/srv/BesHttpSendFile.srv，名称：“upload_syslog”
+ros interface: service, type: bridge/protocol/ros/srv/BesHttpSendFile.srv, name: "upload_syslog"
 
-### 下行指令
+###Download command
 
 ```Nginx
-NameCode = 10005
+NameCode=10005
 
 param
 {
 }
 ```
 
-### 返回结果
+### Return results
 
 ```Nginx
-NameCode = 10005
+NameCode=10005
 
 data
 {
-    bool success # true：成功；false：失败
+     bool success # true: success; false: failure
 }
 ```
 
-## 测试用的协议
+## Protocol for testing
 
-### 断开app连接
+### Disconnect app
 
-ros接口：topic，类型：std_msgs/msg/Bool，名称："disconnect_app"
+ros interface: topic, type: std_msgs/msg/Bool, name: "disconnect_app"
 
-#### 下行指令
+####Download command
 
 ```Nginx
 NameCode = 55001
@@ -2545,7 +2542,7 @@ params
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```Nginx
 NameCode = 55001
@@ -2555,87 +2552,87 @@ data
 }
 ```
 
-## 开发者权限
+## Developer permissions
 
-### 解锁指令
+### Unlock command
 
-#### 下行指令
+####Download command
 
 ```C%2B%2B
-NameCode = 9030
+NameCode=9030
 
 params
 {
-   string = httplink
+    string=httplink
 }
 ```
 
-#### 返回结果
+#### Return results
 
 ```C%2B%2B
-NameCode = 9030
+NameCode=9030
 
 params
 {
-   int result ;
+    int result;
 }
 ```
 
-### 重启指令
+### Restart command
 
-#### 下行指令
-
-```C%2B%2B
-NameCode = 9031
-
-params
-{
-   string = SystemRestart
-}
-```
-
-#### 返回结果
+####Download command
 
 ```C%2B%2B
 NameCode = 9031
 
 params
 {
-   int result ; #
-                # 255 failed
+    string = SystemRestart
 }
 ```
 
-### 关机和重启指令
+#### Return results
 
-ros接口：service，类型："std_srvs/srv/SetBool"，名称："enable_elec_skin"
+```C%2B%2B
+NameCode = 9031
+
+params
+{
+    int result; #
+                 #255 failed
+}
+```
+
+### Shutdown and restart instructions
+
+ros interface: service, type: "std_srvs/srv/SetBool", name: "enable_elec_skin"
 
 
-## 狗腿校准
+## Dogleg calibration
 
-用户手动校准狗腿，先趴下断电，摆正后上电站起
+The user manually calibrates the dogleg, first lies down and cuts off the power, then straightens it and then powers on and stands up.
 
-ros接口：service，类型："std_srvs/srv/SetBool"，名称："dog_leg_calibration"
+ros interface: service, type: "std_srvs/srv/SetBool", name: "dog_leg_calibration"
 
-### 下行指令
+###Download command
 
 ```YAML
 NameCode = 12001
 
 param
 {
-    bool data # false趴下断电 true上电站起
+     bool data # false lie down and power off true power on and stand up
 }
 ```
 
-### 返回结果
+### Return results
 
 ```Go
 NameCode = 12001
 
 data
 {
-    bool success
-    string message
+     bool success
+     string message
 }
 ```
