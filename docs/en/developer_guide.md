@@ -19,40 +19,40 @@
 
 
 ```js
-int32 motion_id #Robot motion control posture
-int32 cmd_type # Instruction type constraints, 1: Data, 2: End;
-                            # The Data frame writes the following parameters according to the control requirements, and the End frame does not need to fill in the parameters.
-int32 cmd_source #Command source,
-                            # 0: App, 1: Audio, 2: Vis, 3: BluTele 4: Algo
-int32 value # 0, inward gait, 2, vertical gait
-float32[3] vel_des # x y (maximum value 1.5) yaw (maximum value 2.0) speed m/s
-float32[3] rpy_des # Currently not available. roll pitch yaw (maximum value 0.4) rad
-float32[3] pos_des # Currently not open. x y (maximum value 0.2) z (maximum value 0.3) m
-float32[3] acc_des # Currently not available. acc for jump m^2/s
-float32[3] ctrl_point # Currently not available. pose ctrl point m
-float32[3] foot_pose # Currently not open. front/back foot pose x,y,z m
-float32[2] step_height # The leg lifting height when walking, the default can be set to 0.05m
+int32 motion_id            #Robot motion control posture
+int32 cmd_type             # Instruction type constraints, 1: Data, 2: End;
+                           # The Data frame writes the following parameters according to the control requirements, and the End frame does not need to fill in the parameters.
+int32 cmd_source           #Command source,
+                           # 0: App, 1: Audio, 2: Vis, 3: BluTele 4: Algo
+int32 value                # 0, inward gait, 2, vertical gait
+float32[3] vel_des         # x y (maximum value 1.5) yaw (maximum value 2.0) speed m/s
+float32[3] rpy_des         # Currently not available. roll pitch yaw (maximum value 0.4) rad
+float32[3] pos_des         # Currently not open. x y (maximum value 0.2) z (maximum value 0.3) m
+float32[3] acc_des         # Currently not available. acc for jump m^2/s
+float32[3] ctrl_point      # Currently not available. pose ctrl point m
+float32[3] foot_pose       # Currently not open. front/back foot pose x,y,z m
+float32[2] step_height     # The leg lifting height when walking, the default can be set to 0.05m
 ```
 
 ### Servo command feedback
 
 - Specific function: Feedback to the user the current servo command execution status (including the current gait and whether the execution result of the servo command is correct)
-- Interface form: ros topic
-- Interface name: "motion_servo_response"
-- Message file: protocol/msg/MotionServoResponse.msg
+- Interface form:    ros topic
+- Interface name:    "motion_servo_response"
+- Message file:      protocol/msg/MotionServoResponse.msg
 - Message content:
 
 ```js
 int32 motion_id
-int8 order_process_bar # Action execution progress
-int8 status # Status of motion control gait switching
-bool result # Whether the action was executed successfully
-int32 code # Error code when exception occurs
+int8 order_process_bar   # Action execution progress
+int8 status              # Status of motion control gait switching
+bool result              # Whether the action was executed successfully
+int32 code               # Error code when exception occurs
 ```
 
 ### Result command
 
-- Specific functions: In the form of client/server, it accepts motion instructions, completes all preset actions, returns the execution results of all actions, and reports all abnormal causes, including motor abnormalities, state machine abnormalities, operation control abnormalities, etc. . At the same time, actions can also be customized by users in visual programming. Currently, the customizable parameters are relatively limited, including the foothold position, the flight time of the legs, and the overall speed of the robot dog. After the action is defined, it can be called in visual programming using the same interface as the built-in action. Built-in actions include:
+- Specific functions: In the form of client/server, it accepts motion instructions, completes all preset actions, returns the execution results of all actions, and reports all abnormal causes, including motor abnormalities, state machine abnormalities, operation control abnormalities, etc... At the same time, actions can also be customized by users in visual programming. Currently, the customizable parameters are relatively limited, including the foothold position, the flight time of the legs, and the overall speed of the robot dog. After the action is defined, it can be called in visual programming using the same interface as the built-in action. Built-in actions include:
 
 | motion_id | motion name | motion_id | motion name | motion_id | motion name |
 | --------- | -------------- | --------- | -------------- | --------- | ---------------- |
@@ -65,28 +65,28 @@ int32 code # Error code when exception occurs
 | 125 | Walking the dog | 142 | Shaking the right hand | 175 | Showing respect |
 | 130 | 3D jump and turn left 90 degrees | 143 | Sit down | | |
 
-- Interface form: ros service
-- Interface name: "motion_result_cmd"
-- Service file: protocol/srv/MotionResultCmd.srv
+- Interface form:  ros service
+- Interface name:  "motion_result_cmd"
+- Service file:    protocol/srv/MotionResultCmd.srv
 - Service Content:
 
 ```js
-int32 motion_id #Robot motion control posture
-int32 cmd_source #Command source,
-                            # 0: App, 1: Audio, 2: Vis, 3: BluTele 4: Algo
-float32[3] vel_des # Currently not available. x y (maximum value 1.5, m/s) yaw (maximum value 2.0, rad/s)
-float32[3] rpy_des # roll pitch yaw (maximum value 0.4) rad
-float32[3] pos_des # x y (maximum value 0.2) z (maximum value 0.3) m
-float32[3] acc_des # Currently not available. acc for jump m^2/s
-float32[3] ctrl_point # Currently not available. pose ctrl point m
-float32[3] foot_pose # Currently not open. front/back foot pose x,y,z m
-float32[2] step_height # Leg lifting height, currently can be set by 0.05m
-int32 duration # Expectations set when performing incremental position control, incremental force control, and absolute force control posture control
-                            # Complete time
+int32 motion_id           #Robot motion control posture
+int32 cmd_source          #Command source,
+                          # 0: App, 1: Audio, 2: Vis, 3: BluTele 4: Algo
+float32[3] vel_des        # Currently not available. x y (maximum value 1.5, m/s) yaw (maximum value 2.0, rad/s)
+float32[3] rpy_des        # roll pitch yaw (maximum value 0.4) rad
+float32[3] pos_des        # x y (maximum value 0.2) z (maximum value 0.3) m
+float32[3] acc_des        # Currently not available. acc for jump m^2/s
+float32[3] ctrl_point     # Currently not available. pose ctrl point m
+float32[3] foot_pose      # Currently not open. front/back foot pose x,y,z m
+float32[2] step_height    # Leg lifting height, currently can be set by 0.05m
+int32 duration            # Expectations set when performing incremental position control, incremental force control, and absolute force control posture control
+                          # Complete time
 ---
-int32 motion_id #Robot motion control posture
-bool result #Execution result
-int32 code # module code
+int32 motion_id           #Robot motion control posture
+bool result               #Execution result
+int32 code                # module code
 ```
 
 ##Visual function
@@ -96,17 +96,17 @@ int32 code # module code
 **CameraService.srv** 
 
 ```Go
-uint8 SET_PARAMETERS = 0
-uint8 TAKE_PICTURE = 1
-uint8 START_RECORDING = 2
-uint8 STOP_RECORDING = 3
-uint8 GET_STATE = 4
-uint8 DELETE_FILE = 5
-uint8 GET_ALL_FILES = 6
-uint8 START_LIVE_STREAM = 7
-uint8 STOP_LIVE_STREAM = 8
-uint8 START_IMAGE_PUBLISH = 9
-uint8 STOP_IMAGE_PUBLISH = 10
+uint8 SET_PARAMETERS        = 0
+uint8 TAKE_PICTURE          = 1
+uint8 START_RECORDING       = 2
+uint8 STOP_RECORDING        = 3
+uint8 GET_STATE             = 4
+uint8 DELETE_FILE           = 5
+uint8 GET_ALL_FILES         = 6
+uint8 START_LIVE_STREAM     = 7
+uint8 STOP_LIVE_STREAM      = 8
+uint8 START_IMAGE_PUBLISH   = 9
+uint8 STOP_IMAGE_PUBLISH    = 10
 uint8 command
 
 # command arguments
@@ -116,13 +116,13 @@ uint16 height
 uint16 fps
 
 ---
-uint8 RESULT_SUCCESS = 0
-uint8 RESULT_INVALID_ARGS = 1
-uint8 RESULT_UNSUPPORTED = 2
-uint8 RESULT_TIMEOUT = 3
-uint8 RESULT_BUSY = 4
-uint8 RESULT_INVALID_STATE = 5
-uint8 RESULT_INNER_ERROR = 6
+uint8 RESULT_SUCCESS         = 0
+uint8 RESULT_INVALID_ARGS    = 1
+uint8 RESULT_UNSUPPORTED     = 2
+uint8 RESULT_TIMEOUT         = 3
+uint8 RESULT_BUSY            = 4
+uint8 RESULT_INVALID_STATE   = 5
+uint8 RESULT_INNER_ERROR     = 6
 uint8 RESULT_UNDEFINED_ERROR = 255
 uint8 result
 string msg
@@ -149,9 +149,7 @@ ros2 lifecycle set /stereo_camera cleanup
 - Get images
 
 Interface form: ros topic
-
 Interface name: camera_server
-
 Topic name:
 
 ```Bash
@@ -190,9 +188,7 @@ ros2 service call /camera_service protocol/srv/CameraService "{command: 10, args
 - Get images
 
 Interface form: ros topic
-
 Interface name: camera_server
-
 Topic name:
 
 ```Bash
@@ -247,9 +243,7 @@ Image data topic content: sensor_msgs::msg::Image
 - Get images
 
 Interface form: ros topic
-
 Interface name: realsense2_camera_node, realsense_align_node
-
 Topic name:
 
 ```Bash
@@ -333,7 +327,6 @@ float64[9] linear_acceleration_covariance
 - Interface name:
 
 service: "cyberdog_face_entry_srv"
-
 topic: "face_entry_msg"
 
 - Service file: protocol/srv/FaceEntry.srv
@@ -364,95 +357,62 @@ int32 result                        #Request entry service result
 string allfaces                     #Get all faces
 ```
 
-- 消息文件：protocol/msg/FaceEntryResult.msg
-- 消息文件内容：
+- Message file: protocol/msg/FaceEntryResult.msg
+- Message file content:
 
 ```Go
 // protocol/msg/FaceEntryResult.msg
-
-int32  RESULT_SUCCESS =0                  #录入结果成功
-
-int32  RESULT_TIMEOUT =5907               #录入超时
-
-int32  RESULT_FACE_ALREADY_EXIST = 5921   #人脸已存在
-
-
-
-int32  result                             #录入结果
-
-string username                           #录入的名字
+int32 RESULT_SUCCESS            = 0    #The entry result is successful
+int32 RESULT_TIMEOUT            = 5907 #Input timeout
+int32 RESULT_FACE_ALREADY_EXIST = 5921 #Face already exists
+int32 result                           #Input result
+string username                        #Entered name
 ```
 
-#### 人脸识别 
+#### Face recognition
 
-- 具体功能：识别数据库中已录入的人脸。
-- 接口形式：ros service/topic  当前人脸识别模块提供一个service和一个topic，service用于激活人脸识别功能，激活后，在规定的timeout时间内，该节点会发布检测到人脸ID的topic。
-- 接口名称：
+- Specific function: Recognize faces entered in the database.
+- Interface form: ros service/topic The current face recognition module provides a service and a topic. The service is used to activate the face recognition function. After activation, within the specified timeout period, the node will publish the topic that detects the face ID. .
+- Interface name:
 
-service："cyberdog_face_recognition_srv" 
+service: "cyberdog_face_recognition_srv"
 
-topic： "face_rec_msg" 
+topic: "face_rec_msg"
 
-- 服务文件：protocol/srv/FaceRec.srv
-- 服务文件内容
+- Service file: protocol/srv/FaceRec.srv
+- Service file content
 
 ```Go
 #request
-
-int32 COMMAND_RECOGNITION_ALL = 0             #请求识别所有人
-
-int32 COMMAND_RECOGNITION_SINGLE = 1          #请求识别某个人
-
-int32 COMMAND_RECOGNITION_CANCEL = 2          #取消识别人脸
-
-int32 MAX_TIMEOUT = 300                       #识别最大时长
-
-int32 MIN_TIMEOUT = 30                        #识别做小时长
-
-int32 DEFAULT_TIMEOUT = 60                    #默认识别时长
-
-
-
-int32 command                                 #请求识别指令
-
-string username                               #识别人脸的名字
-
-string id                                     #识别人脸的id
-
-int32 timeout                                 #有效时间30s～300s，default = 60 
-
-                                              #如果不添加该字段，采用默认值
-
+int32 COMMAND_RECOGNITION_ALL    = 0    #Request to identify everyone
+int32 COMMAND_RECOGNITION_SINGLE = 1    #Request to identify a person
+int32 COMMAND_RECOGNITION_CANCEL = 2    #Cancel face recognition
+int32 MAX_TIMEOUT                = 300  #Identify the maximum duration
+int32 MIN_TIMEOUT                = 30   #Identify the hour length
+int32 DEFAULT_TIMEOUT            = 60   #Default recognition duration
+int32 command                           #Request identification command
+string username                         #Name of face recognition
+string id                               #identify the id of the face
+int32 timeout                           #valid time 30s～300s, default = 60
+                                        #If this field is not added, the default value will be used
 ---
-
-int32 ENABLE_SUCCESS = 0                      #请求识别成功
-
-int32 ENABLE_FAIL = 5901                      #请求识别失败
-
-int32 result                                  #请求识别结果
+int32 ENABLE_SUCCESS             = 0    #Request identification successful
+int32 ENABLE_FAIL                = 5901 #Request identification failed
+int32 result                            #Request identification result
 ```
 
-- 消息文件：protocol/msg/FaceRecognitionResult.msg
-- 消息文件内容：
+- Message file: protocol/msg/FaceRecognitionResult.msg
+- Message file content:
 
 ```C%2B%2B
 // protocol/msg/FaceRecognitionResult.msg
-
-int32 RESULT_SUCCESS =0                      #识别成功
-
-int32 RESULT_TIMEOUT =5907                   #识别超时
-
-
-
-string username                              #识别到人脸的名字
-
-int32 result                                 #识别结果
-
-string id                                    #识别到人脸的ID
-
-float32 age                                  #识别到的年龄
-
-float32 emotion                              #识别到的情绪
+int32 RESULT_SUCCESS              = 0    #Identification successful
+int32 RESULT_TIMEOUT              = 5907 #Identification timeout
+string username                          #The name of the recognized face
+int32 result                             #recognition result
+string id                                #The ID of the face recognized
+float32 age                              #Recognized age
+float32 emotion                          #Recognized emotion
 ```
 
 ### 动态手势识别 
