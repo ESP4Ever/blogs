@@ -66,63 +66,63 @@ bool result # Whether the action was executed successfully
 int32 code # Error code when exception occurs
 ```
 
-### 结果指令 
+### Result command
 
-- 具体功能：以客户端/服务端的形式，接受运动指令，完成预置的所有动作，能够返回所有动作的执行结果，并上报所有的异常原因，包括电机异常、状态机异常、运控异常等。同时还可以在可视化编程中由用户自定义动作，目前放开的自定义参数较为有限，包含落足点位置、足腿的腾空时间、机器狗的整体速度等参数。动作完成定义后，即可与内置动作采用相同的接口在可视化编程中实现调用。内置动作包括：
+- Specific functions: In the form of client/server, it accepts motion instructions, completes all preset actions, returns the execution results of all actions, and reports all abnormal causes, including motor abnormalities, state machine abnormalities, operation control abnormalities, etc. . At the same time, actions can also be customized by users in visual programming. Currently, the customizable parameters are relatively limited, including the foothold position, the flight time of the legs, and the overall speed of the robot dog. After the action is defined, it can be called in visual programming using the same interface as the built-in action. Built-in actions include:
 
-| motion_id | 动作名称       | motion_id | 动作名称       | motion_id | 动作名称         |
+| motion_id | motion name | motion_id | motion name | motion_id | motion name |
 | --------- | -------------- | --------- | -------------- | --------- | ---------------- |
-| 0         | 急停           | 131       | 3D跳跃右转90度 | 144       | 屁股画圆   |
-| 101       | 高阻尼趴下     | 132       | 3D跳跃前跳60cm | 145       | 头画圆   |
-| 111       | 恢复站立       | 134       | 3D跳跃左跳20cm | 146       | 伸展身体   |
-| 118       | 强化起身        | 135      | 3D跳跃右跳20cm | 151       | 芭蕾舞  |
-| 121       | 后空翻         | 140       | 舞蹈集合       | 152       | 太空步         |
-| 123       | 作揖           | 141       | 握左手       | 174       | 俯卧撑 |
-| 125       | 遛狗           | 142       | 握右手         | 175       | 作揖比心     |
-| 130       | 3D跳跃左转90度  | 143       | 坐下         |           |        |
+| 0 | Emergency stop | 131 | 3D jump and turn right 90 degrees | 144 | Butt circle |
+| 101 | High damping lying down | 132 | 3D jump forward 60cm | 145 | Draw a circle with the head |
+| 111 | Return to standing | 134 | 3D jump left jump 20cm | 146 | Stretching |
+| 118 | Strengthen getting up | 135 | 3D jump right jump 20cm | 151 | Ballet |
+| 121 | Backflip | 140 | Dance Set | 152 | Moonwalk |
+| 123 | Bow | 141 | Hold left hand | 174 | Push-ups |
+| 125 | Walking the dog | 142 | Shaking the right hand | 175 | Showing respect |
+| 130 | 3D jump and turn left 90 degrees | 143 | Sit down | | |
 
-- 接口形式：ros service
-- 接口名字："motion_result_cmd"
-- 服务文件：protocol/srv/MotionResultCmd.srv
-- 服务内容：
+- Interface form: ros service
+- Interface name: "motion_result_cmd"
+- Service file: protocol/srv/MotionResultCmd.srv
+- Service Content:
 
 ```js
-int32         motion_id    # 机器人运控姿态
+int32 motion_id #Robot motion control posture
 
-int32         cmd_source   # 指令来源，
+int32 cmd_source #Command source,
 
-                           # 0：App, 1: Audio, 2: Vis， 3: BluTele 4: Algo
+                            # 0: App, 1: Audio, 2: Vis, 3: BluTele 4: Algo
 
-float32[3]    vel_des      # 当前暂不开放。x y(最大值1.5，m/s） yaw（最大值2.0，rad/s）
+float32[3] vel_des # Currently not available. x y (maximum value 1.5, m/s) yaw (maximum value 2.0, rad/s)
 
-float32[3]    rpy_des      # roll pitch yaw（最大值0.4）rad
+float32[3] rpy_des # roll pitch yaw (maximum value 0.4) rad
 
-float32[3]    pos_des      # x y（最大值0.2）z（最大值0.3) m
+float32[3] pos_des # x y (maximum value 0.2) z (maximum value 0.3) m
 
-float32[3]    acc_des      # 当前暂不开放。acc for jump m^2/s
+float32[3] acc_des # Currently not available. acc for jump m^2/s
 
-float32[3]    ctrl_point   # 当前暂不开放。pose ctrl point  m
+float32[3] ctrl_point # Currently not available. pose ctrl point m
 
-float32[3]    foot_pose    # 当前暂不开放。front/back foot pose x,y,z  m
+float32[3] foot_pose # Currently not open. front/back foot pose x,y,z m
 
-float32[2]    step_height  # 抬腿高度，当前可按0.05m设定
+float32[2] step_height # Leg lifting height, currently can be set by 0.05m
 
-int32         duration     # 进行增量位控和增量力控、绝对量力控姿态控制时设定的期望
+int32 duration # Expectations set when performing incremental position control, incremental force control, and absolute force control posture control
 
-                           # 完成时间
+                            # Complete time
 
 ---
 
-int32         motion_id    # 机器人运控姿态
+int32 motion_id #Robot motion control posture
 
-bool          result       # 执行结果
+bool result #Execution result
 
-int32         code         # module code
+int32 code # module code
 ```
 
-## 视觉功能 
+##Visual function
 
-### 相机服务
+### Camera Service
 
 **CameraService.srv** 
 
