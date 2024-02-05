@@ -9,7 +9,7 @@
 
 ### Design
 
-[cyberdog_grpc design document](/cn/cyberdog_grpc_cn.md)
+[cyberdog_grpc design document](/en/cyberdog_grpc.md)
 
 
 ## sport control
