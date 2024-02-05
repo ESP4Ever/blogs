@@ -1,50 +1,50 @@
 <h1 align="center">
-  四足机器人开发指南
+   Quadruped Robot Development Guide
 </h1>
 
 
-## 简介
+## Introduction
 
-本文基于小米四足开发平台做软件开发指导。
+This article provides software development guidance based on Xiaomi's four-legged development platform.
 
 
 
-## 框架
+## Frame
 
-**开发整体框架图**
+**Develop overall framework diagram**
 
 ![dev](./image/dev.png)
 
-**开发方式**
+**Development Method**
 
-1. 基于PC端编写程序，通过grpc或ros对机器人进行调度
-2. 基于NX端编写调度程序，对现有的服务类ros接口进行调用（推荐）
-3. 基于NX端改写程序，对现有的调度类或服务类业务进行二次开发
+1. Write a program based on PC and schedule the robot through grpc or ros.
+2. Write a scheduler based on NX and call the existing service class ros interface (recommended)
+3. Rewrite the program based on the NX side to conduct secondary development of existing scheduling or service businesses
 
-**开发流程**
+**Development Process**
 
-1. 通过手机APP申请开发者权限
+1. Apply for developer permission through mobile APP
 
-2. 与机器人建立连接（无线有线均可）
+2. Establish a connection with the robot (either wireless or wired)
 
-   - 有线登录方式，USB-Type数据线连接PC与机器人Download口：
+    - Wired login method, USB-Type data cable connects the PC and the robot Download port:
 
-     `ssh mi@192.168.55.1`
+      `ssh mi@192.168.55.1`
 
-     `passwd: "123"`
+      `passwd: "123"`
 
-   - 无线方式，通过app给机器人连网，使用无线网IP（app内可查看）登录
+    - Wirelessly, connect the robot to the Internet through the app, and log in using the wireless network IP (which can be viewed in the app)
 
-   ![connect](./image/connect.png)
+    ![connect](./image/connect.png)
 
-3. 按照你想要的方式开始即可
+3. Just start the way you want
 
 
 
-## 资源
+## resource
 
-- 核心代码开源：[Github地址](https://github.com/MiRoboticsLab/cyberdog_ws)
-- 开发者手册（API，上述第1、2种开发方式）：[博客地址](https://miroboticslab.github.io/blogs/#/cn/developer_guide)
-- 程序设计（源码，上述第3种开发方式）：应用文档，运控文档，slam文档以及感知文档；
-- 刷机：[博客地址](https://miroboticslab.github.io/blogs/#/cn/cyberdog_flash)
-- 运营咨询：[mi-cyberdog@xiaomi.com](mailto:mi-cyber@xiaomi.com) 
+- Core code open source: [Github address](https://github.com/MiRoboticsLab/cyberdog_ws)
+- Developer manual (API, 1st and 2nd development methods above): [Blog address](https://miroboticslab.github.io/blogs/#/cn/developer_guide)
+- Programming (source code, the third development method mentioned above): application documents, operation control documents, slam documents and perception documents;
+- Flash: [blog address](https://miroboticslab.github.io/blogs/#/cn/cyberdog_flash)
+- Operation consultation: [mi-cyberdog@xiaomi.com](mailto:mi-cyber@xiaomi.com)
