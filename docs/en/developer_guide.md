@@ -20,29 +20,17 @@
 
 ```js
 int32 motion_id #Robot motion control posture
-
 int32 cmd_type # Instruction type constraints, 1: Data, 2: End;
-
                             # The Data frame writes the following parameters according to the control requirements, and the End frame does not need to fill in the parameters.
-
 int32 cmd_source #Command source,
-
                             # 0: App, 1: Audio, 2: Vis, 3: BluTele 4: Algo
-
 int32 value # 0, inward gait, 2, vertical gait
-
 float32[3] vel_des # x y (maximum value 1.5) yaw (maximum value 2.0) speed m/s
-
 float32[3] rpy_des # Currently not available. roll pitch yaw (maximum value 0.4) rad
-
 float32[3] pos_des # Currently not open. x y (maximum value 0.2) z (maximum value 0.3) m
-
 float32[3] acc_des # Currently not available. acc for jump m^2/s
-
 float32[3] ctrl_point # Currently not available. pose ctrl point m
-
 float32[3] foot_pose # Currently not open. front/back foot pose x,y,z m
-
 float32[2] step_height # The leg lifting height when walking, the default can be set to 0.05m
 ```
 
@@ -56,13 +44,9 @@ float32[2] step_height # The leg lifting height when walking, the default can be
 
 ```js
 int32 motion_id
-
 int8 order_process_bar # Action execution progress
-
 int8 status # Status of motion control gait switching
-
 bool result # Whether the action was executed successfully
-
 int32 code # Error code when exception occurs
 ```
 
@@ -140,13 +124,8 @@ uint8 RESULT_BUSY = 4
 uint8 RESULT_INVALID_STATE = 5
 uint8 RESULT_INNER_ERROR = 6
 uint8 RESULT_UNDEFINED_ERROR = 255
-
-
-
 uint8 result
-
 string msg
-
 int32 code
 ```
 
@@ -160,15 +139,10 @@ ros2 launch camera_test stereo_camera.py
 #View name space
 ros2 node list
 
-
 ###If it starts automatically at boot, please add the namespace before the topic.
-
 ros2 lifecycle set /stereo_camera configure
-
 ros2 lifecycle set /stereo_camera activate
-
 ros2 lifecycle set /stereo_camera deactivate
-
 ros2 lifecycle set /stereo_camera cleanup
 ```
 
@@ -183,18 +157,13 @@ Topic name:
 ```Bash
 #Use topic to subscribe to rgb camera, left fisheye camera, right fisheye camera
 
-
-
 #left eye
-
 /image_left
 
 #right eye
-
 /image_right
 
 #rgbcamera
-
 /image_rgb
 ```
 
@@ -230,7 +199,6 @@ Topic name:
 #Use topic to subscribe to AI camera
 
 #AIcameratopic
-
 topic: /image
 ```
 
@@ -246,61 +214,33 @@ Image data topic content: sensor_msgs::msg::Image
 
 ```Bash
    #/camera/camera node startup command
-
    ros2 launch realsense2_camera on_dog.py
 
-  
-
    #initialization
-
    ros2 lifecycle set /camera/camera configure
 
-  
-
    #Open data
-
    ros2 lifecycle set /camera/camera activate
 
-  
-
    #Close data
-
    ros2 lifecycle set /camera/camera deactivate
 
-  
-
    #Reset node
-
    ros2 lifecycle set /camera/camera cleanup
 
-  
-
    #/camera/camera_align node startup command
-
    ros2 launch realsense2_camera realsense_align_node.launch.py
 
-  
-
    #initialization
-
    ros2 lifecycle set /camera/camera_align configure
 
-  
-
    #Open data
-
    ros2 lifecycle set /camera/camera_align activate
 
-  
-
    #Close data
-
    ros2 lifecycle set /camera/camera_align deactivate
 
-  
-
    #Reset node
-
    ros2 lifecycle set /camera/camera_align cleanup
 ```
 
@@ -316,23 +256,18 @@ Topic name:
 ---You need to add a domain name to start automatically at boot.
 
 #lefteyeimage
-
 /camera/infra1/image_rect_raw
 
 #righteyeimage
-
 /camera/infra1/image_rect_raw
 
 #Depth map
-
 /camera/depth/image_rect_raw
 
 #IMUdata
-
 /camera/imu
 
 #aligndepth map
-
 /camera/aligned_depth_to_extcolor/image_raw
 ```
 
@@ -340,89 +275,49 @@ Image data topic content
 
 ```js
 # Header (timestamp and frame)
-
 std_msgs/Header header
 
-
-
 # image height, that is, number of rows
-
 uint32 height
 
-
-
 # image width, that is, number of columns
-
 uint32 width
 
-
-
 # Encoding of pixels -- channel meaning, ordering, size
-
 string encoding
 
-
-
 # is this data bigendian?
-
 uint8 is_bigendian
 
-
-
 # Full row length in bytes
-
 #uint32 step
 
-
-
 # actual matrix data, size is (step * rows)
-
 #uint8[] data
-
- 
 ```
 
 IMU data topic content
 
 ```Bash
 #Header (timestamp and frame)
-
 std_msgs/Header header
 
-  
-
 #orientation
-
 geometry_msgs/Quaternion orientation
 
-
-
 #orientation_covariance
-
 double[9] orientation_covariance
 
-
-
 #angular_velocity
-
 geometry_msgs/Vector3 angular_velocity
 
-
-
 #angular_velocity_covariance
-
 float64[9] angular_velocity_covariance
 
-
-
 #linear_acceleration
-
 geometry_msgs/Vector3 linear_acceleration
 
-
-
 #linear_acceleration_covariance
-
 float64[9] linear_acceleration_covariance
 ```
 
@@ -446,52 +341,27 @@ topic: "face_entry_msg"
 
 ```Go
 # request
-
-int32 ADD_FACE = 0 #Add face
-
-int32 CANCEL_ADD_FACE = 1 #Cancel adding face
-
-int32 CONFIRM_LAST_FACE = 2 #Confirm the last face
-
-int32 UPDATE_FACE_ID = 3 #Update face ID
-
-int32 DELETE_FACE = 4 #Delete face
-
-int32 GET_ALL_FACES = 5 #Get all faces
-
-
-
-int32 command #Face input command
-
-string username #User name
-
-string origine #User’s original name
-
-bool ishost #Whether it is the owner
-
+int32 ADD_FACE               = 0    #Add face
+int32 CANCEL_ADD_FACE        = 1    #Cancel adding face
+int32 CONFIRM_LAST_FACE      = 2    #Confirm the last face
+int32 UPDATE_FACE_ID         = 3    #Update face ID
+int32 DELETE_FACE            = 4    #Delete face
+int32 GET_ALL_FACES          = 5    #Get all faces
+int32 command                       #Face input command
+string username                     #User name
+string origine                      #User’s original name
+bool ishost                         #Whether it is the owner
 ---
-
-int32 RESULT_SUCCESS = 0 #Request for entry service successful
-
-int32 RESULT_INVALID_ARGS = 5910 #The input parameters are invalid parameters
-
-int32 RESULT_UNSUPPORTED = 5908 #Does not support entry
-
-int32 RESULT_TIMEOUT = 5907 #Input timeout
-
-int32 RESULT_BUSY = 5911 #Input busy
-
-int32 RESULT_INVALID_STATE = 5903 #Input invalid status
-
-int32 RESULT_INNER_ERROR = 5904 #Internal error
-
+int32 RESULT_SUCCESS         = 0    #Request for entry service successful
+int32 RESULT_INVALID_ARGS    = 5910 #The input parameters are invalid parameters
+int32 RESULT_UNSUPPORTED     = 5908 #Does not support entry
+int32 RESULT_TIMEOUT         = 5907 #Input timeout
+int32 RESULT_BUSY            = 5911 #Input busy
+int32 RESULT_INVALID_STATE   = 5903 #Input invalid status
+int32 RESULT_INNER_ERROR     = 5904 #Internal error
 int32 RESULT_UNDEFINED_ERROR = 5901 #Unknown error
-
-
-
-int32 result #Request entry service result
-
-string allfaces #Get all faces
+int32 result                        #Request entry service result
+string allfaces                     #Get all faces
 ```
 
 - 消息文件：protocol/msg/FaceEntryResult.msg
