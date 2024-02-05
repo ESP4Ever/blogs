@@ -44,7 +44,7 @@ This article provides software development guidance based on Xiaomi's four-legge
 ## resource
 
 - Core code open source (v2): [Github address](https://github.com/MiRoboticsLab/cyberdog_ws)
-- Developer manual (API, 1st and 2nd development methods above): [Blog address]([docs/en/developer_guide.md](https://github.com/ESP4Ever/blogs/blob/rolling/docs/en/developer_guide.md))
+- Developer manual (API, 1st and 2nd development methods above): [Blog address](https://github.com/ESP4Ever/blogs/blob/rolling/docs/en/developer_guide.md)
 - Programming (source code, the third development method mentioned above): application documents, operation control documents, slam documents and perception documents;
 - Flash: [blog address](https://miroboticslab.github.io/blogs/#/cn/cyberdog_flash)
 - Operation consultation: [mi-cyberdog@xiaomi.com](mailto:mi-cyber@xiaomi.com)
