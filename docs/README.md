@@ -13,7 +13,7 @@ This article provides software development guidance based on Xiaomi's four-legge
 
 **Develop overall framework diagram**
 
-![dev](./image/dev.png)
+![dev](./image/dev_en.png)
 
 **Development Method**
 
