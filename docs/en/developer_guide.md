@@ -1903,17 +1903,11 @@ Visual following can be divided into human body following and all things followi
 
 ```js
 "nav_type: 13" # 13 means starting visual following
-
 "object_tracking: true" # true means to start tracking of all things, false means to start following of human body
-
 "relative_pos: 200: # 200: Independently choose to follow the position
-
                           #201: Follow behind the target
-
                           #202: Follow left of target
-
                           #203: Follow on the right side of the target
-
 "keep_distance: 1.2" # Set following distance
 ```
 
@@ -1937,20 +1931,14 @@ Visual following can be divided into human body following and all things followi
 
 ```js
 "nav_type: 11" # 11 means to start UWB following
-
 "relative_pos: 200: # 200: Independently choose to follow the position
-
                           #201: Follow behind the target
-
                           #202: Follow left of target
-
                           #203: Follow on the right side of the target
-
 "keep_distance: 1.2" # Set following distance
 ```
 
  
-
 - For the shutdown method, see the shutdown task service interface, where the required key request fields include:
 
 ```js
@@ -1986,23 +1974,14 @@ The content format of data is json, there are two types:
 
 ```JSON
 {
-
      "offer_sdp" : {
-
          "sdp" : "sdp content",
-
          "type" : "sdp type"
-
      },
-
      "uid" : "identification code",
-
      "height" : "The height of the mobile phone screen",
-
      "width" : "Width of the mobile phone screen",
-
      "alignment" : "top or middle or bottom"
-
 }
 ```
 
@@ -2010,19 +1989,12 @@ The content format of data is json, there are two types:
 
 ```JSON
 {
-
      "c_sdp" : {
-
          "sdpMid" : "If present, this is the value of the \"a=mid\" attribute of the candidate's m= section in SDP, which identifies the m= section",
-
          "sdpMLineIndex" : "This indicates the index (starting at zero) of m= section this candidate is associated with. Needed when an endpoint doesn't support MIDs",
-
          "candidate" : "ice candidate content"
-
      },
-
      "uid" : "identification code"
-
 }
 ```
 
@@ -2043,17 +2015,11 @@ The content format of data is json, there are two types:
 
 ```JSON
 {
-
      "answer_sdp" : {
-
          "sdp" : "sdp content",
-
          "type" : "sdp type"
-
      },
-
      "uid" : "identification code",
-
 }
 ```
 
@@ -2061,19 +2027,12 @@ The content format of data is json, there are two types:
 
 ```JSON
 {
-
      "c_sdp" : {
-
          "sdpMid" : "If present, this is the value of the \"a=mid\" attribute of the candidate's m= section in SDP, which identifies the m= section",
-
          "sdpMLineIndex" : "This indicates the index (starting at zero) of m= section this candidate is associated with. Needed when an endpoint doesn't support MIDs",
-
          "candidate" : "ice candidate content"
-
      },
-
      "uid" : "identification code"
-
 }
 ```
 
@@ -2089,63 +2048,34 @@ The content format of data is json, there are two types:
 
 ```js
 uint8 SET_PARAMETERS = 0 #Set internal parameters
-
 uint8 TAKE_PICTURE = 1 #Photography command, take a photo each time, the photo file is saved in /home/mi/Camera
-
 uint8 START_RECORDING = 2 #Start recording command
-
 uint8 STOP_RECORDING = 3 #End recording command, the video file is saved in /home/mi/Camera
-
 uint8 GET_STATE = 4 #Get the status of whether it is currently recording or not
-
 uint8 DELETE_FILE = 5 #Delete the specified photo or video file
-
 uint8 GET_ALL_FILES = 6 #Get the file names of all saved photos and videos
-
 uint8 START_LIVE_STREAM = 7 #Enable image transmission command
-
 uint8 STOP_LIVE_STREAM = 8 #End image transmission command
-
 uint8 START_IMAGE_PUBLISH = 9 #Enable image publishing command, topic name: /image
-
 uint8 STOP_IMAGE_PUBLISH = 10 #Close image publishing instruction
-
-
-
 uint8 command
 
 # command arguments
-
 string args
-
 uint16 width
-
 uint16 height
-
 uint16 fps
 
 ---
-
 uint8 RESULT_SUCCESS = 0 #Success
-
 uint8 RESULT_INVALID_ARGS = 1 #Invalid parameters
-
 uint8 RESULT_UNSUPPORTED = 2 #Not supported
-
 uint8 RESULT_TIMEOUT = 3 #Timeout
-
 uint8 RESULT_BUSY = 4 #Busy
-
 uint8 RESULT_INVALID_STATE = 5 #Invalid state
-
 uint8 RESULT_INNER_ERROR = 6 #Internal error
-
 uint8 RESULT_UNDEFINED_ERROR = 255 #Undefined error
-
-
-
 uint8 result
-
 string msg
 ```
 
@@ -2165,63 +2095,33 @@ This service will be called when taking pictures, and the command is TAKE_PICTUR
 
 ```js
 uint8 SET_PARAMETERS = 0 #Set internal parameters
-
 uint8 TAKE_PICTURE = 1 #Photography command, take a photo each time, the photo file is saved in /home/mi/Camera
-
 uint8 START_RECORDING = 2 #Start recording command
-
 uint8 STOP_RECORDING = 3 #End recording command, the video file is saved in /home/mi/Camera
-
 uint8 GET_STATE = 4 #Get the status of whether it is currently recording or not
-
 uint8 DELETE_FILE = 5 #Delete the specified photo or video file
-
 uint8 GET_ALL_FILES = 6 #Get the file names of all saved photos and videos
-
 uint8 START_LIVE_STREAM = 7 #Enable image transmission command
-
 uint8 STOP_LIVE_STREAM = 8 #End image transmission command
-
 uint8 START_IMAGE_PUBLISH = 9 #Enable image publishing command, topic name: /image
-
 uint8 STOP_IMAGE_PUBLISH = 10 #Close image publishing instruction
-
-
-
 uint8 command
 
 # command arguments
-
 string args
-
 uint16 width
-
 uint16 height
-
 uint16 fps
-
 ---
-
 uint8 RESULT_SUCCESS = 0 #Success
-
 uint8 RESULT_INVALID_ARGS = 1 #Invalid parameters
-
 uint8 RESULT_UNSUPPORTED = 2 #Not supported
-
 uint8 RESULT_TIMEOUT = 3 #Timeout
-
 uint8 RESULT_BUSY = 4 #Busy
-
 uint8 RESULT_INVALID_STATE = 5 #Invalid state
-
 uint8 RESULT_INNER_ERROR = 6 #Internal error
-
 uint8 RESULT_UNDEFINED_ERROR = 255 #Undefined error
-
-
-
 uint8 result
-
 string msg
 ```
 
