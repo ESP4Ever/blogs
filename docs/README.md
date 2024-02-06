@@ -6,7 +6,7 @@
 ## Introduction
 
 This article provides software development guidance based on Xiaomi's four-legged development platform.
-
+[Table of Contents](https://github.com/ESP4Ever/blogs/blob/rolling/docs/_table_of_contents.md)
 
 
 ## Frame
