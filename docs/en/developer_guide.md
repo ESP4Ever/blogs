@@ -408,18 +408,18 @@ float32 age                              #Recognized age
 float32 emotion                          #Recognized emotion
 ```
 
-### 动态手势识别 
+### Dynamic gesture recognition
 
-- 具体功能：连贯手势动作识别，包括手掌/手指向左挥动、手掌/手指向右挥动、手掌/手指向上移动、手掌/手指向下移动、手掌/手指张开、手掌/手指闭合。
-- 接口形式：ros service/topic  目前手势识别模块提供一个service和一个topic，service用于激活手势识别功能，激活后，在规定的timeout时间内，该节点会发布检测到的手势动作id的topic。
-- 接口名称：
+- Specific functions: Consecutive gesture action recognition, including palm/finger waving to the left, palm/finger waving to the right, palm/finger moving up, palm/finger moving down, palm/finger opening, palm/finger closing.
+- Interface form: ros service/topic The gesture recognition module currently provides a service and a topic. The service is used to activate the gesture recognition function. After activation, within the specified timeout, the node will publish the topic of the detected gesture action ID.
+- Interface name:
 
-service："gesture_action_control" 
+service: "gesture_action_control"
 
-topic： gesture_action_msg 
+topic: gesture_action_msg
 
-- 服务文件：protocol/srv/GestureActionControl.srv
-- 服务文件内容
+- Service file: protocol/srv/GestureActionControl.srv
+- Service file content
 
 ```C%2B%2B
 // protocol/srv/GestureActionControl.srv
@@ -428,136 +428,136 @@ uint8 START_ALGO = 0
 
 uint8 STOP_ALGO = 1
 
-int32 DEFAUT_TIMEOUT = 60               #算法持续时间默认为60s
+int32 DEFAUT_TIMEOUT = 60 #Algorithm duration defaults to 60s
 
 
 
-uint8 command                           #打开或者停止手势动作识别算法
+uint8 command #Open or stop gesture action recognition algorithm
 
-int32 timeout                           #算法持续时间有效时间为（1s-300s），请求中忽略此关键字
+int32 timeout #The algorithm duration is valid for (1s-300s), this keyword is ignored in the request
 
-                                        #取值范围不在（1s-300s）算法持续时间默认为60s。
+                                         #The value range is not (1s-300s) and the algorithm duration defaults to 60s.
 
 ---
 
-int32 RESULT_SUCCESS = 0                #请求成功回执
+int32 RESULT_SUCCESS = 0 #Request success receipt
 
-int32 RESULT_BUSY = 1                   #重复请求开启/关闭算法请求回执
+int32 RESULT_BUSY = 1 #Repeat request to turn on/off algorithm request receipt
 
 
 
-int32 code                              #请求回执
+int32 code #request receipt
 ```
 
-- 消息文件：protocol/msg/GestureActionResult.msg
-- 消息文件内容
+- Message file: protocol/msg/GestureActionResult.msg
+- Message file content
 
 ```C%2B%2B
 // protocol/msg/GestureActionResult.msg
 
-int32 NO_GESTURE =0                                      #没有手势
+int32 NO_GESTURE =0 #No gesture
 
-int32 PULLING_HAND_OR_TWO_FINGERS_IN =1                  #手掌拉近
+int32 PULLING_HAND_OR_TWO_FINGERS_IN =1 #Pull your palm closer
 
-int32 PUSHING_HAND_OR_TWO_FINGERS_AWAY =2                #手掌推开
+int32 PUSHING_HAND_OR_TWO_FINGERS_AWAY =2 #Push away with palm
 
-int32 SLIDING_HAND_OR_TWO_FINGERS_UP = 3                 #手向上抬
+int32 SLIDING_HAND_OR_TWO_FINGERS_UP = 3 #Raise hand up
 
-int32 SLIDING_HAND_OR_TWO_FINGERS_DOWN =4                #手向下压
+int32 SLIDING_HAND_OR_TWO_FINGERS_DOWN =4 #Hand down
 
-int32 SLIDING_HAND_OR_TWO_FINGERS_LEFT =5                #手向左推
+int32 SLIDING_HAND_OR_TWO_FINGERS_LEFT =5 #Push your hand to the left
 
-int32 SLIDING_HAND_OR_TWO_FINGERS_RIGHT =6               #手向右推
+int32 SLIDING_HAND_OR_TWO_FINGERS_RIGHT =6 #Push your hand to the right
 
-int32 STOP_SIGN =7                                       #停止手势 
+int32 STOP_SIGN =7 #Stop gesture
 
-int32 THUMB_UP =8                                        #大拇指朝上
+int32 THUMB_UP =8 #Thumbs up
 
-int32 ZOOMING_IN_WITH_HAND_OR_TWO_FINGERS = 9            #张开手掌或手指
+int32 ZOOMING_IN_WITH_HAND_OR_TWO_FINGERS = 9 #Open your palm or fingers
 
-int32 ZOOMING_OUT_WITH_HAND_OR_TWO_FINGERS =10           #闭合手掌或手指
+int32 ZOOMING_OUT_WITH_HAND_OR_TWO_FINGERS =10 #Close the palm or fingers
 
-int32 THUMB_DOWN =11                                     #大拇指朝下
+int32 THUMB_DOWN =11 #Thumbs down
 
 
 
-int32 id                                                 #手势识别结果id
+int32 id #gesture recognition result id
 ```
 
-### 表情识别 
+### Expression recognition
 
-- 具体功能：识别场景中目标人的表情，包括中性、微笑、大笑、生气、哭泣五种表情，如下所示：
+- Specific function: Recognize the expression of the target person in the scene, including five expressions: neutral, smiling, laughing, angry, and crying, as shown below:
 
-| 中性                                                         | 微笑                                                         | 大笑                                                         | 生气                                                         | 哭泣                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ![img](./image/developer_guide/image2.png) | ![img](./image/developer_guide/image3.png) | ![img](./image/developer_guide/image4.png) | ![img](./image/developer_guide/image5.png) | ![img](./image/developer_guide/image6.png) |
+| Neutral | Smile | Laugh | Angry | Cry |
+| -------------------------------------------------- ---------- | --------------------------------------- ---------------------------- | ---------------------------- ---------------------------------- | ---------------- -------------------------------------------------- | ----- -------------------------------------------------- ----- |
+| ![img](./image/developer_guide/image2.png) | ![img](./image/developer_guide/image3.png) | ![img](./image/developer_guide/image4.png) | ! [img](./image/developer_guide/image5.png) | ![img](./image/developer_guide/image6.png) |
 
-- 接口形式：ros service + topic  调用service开启人脸识别算法，请求中algo_enable传入参数ALGO_FACE。通过topic获取人脸识别结果，其中topic person的face_info.info[i].emotion表示对应人脸的表情信息。
-- 接口名称/服务文件/文件位置：统一见目标跟踪。
+- Interface form: ros service + topic Call service to enable the face recognition algorithm. In the request, algo_enable passes in the parameter ALGO_FACE. Obtain the face recognition results through the topic, where the face_info.info[i].emotion of the topic person represents the expression information of the corresponding face.
+- Interface name/service file/file location: See target tracking for unified information.
 
-### 年龄预测 
+### Age prediction
 
-- 具体功能：可预测场景中目标人的年龄，输出年龄范围为0-80。
-- 接口形式：ros service + topic  调用service开启人脸识别算法，请求中algo_enable传入参数ALGO_FACE。通过topic获取人脸识别结果，其中topic person的face_info.info[i].age表示对应人脸的年龄信息。
-- 接口名称/服务文件/文件位置：统一见目标跟踪。
+- Specific function: It can predict the age of the target person in the scene, and the output age range is 0-80.
+- Interface form: ros service + topic Call service to enable the face recognition algorithm. In the request, algo_enable passes in the parameter ALGO_FACE. Obtain the face recognition results through the topic, where the face_info.info[i].age of the topic person represents the age information of the corresponding face.
+- Interface name/service file/file location: See target tracking for unified information.
 
-### 人体骨骼点检测 
+### Human skeleton point detection
 
-- 具体功能：检测场景中所有人的关键点位置，单个目标人输出17个关键点的坐标，分别为：nose、left_eye、right_eye、left_ear、right_ear、left_shoulder、right_shoulder、left_elbow、right_elbow、left_wrist、right_wrist、left_hip、right_hip、left_knee、right_knee、left_ankle、right_ankle，对应各关键点位置如下：
+- Specific functions: detect the key point positions of all people in the scene, and output the coordinates of 17 key points for a single target person, which are: nose, left_eye, right_eye, left_ear, right_ear, left_shoulder, right_shoulder, left_elbow, right_elbow, left_wrist, right_wrist, left_hip, right_hip, left_knee, right_knee, left_ankle, right_ankle, the corresponding key point positions are as follows:
 
 ![img](./image/developer_guide/image1.png)
 
-- 接口形式：ros service + topic  调用service开启关键点检测算法，请求中algo_enable传入参数ALGO_BODY和ALGO_KEYPOINTS。通过topic获取关键点检测结果，其中topic person中body_info.infos[i].keypoints为关键点的位置信息。
-- 接口名称/服务文件/文件位置：统一见目标跟踪。
+- Interface form: ros service + topic Call service to enable the key point detection algorithm. In the request, algo_enable passes in the parameters ALGO_BODY and ALGO_KEYPOINTS. Obtain the key point detection results through the topic, where body_info.infos[i].keypoints in the topic person is the location information of the key points.
+- Interface name/service file/file location: See target tracking for unified information.
 
-### 静态手势识别 
+### Static gesture recognition
 
-- 具体功能：识别场景中所有人的手势，单个目标人对应一个手势，手势类别及定义如下所示：
+- Specific functions: Recognize the gestures of all people in the scene. A single target person corresponds to a gesture. The gesture categories and definitions are as follows:
 
- ![image-20230522152113978](./image/developer_guide/image-20230522152113978.png)
+  ![image-20230522152113978](./image/developer_guide/image-20230522152113978.png)
 
-- 接口形式：ros service + topic  调用service开启手势识别算法，请求中algo_enable传入参数ALGO_BODY和ALGO_GESTURE。通过topic获取手势识别结果，其中topic person中body_info.infos[i].gesture为手势识别的结果。
-- 接口名称/服务文件/文件位置：统一见目标跟踪。
+- Interface form: ros service + topic Call service to enable the gesture recognition algorithm. In the request, algo_enable passes in the parameters ALGO_BODY and ALGO_GESTURE. Get the gesture recognition result through topic, where body_info.infos[i].gesture in topic person is the result of gesture recognition.
+- Interface name/service file/file location: See target tracking for unified information.
 
-### 人体检测 
+### Human body detection
 
-- 具体功能：检测场景中所有人体，给出每个人体的位置及置信度信息。
-- 接口形式：ros service + topic  调用service开启人体检测算法，请求中algo_enable传入参数ALGO_BODY。通过topic获取人体检测结果，其中topic person中body_info.infos[i]为人体检测的结果。
-- 接口名称/服务文件/文件位置：统一见目标跟踪。
+- Specific functions: Detect all human bodies in the scene and give the location and confidence information of each human body.
+- Interface form: ros service + topic Call service to enable the human body detection algorithm, and pass in the parameter ALGO_BODY to algo_enable in the request. Obtain the human body detection results through the topic, where body_info.infos[i] in the topic person is the human body detection result.
+- Interface name/service file/file location: See target tracking for unified information.
 
-### 目标跟踪 
+### Target Tracking 
 
-- 可实现指定目标（人体、篮球、机器狗、玩具车等）的长时稳定跟踪，跟踪目标出视野或者交叉遮挡再出现后，限定时间内支持重新找回。
-- 接口形式：ros service + topic  调用service开启人体跟踪算法进行人体的跟踪，请求中algo_enable传入参数ALGO_BODY和ALGO_REID。除人体外其他目标的跟踪，调用service开启万物跟踪算法，请求中algo_enable传入参数 ALGO_FOCUS。通过topic获取人体及万物跟踪的结果，其中topic person中track_res为人体及万物的跟踪结果。
-- 接口名称：
+- It can achieve long-term stable tracking of designated targets (human body, basketball, robot dog, toy car, etc.). After the tracking target goes out of view or cross-occlusion reappears, it can be retrieved within a limited time.
+- Interface form: ros service + topic Call service to enable the human body tracking algorithm for human body tracking. In the request, algo_enable passes in the parameters ALGO_BODY and ALGO_REID. To track targets other than the human body, call service to enable the tracking algorithm for all objects, and pass in the parameter ALGO_FOCUS in the request algo_enable. Obtain the tracking results of the human body and all things through the topic, where track_res in the topic person is the tracking result of the human body and all things.
+- Interface name:
 
-     service: "algo_manager" 
+      service: "algo_manager"
 
-     topic: "person" 
+      topic: "person"
 
-- 文件位置：
+- File location:
 
-     protocol/srv/AlgoManager.srv 
+      protocol/srv/AlgoManager.srv
 
-     protocol/msg/AlgoList.msg 
+      protocol/msg/AlgoList.msg
 
-     protocol/msg/Person.msg 
+      protocol/msg/Person.msg
 
-     protocol/msg/FaceInfo.msg 
+      protocol/msg/FaceInfo.msg
 
-     protocol/msg/Face.msg 
+      protocol/msg/Face.msg
 
-     protocol/msg/BodyInfo.msg 
+      protocol/msg/BodyInfo.msg
 
-     protocol/msg/Body.msg 
+      protocol/msg/Body.msg
 
-     protocol/msg/Keypoint.msg 
+      protocol/msg/Keypoint.msg
 
-     protocol/msg/Gesture.msg 
+      protocol/msg/Gesture.msg
 
-     protocol/msg/TrackResult.msg 
+      protocol/msg/TrackResult.msg
 
-- 文件内容：
+- document content:
 
 ```js
 # protocol/srv/AlgoManager.srv
@@ -568,7 +568,7 @@ AlgoList[] algo_enable
 
 AlgoList[] algo_disable
 
-# param of face(预留字段，暂未使用)
+# param of face (reserved field, not used yet)
 
 bool open_age
 
@@ -580,7 +580,7 @@ bool open_emotion
 
 
 
-# response
+#response
 
 uint8 ENABLE_SUCCESS = 0
 
@@ -620,7 +620,7 @@ std_msgs/Header header
 
 
 
-# face info （人脸识别结果）
+# face info (face recognition results)
 
 FaceInfo face_info
 
@@ -664,13 +664,13 @@ sensor_msgs/RegionOfInterest roi
 
 
 
-# face id
+#faceid
 
 string id
 
 
 
-# confidence
+#confidence
 
 float32 score
 
@@ -682,7 +682,7 @@ float32 match
 
 
 
-# face pose
+#facepose
 
 float32 yaw
 
@@ -692,7 +692,7 @@ float32 row
 
 
 
-# is host
+#ishost
 
 bool is_host
 
@@ -711,7 +711,7 @@ std_msgs/Header header
 
 
 
-# number of bodys
+# number of bodies
 
 uint32 count
 
@@ -736,35 +736,35 @@ string reid
 
 
 
-# features
+#features
 
 float32[] feats
 
 
 
-# keypoints
+#keypoints
 
 Keypoint[] keypoints
 
 
 
-# gesture
+#gesture
 
 Gesture gesture
 # protocol/msg/Keypoint.msg
 
-float32 x
+float32x
 
-float32 y
+float32y
 # protocol/msg/Gesture.msg
 
-# gesture rect
+#gesturerect
 
 sensor_msgs/RegionOfInterest roi
 
 
 
-# gesture cls
+#gesturecls
 
 int32 GESTURE_OK = 0
 
@@ -795,67 +795,67 @@ std_msgs/Header header
 
 
 
-# rect tracked
+#rect tracked
 
 sensor_msgs/RegionOfInterest roi
 ```
 
-## 外设及传感器 
+## Peripherals and sensors
 
-### touch手势识别 
+### touch gesture recognition
 
-- 支持单击、双击、长按等多种手势触碰识别。
-- 根据touch_status的值实现长按触发联网，双击报电量的功能。
+- Supports multiple gesture touch recognition such as single click, double click, and long press.
+- Based on the value of touch_status, the function of long-pressing to trigger networking and double-clicking to report the battery level is realized.
 
-#### touch 手势获取 
+#### touch gesture acquisition
 
-具体功能：touch手势识别获取 
+Specific function: touch gesture recognition acquisition
 
-接口形式：ros topic 
+Interface form: ros topic
 
-接口名字："touch_status" 
+Interface name: "touch_status"
 
-接口内容： 
+Interface content:
 
 ```Go
 std_msgs/Header header
 
 
 
-int32    touch_state     // 0x01 ：单击， 0x03:双击 ， 0x07: 长按
+int32 touch_state // 0x01: single click, 0x03: double click, 0x07: long press
 
-uint64   timestamp       // 时间戳
+uint64 timestamp // timestamp
 ```
 
-### 连网功能 
+### Networking function
 
-- 有无线网卡，接入互联网的能力
-- 查询联网状态能力
+- Have wireless network card and the ability to access the Internet
+- Ability to check network status
 
-### uwb数据 
+### uwbdata
 
-- 初始化UWB传感器固件
-- 开启UWB传感器数据采集
-- 关闭UWB传感器数据采集
-- 4个UWB传感器数据信息
+- Initialize UWB sensor firmware
+- Enable UWB sensor data collection
+- Turn off UWB sensor data collection
+- 4 UWB sensor data information
 
-##### uwb数据发布 
+##### uwb data release
 
-- 接口形式：ros topic
-- 接口名字："uwb_raw"
-- 话题文件：protocol/msg/UwbRaw
-- 话题内容：
+- Interface form: ros topic
+- Interface name: "uwb_raw"
+- Topic file: protocol/msg/UwbRaw
+- Topic content:
 
 ```js
 std_msgs/Header header
 
-        builtin_interfaces/Time stamp
+         builtin_interfaces/Time stamp
 
-                int32 sec
+                 int32 sec
 
-                uint32 nanosec
+                 uint32 nanosec
 
-        string frame_id
+         string frame_id
 
 
 
@@ -870,62 +870,62 @@ float32 rssi_1
 float32 rssi_2
 ```
 
-### 超声数据 
+### Ultrasound data
 
-- 功能描述：获取超声传感器探测目标测距值与强度值。
-- 接口形式：ros topic
-- 接口名称：ultrasonic_payload
-- 发送频率：10hz
-- 接口内容：
+- Function description: Obtain the range value and intensity value of the target detected by the ultrasonic sensor.
+- Interface form: ros topic
+- Interface name: ultrasonic_payload
+- Transmission frequency: 10hz
+- Interface content:
 
-”sensor_msgs/msg/Range.msg“ 
+"sensor_msgs/msg/Range.msg"
 
 ```C%2B%2B
-#  包含topic的时间戳和序列信息，详情见std_msgs/Header
+# Contains the timestamp and sequence information of the topic. For details, see std_msgs/Header
 
-Header header           
+Header header
 
     
 
-# 特定传感器的字段定义
+# Field definitions for specific sensors
 
 uint8 ULTRASOUND=0
 
 uint8 INFRARED=1
 
-# 传感器类型包含超声 0 和红外 1               
+# Sensor types include ultrasonic 0 and infrared 1
 
-uint8 radiation_type    
+uint8 radiation_type
 
-# 使用传感器的fov
+# Use the fov of the sensor
 
-float32 field_of_view   
+float32 field_of_view
 
-# 传感器能够探测的最小距离[m]
+# Minimum distance that the sensor can detect [m]
 
-float32 min_range       
+float32 min_range
 
-# 传感器能够探测的最大距离[m]
+# Maximum distance that the sensor can detect [m]
 
-float32 max_range       
+float32 max_range
 
-# 传感器返回的测距值[m]
+#Ranging value returned by the sensor [m]
 
-float32 range 
+float32 range
 ```
 
-其中引用了ros2系统自带的消息 std_msgs/Header 
+It quotes the message std_msgs/Header that comes with the ros2 system.
 
 ```C%2B%2B
 # Standard metadata for higher-level stamped data types.
 
-# This is generally used to communicate timestamped data 
+# This is generally used to communicate timestamped data
 
 # in a particular coordinate frame.
 
-# 
+#
 
-# sequence ID: consecutively increasing ID 
+# sequence ID: consecutively increasing ID
 
 uint32 seq
 
@@ -946,19 +946,19 @@ string frame_id
 
  
 
-### tof数据 
+### tof data
 
-- 功能描述：有四个tof传感器，由头部mcu和尾部mcu各控制两个，单个tof可以获取8*8矩阵的高程数据
-- 接口形式：ros topic
-- 接口名字：topic_name: head_tof_payload，rear_tof_payload
-- 发送频率：10hz
-- 数据描述：TOF 目前设定的有效距离是150-660mm，小于150mm，显示的值是0.150；大于660mm，显示的是最大值0.660m；
-- 接口内容：
+- Function description: There are four TOF sensors, two each controlled by the head MCU and the tail MCU. A single TOF can obtain 8*8 matrix elevation data
+- Interface form: ros topic
+- Interface name: topic_name: head_tof_payload, rear_tof_payload
+- Transmission frequency: 10hz
+- Data description: The currently set effective distance of TOF is 150-660mm. If it is less than 150mm, the displayed value is 0.150; if it is greater than 660mm, the displayed value is the maximum value of 0.660m;
+- Interface content:
 
-“HeadTofPayload.msg 
+"HeadTofPayload.msg
 
 ```C%2B%2B
-# This message is  used to describe head tofs
+# This message is used to describe head tofs
 
 
 
@@ -967,10 +967,10 @@ SingleTofPayload left_head
 SingleTofPayload right_head
 ```
 
-”RearTofPayload.msg"  
+"RearTofPayload.msg"
 
 ```C%2B%2B
-# This message is  used to describe rear tofs
+# This message is used to describe rear tofs
 
 
 
@@ -979,10 +979,10 @@ SingleTofPayload left_rear
 SingleTofPayload right_rear
 ```
 
-其中引用了自定义的”SingleTofPayload.msg" 
+It refers to the customized "SingleTofPayload.msg"
 
 ```C%2B%2B
-#  包含topic的时间戳和序列信息，详情见std_msgs/Header
+# Contains the timestamp and sequence information of the topic. For details, see std_msgs/Header
 
 # This message is  used to describe single tof payload
 
@@ -1037,7 +1037,7 @@ float32[] data      # tof data , Unit: m
 float32[] intensity      # tof data intensity    
 ```
 
-其中引用了ros2系统自带的消息 std_msgs/Header 
+It quotes the message std_msgs/Header that comes with the ros2 system.
 
 ```C%2B%2B
 # Standard metadata for higher-level stamped data types.
@@ -1069,98 +1069,98 @@ string frame_id
 
  
 
-### gps数据 
+### gps data
 
-- 功能描述：获取设备当前的经纬度数据信息
-- 接口形式：ros topic
-- 接口名字：topic_name: gps_payload
-- 发送频率：1hz
-- 接口内容：
+- Function description: Get the current latitude and longitude data information of the device
+- Interface form: ros topic
+- Interface name: topic_name: gps_payload
+- Transmission frequency: 1hz
+- Interface content:
 
-“GpsPayload.msg 
+"GpsPayload.msg
 
 ```C%2B%2B
-# GPS msg
+#GPS msg
 
-uint32 sec # The seconds component of nv current time .
+uint32 sec # The seconds component of nv current time.
 
 uint32 nanosec #The nanoseconds component of nv current time .
 
 uint32 itow # the GPS Timestamps
 
-uint8 fix_type # GNSSfix Type:
+uint8 fix_type #GNSSfix Type:
 
 uint8 num_sv # Number of satellites used (range: 0-12)
 
-float64 lon # longitude    
+float64 lon # longitude
 
-float64 lat #  latitude
+float64 lat # latitude
 ```
 
-### 电池信息 
+### Battery information
 
-#### 电池状态信息获取 
+#### Obtain battery status information
 
-- 具体功能：获取当前电池状态
-- 接口形式：ros topic
-- 接口名字："bms_status"
-- 消息文件：protocol/msg/BmsStatus
-- 消息内容：
+- Specific function: Get current battery status
+- Interface form: ros topic
+- Interface name: "bms_status"
+- Message file: protocol/msg/BmsStatus
+- Message content:
 
 ```js
 std_msgs/Header header
 
 
 
-uint16 batt_volt              # 电压
+uint16 batt_volt # Voltage
 
-int16 batt_curr               # 电流
+int16 batt_curr # current
 
-uint8 batt_soc                # 电量
+uint8 batt_soc # power
 
-int16 batt_temp               # 电池温度
+int16 batt_temp # battery temperature
 
-uint8 batt_st                 # 电池状态
+uint8 batt_st #Battery status
 
-int8  batt_health             # 电池健康度
+int8 batt_health # Battery health
 
-int16 batt_loop_number        # 电池循环次数
+int16 batt_loop_number # Number of battery cycles
 
 
 
-bool power_normal             # 正常模式
+bool power_normal # normal mode
 
-bool power_wired_charging     # 有线充电中
+bool power_wired_charging # Wired charging
 
-bool power_finished_charging  # 充电完成
+bool power_finished_charging # Charging completed
 
-bool power_motor_shutdown     # 电机掉电
+bool power_motor_shutdown # Motor power down
 
-bool power_soft_shutdown      # 软关机
+bool power_soft_shutdown # Soft shutdown
 
-bool power_wp_place           # 无线充电在位
+bool power_wp_place # Wireless charging in place
 
-bool power_wp_charging        # 无线充电中
+bool power_wp_charging # Wireless charging
 
-bool power_expower_supply     # 外部供电
+bool power_expower_supply # External power supply
 ```
 
  
 
-### 灯效 
+### Lighting effects
 
-#### 灯效设置 
+#### Lighting effect settings
 
-- 具体功能：设置灯带的显示颜色及模式
-- 接口形式：ros service
-- 接口名字："led_execute"
-- 服务文件：protocol/srv/LedExecute
-- 服务内容：
+- Specific functions: Set the display color and mode of the light strip
+- Interface form: ros service
+- Interface name: "led_execute"
+- Service file: protocol/srv/LedExecute
+- Service Content:
 
 ```js
-# client 
+# client
 
-string UNDEFINED ="undefined"          #调试时可用，优先级最高。       
+string UNDEFINED ="undefined" #Available during debugging, with the highest priority.      
 
 string VP ="vp"
 
@@ -1186,121 +1186,121 @@ uint8 MINI_LED =3
 
 # mode
 
-uint8 SYSTEM_PREDEFINED =0x01          #使用系统预定义的模式，此模式下，用户使用时只需从effect字段中
+uint8 SYSTEM_PREDEFINED =0x01 #Use the system predefined mode. In this mode, users only need to select the effect field from the
 
-                                       #选择所需灯效。r_value、g_value、b_value字段无意义。
+                                        #Select the desired lighting effect. The r_value, g_value, and b_value fields are meaningless.
 
-                                       #例如 target = 1 effect = 0xA1 代表头灯红常亮。
+                                        #For example, target = 1 effect = 0xA1 means the headlight is always red.
 
-uint8 USER_DEFINED =0x02               #使用用户自定义的模式，此模式下，灯效由effect和r_value、g_value、
+uint8 USER_DEFINED =0x02 #Use user-defined mode. In this mode, the lighting effect consists of effect, r_value, g_value,
 
-                                       #b_value字段联合决定。effect字段决定灯亮的方式，r_value、g_value、b_value
+                                        #b_value field is jointly determined. The effect field determines how the light turns on, r_value, g_value, b_value
 
-                                       #字段决定灯效的颜色。例如 target = 1，effect = 0x01， r_value =255 
+                                        The # field determines the color of the lighting effect. For example target = 1, effect = 0x01, r_value =255
 
-                                       #g_value =0 b_value=0 代表头灯红灯亮。
+                                        #g_value =0 b_value=0 means the red light of the headlight is on.
 
 
 
 # effect
 
-#HEAD_LED和TAIL_LED的基础灯效（0x01 ～0x09），在 mode = USER_DEFINED 时配合r_value、g_value、b_value使用。
+The basic lighting effects of #HEAD_LED and TAIL_LED (0x01 ~ 0x09) are used in conjunction with r_value, g_value, and b_value when mode = USER_DEFINED.
 
-uint8 RGB_ON =0x01                     #常亮
+uint8 RGB_ON =0x01 #Always on
 
-uint8 BLINK =0x02                      #闪烁
+uint8 BLINK =0x02 #Blink
 
-uint8 BLINK_FAST =0x03                 #快速闪烁    
+uint8 BLINK_FAST =0x03 #Blink quickly
 
-uint8 BREATH =0x04                     #呼吸
+uint8 BREATH =0x04 #Breathe
 
-uint8 BREATH_FAST =0x05                #快速呼吸 
+uint8 BREATH_FAST =0x05 #Breathe quickly
 
-uint8 ONE_BY_ONE =0x06                 #逐个点亮
+uint8 ONE_BY_ONE =0x06 #Light up one by one
 
-uint8 ONE_BY_ONE_FAST =0x07            #快速逐个点亮
+uint8 ONE_BY_ONE_FAST =0x07 #Light up one by one quickly
 
-uint8 BACK_AND_FORTH =0x08             #往返逐个点亮
+uint8 BACK_AND_FORTH =0x08 #Light up one by one in and out
 
-uint8 TRAILING_RACE =0x09              #拖尾流跑马 
-
-
+uint8 TRAILING_RACE =0x09 #TRAILING RACE
 
 
 
-# HEAD_LED和TAIL_LED系统预定义的灯效（0xA0 ～0xB5），在mode = SYSTEM_PREDEFINED 时有效。
-
-uint8 RGB_OFF =0xA0                    #常灭
 
 
+# HEAD_LED and TAIL_LED system predefined lighting effects (0xA0 ~ 0xB5), valid when mode = SYSTEM_PREDEFINED.
 
-uint8 RED_ON =0xA1                     #红灯常亮
-
-uint8 RED_BLINK =0xA2                  #红灯闪烁
-
-uint8 RED_BLINK_FAST =0xA3             #红灯快速闪烁
-
-uint8 RED_BREATH =0xA4                 #红灯呼吸
-
-uint8 RED_BREATH_FAST =0xA5            #红灯快速呼吸
-
-uint8 RED_ONE_BY_ONE =0xA6             #红灯逐个点亮
-
-uint8 RED_ONE_BY_ONE_FAST =0xA7        #红灯快速逐个点亮
+uint8 RGB_OFF =0xA0 #Always off
 
 
 
-uint8 BLUE_ON =0xA8                    #蓝灯常亮
+uint8 RED_ON =0xA1 #The red light is always on
 
-uint8 BLUE_BLINK =0xA9                 #蓝灯闪烁
+uint8 RED_BLINK =0xA2 #Red light flashes
 
-uint8 BLUE_BLINK_FAST =0xAA            #蓝灯快速闪烁
+uint8 RED_BLINK_FAST =0xA3 #Red light flashes quickly
 
-uint8 BLUE_BREATH =0xAB                #蓝灯呼吸
+uint8 RED_BREATH =0xA4 #Red light breathing
 
-uint8 BLUE_BREATH_FAST =0xAC           #蓝灯快速呼吸
+uint8 RED_BREATH_FAST =0xA5 #Red light breathes quickly
 
-uint8 BLUE_ONE_BY_ONE =0xAD            #蓝灯逐个点亮
+uint8 RED_ONE_BY_ONE =0xA6 #The red lights light up one by one
 
-uint8 BLUE_ONE_BY_ONE_FAST =0xAE       #蓝灯快速逐个点亮
-
-
-
-uint8 YELLOW_ON =0xAF                  #黄灯常亮
-
-uint8 YELLOW_BLINK =0xB0               #黄灯闪烁
-
-uint8 YELLOW_BLINK_FAST =0xB1          #黄灯快速闪烁
-
-uint8 YELLOW_BREATH =0xB2              #黄灯呼吸
-
-uint8 YELLOW_BREATH_FAST =0xB3         #黄灯快速呼吸
-
-uint8 YELLOW_ONE_BY_ONE =0xB4          #黄灯逐个点亮
-
-uint8 YELLOW_ONE_BY_ONE_FAST =0xB5     #黄灯快速逐个点亮
+uint8 RED_ONE_BY_ONE_FAST =0xA7 #Red lights light up quickly one by one
 
 
 
-#MINI LED的基础灯效（0x30 ～0x31），在 mode = USER_DEFINED 时配合r_value、g_value、b_value使用。
+uint8 BLUE_ON =0xA8 #The blue light is always on
 
-uint8 CIRCULAR_BREATH = 0x30           #圆形缩放
+uint8 BLUE_BLINK =0xA9 #Blue light flashes
 
-uint8 CIRCULAR_RING = 0x31             #画圆环
+uint8 BLUE_BLINK_FAST =0xAA #Blue light flashes quickly
+
+uint8 BLUE_BREATH =0xAB #Blue light breathing
+
+uint8 BLUE_BREATH_FAST =0xAC #Blue light breathes quickly
+
+uint8 BLUE_ONE_BY_ONE =0xAD #Blue lights light up one by one
+
+uint8 BLUE_ONE_BY_ONE_FAST =0xAE #Blue lights light up one by one quickly
 
 
 
-# MINI LED系统预定义的灯效（0x32 ～0x36），在mode = SYSTEM_PREDEFINED 时有效。
+uint8 YELLOW_ON =0xAF #The yellow light is always on
 
-uint8 MINI_OFF = 0x32                  #常灭
+uint8 YELLOW_BLINK =0xB0 #Yellow light flashes
 
-uint8 RECTANGLE_COLOR = 0x33           #方块变色(无须设定r,g,b取值)
+uint8 YELLOW_BLINK_FAST =0xB1 #Yellow light flashes quickly
 
-uint8 CENTRE_COLOR = 0x34              #中间彩带(无须设定r,g,b取值)
+uint8 YELLOW_BREATH =0xB2 #Yellow light breathing
 
-uint8 THREE_CIRCULAR = 0x35            #三圆呼吸(无须设定r,g,b取值)
+uint8 YELLOW_BREATH_FAST =0xB3 #Yellow light breathes quickly
 
-uint8 COLOR_ONE_BY_ONE = 0x36          #彩带逐个点亮(无须设定r,g,b取值)
+uint8 YELLOW_ONE_BY_ONE =0xB4 #Yellow lights light up one by one
+
+uint8 YELLOW_ONE_BY_ONE_FAST =0xB5 #Yellow lights light up quickly one by one
+
+
+
+#MINI LED's basic lighting effect (0x30 ~ 0x31), used with r_value, g_value, and b_value when mode = USER_DEFINED.
+
+uint8 CIRCULAR_BREATH = 0x30 #Circular scaling
+
+uint8 CIRCULAR_RING = 0x31 #Draw a circle
+
+
+
+# MINI LED system predefined lighting effects (0x32 ~ 0x36), valid when mode = SYSTEM_PREDEFINED.
+
+uint8 MINI_OFF = 0x32 #Always off
+
+uint8 RECTANGLE_COLOR = 0x33 #The square changes color (no need to set r, g, b values)
+
+uint8 CENTRE_COLOR = 0x34 #Center color band (no need to set r, g, b values)
+
+uint8 THREE_CIRCULAR = 0x35 #Three-circle breathing (no need to set r, g, b values)
+
+uint8 COLOR_ONE_BY_ONE = 0x36 #The ribbons light up one by one (no need to set r, g, b values)
 
 
 
@@ -1308,19 +1308,19 @@ uint8 COLOR_ONE_BY_ONE = 0x36          #彩带逐个点亮(无须设定r,g,b取�
 
 
 
-string client                          # 使用模块，例如"bms";"vp";"connector" 具体见协议中常量定义
+string client #Use modules, such as "bms";"vp";"connector" For details, please see the constant definition in the protocol
 
-uint8 target                           # 用户希望使用的灯，可选择 HEAD_LED , TAIL_LED, MINI_LED
+uint8 target # The light the user wants to use, you can choose HEAD_LED, TAIL_LED, MINI_LED
 
-uint8 mode                             # 用户采用的模式（自定义USER_DEFINED/预置SYSTEM_PREDEFINED），取值见协议中常量定义
+uint8 mode # The mode adopted by the user (customized USER_DEFINED/preset SYSTEM_PREDEFINED). For the value, see the constant definition in the protocol.
 
-uint8 effect                           # 灯效，见协议中常量定义
+uint8 effect # Lighting effect, see constant definition in the protocol
 
-uint8 r_value                          # 自定义模式下，红色通道的灰度值，取值范围0～255，其它模式下无意义。
+uint8 r_value # In custom mode, the gray value of the red channel ranges from 0 to 255. It is meaningless in other modes.
 
-uint8 g_value                          # 自定义模式下，绿色通道的灰度值，取值范围0～255，其它模式下无意义。
+uint8 g_value # In custom mode, the gray value of the green channel ranges from 0 to 255. It is meaningless in other modes.
 
-uint8 b_value                          # 自定义模式下，蓝色通道的灰度值，取值范围0～255，其它模式下无意义。
+uint8 b_value # In custom mode, the gray value of the blue channel ranges from 0 to 255. It is meaningless in other modes.
 
 
 
@@ -1328,787 +1328,787 @@ uint8 b_value                          # 自定义模式下，蓝色通道的灰
 
 ---
 
-# response 
+#response
 
-int32 SUCCEED =0                        # 当前请求参数合理，优先级最高，请求灯效执行成功
+int32 SUCCEED =0 # The current request parameters are reasonable, the priority is the highest, and the requested lighting effect is successfully executed.
 
-int32 TIMEOUT =1107                     # 当前请求led硬件响应超时
+int32 TIMEOUT =1107 # Current request LED hardware response timeout
 
-int32 TARGET_ERROR =1121                # 当前请求的target参数为空或者不在可选列表中
+int32 TARGET_ERROR =1121 # The target parameter of the current request is empty or not in the optional list
 
-int32 PRIORITY_ERROR =1122              # 当前请求的client为空或者不在预设的优先级列表中
+int32 PRIORITY_ERROR =1122 # The currently requested client is empty or not in the preset priority list
 
-int32 MODE_ERROR = 1123                 # 当前请求的mode参数为空或者不在可选列表中
+int32 MODE_ERROR = 1123 # The currently requested mode parameter is empty or not in the optional list
 
-int32 EFFECT_ERROR =1124                # 当前请求的effect参数为空或者不在可选列表中
+int32 EFFECT_ERROR =1124 #The effect parameter of the current request is empty or not in the optional list
 
-int32 LOW_PRIORITY = 1125               # 当前请求优先级较低，无法立即执行请求灯效
+int32 LOW_PRIORITY = 1125 # The current request priority is low and the requested lighting effect cannot be executed immediately
 
 
 
-int32 code #执行结果
+int32 code #execution result
 ```
 
-- 头灯（led灯带）
+- Headlight (led light strip)
 
-支持多种系统预置灯效，例如红常亮、绿呼吸、蓝渐变等。 
+Supports a variety of system preset lighting effects, such as red constant light, green breathing, blue gradient, etc.
 
- 允许用户进行自定义设置，包含基础灯效（常亮、呼吸、渐变、闪烁等）和自定义的颜色（R、G、B通道值） 
+  Allows users to customize settings, including basic lighting effects (always on, breathing, gradient, flashing, etc.) and customized colors (R, G, B channel values)
 
-- 尾灯（led灯带）
+- Tail light (led light strip)
 
-        支持多种系统预置灯效，例如红常亮、绿呼吸、蓝渐变等等。 
+         Supports a variety of system preset lighting effects, such as red constant light, green breathing, blue gradient, etc.
 
-         允许用户进行自定义设置，包含基础灯效（常亮、呼吸、渐变、闪烁等）和自定义的颜色（R、G、B通道值） 
+          Allows users to customize settings, including basic lighting effects (always on, breathing, gradient, flashing, etc.) and customized colors (R, G, B channel values)
 
-- 眼灯（mini led）
+- Eye light (mini led)
 
-         支持多种系统预置灯效，例如方块变色、中间彩带等。 
+          Supports a variety of system preset lighting effects, such as square color changes, middle ribbons, etc.
 
-         允许用户进行自定义设置，包含基础灯效（圆环、圆形缩放）和自定义的颜色（R、G、B通道值） 
+          Allows users to customize settings, including basic lighting effects (ring, circular zoom) and custom colors (R, G, B channel values)
 
-## 语音功能 
+## Voice function
 
-### 开关及调节 
+### Switch and adjustment
 
-#### 音量获取 
+#### Volume acquisition
 
-- 具体功能：获取当前音量大小
-- 接口形式：ros service
-- 接口名字："audio_volume_get"
-- 服务文件：protocol/srv/AudioVolumeGet
-- 服务内容：
+- Specific function: Get the current volume
+- Interface form: ros service
+- Interface name: "audio_volume_get"
+- Service file: protocol/srv/AudioVolumeGet
+- Service Content:
 
 ```js
 # request
 
 ---
 
-# response
+#response
 
-uint8 volume    # 音量大小
+uint8 volume # Volume size
 ```
 
-#### 音量设置 
+#### Volume setting
 
-- 具体功能：设定指定大小音量
-- 接口形式：ros service
-- 接口名字："audio_volume_set"
-- 服务文件：protocol/srv/AudioVolumeSet
-- 服务内容：
+- Specific function: Set the specified volume
+- Interface form: ros service
+- Interface name: "audio_volume_set"
+- Service file: protocol/srv/AudioVolumeSet
+- Service Content:
 
 ```js
 # request
 
-uint8 volume    # 音量大小
+uint8 volume # Volume size
 
 ---
 
-# response
+#response
 
-bool success    # true：成功；false：失败
+bool success # true: success; false: failure
 ```
 
-#### 麦克风开关 
+#### Microphone switch
 
-- 具体功能：打开/关闭麦克风，开启/禁用收音功能
-- 接口形式：ros service
-- 接口名字："set_audio_state"
-- 服务文件：protocol/srv/AudioExecute
-- 服务内容：
+- Specific functions: turn on/off the microphone, turn on/disable the radio function
+- Interface form: ros service
+- Interface name: "set_audio_state"
+- Service file: protocol/srv/AudioExecute
+- Service Content:
 
 ```js
 # request
 
-string          client         # 请求服务的模块名称："BMS";"BLUETOOTH";"SENSOR" ..;
+string client #Module name for requesting service: "BMS";"BLUETOOTH";"SENSOR" ..;
 
-AudioStatus     status         # 状态消息
+AudioStatus status # status message
 
 ---
 
-# response
+#response
 
-bool            result         # true：成功；false：失败
+bool result # true: success; false: failure
 ```
 
-- 引用消息：
-  - 消息文件：protocol/msg/AudioStatus
-  - 消息内容：
+- Quote message:
+   - Message file: protocol/msg/AudioStatus
+   - Message content:
 
 ```js
-uint8 AUDIO_STATUS_NORMAL = 0     # 开麦状态
+uint8 AUDIO_STATUS_NORMAL = 0 # Open mic status
 
-uint8 AUDIO_STATUS_OFFMIC = 1     # 关麦状态
+uint8 AUDIO_STATUS_OFFMIC = 1 # Microphone off status
 
 
 
-uint8 state                       # 状态值，取如上常量值
+uint8 state # state value, take the above constant value
 ```
 
-#### 语音开关 
+#### Voice switch
 
-- 具体功能：开启/禁用语音控制垂域功能
-- 接口形式：ros service
-- 接口名字："audio_action_set"
-- 服务文件：std_srvs/srv/SetBool
-- 服务内容：
+- Specific functions: enable/disable voice control vertical function
+- Interface form: ros service
+- Interface name: "audio_action_set"
+- Service file: std_srvs/srv/SetBool
+- Service Content:
 
 ```js
 # request
 
-bool     data             # true：开启；false：关闭
+bool data # true: on; false: off
 
 ---
 
-# response
+#response
 
-bool     success          # true：成功；false：失败
+bool success # true: success; false: failure
 
-string   message          # 成功失败信息
+string message #Success and failure information
 ```
 
-### 语音播放 
+### Voice playback
 
-#### 离线/在线语音播放消息 
+#### Offline/online voice play message
 
-- 具体功能：离线不需要访问互联网的能力，在线需要访问互联网的能力。离线播放是播放预置的音频文件。在线播放是通过tts（text to speech）过程将文字转为语音进行播放。此功能的播放过程是非阻塞式播放，在任一时刻只能播放一条语音，在接收到其他其他消息时，会立即打断当前正在播放的语音，然后播放最新的消息对应的语音。
-- 接口形式：ros topic
-- 接口名字："speech_play_extend"
-- 消息文件：protocol/msg/AudioPlayExtend
-- 消息内容：
+- Specific functions: Offline does not require the ability to access the Internet, online requires the ability to access the Internet. Offline playback is to play preset audio files. Online playback uses the tts (text to speech) process to convert text into speech for playback. The playback process of this function is non-blocking playback. Only one voice can be played at any time. When other messages are received, the currently playing voice will be immediately interrupted, and then the voice corresponding to the latest message will be played.
+- Interface form: ros topic
+- Interface name: "speech_play_extend"
+- Message file: protocol/msg/AudioPlayExtend
+- Message content:
 
 ```js
-string     module_name    # 播放者（模块）名字
+string module_name #Player (module) name
 
-bool       is_online      # true：在线；false：离线
+bool is_online # true: online; false: offline
 
-AudioPlay  speech         # 离线播放信息
+AudioPlay speech # Offline playback information
 
-string     text           # 在线播放文本
+string text # Play text online
 ```
 
-- 引用消息：
-  - 消息文件：protocol/msg/AudioPlay
-  - 消息内容：
+- Quote message:
+   - Message file: protocol/msg/AudioPlay
+   - Message content:
 
 ```js
-uint16 PID_WIFI_ENTER_CONNECTION_MODE_0 = 1      # 进入连网模式
+uint16 PID_WIFI_ENTER_CONNECTION_MODE_0 = 1 # Enter networking mode
 
-uint16 PID_WIFI_WAIT_FOR_SCAN_CODE_0 = 3         # 等待扫描二维码（1次/5s）
+uint16 PID_WIFI_WAIT_FOR_SCAN_CODE_0 = 3 # Wait for scanning QR code (1 time/5s)
 
-uint16 PID_WIFI_SCAN_CODE_SUCCEEDED_0 = 4        # 扫码成功，网络连接中
+uint16 PID_WIFI_SCAN_CODE_SUCCEEDED_0 = 4 # Scan code successfully, network connection is in progress
 
-uint16 PID_WIFI_CONNECTION_SUCCEEDED_0 = 5       # 连网成功
+uint16 PID_WIFI_CONNECTION_SUCCEEDED_0 = 5 # Network connection successful
 
-uint16 PID_WIFI_CONNECTION_FAILED_0 = 7          # 无线网络名称错误，请修改后重试
+uint16 PID_WIFI_CONNECTION_FAILED_0 = 7 # The wireless network name is wrong, please modify it and try again
 
-uint16 PID_WIFI_CONNECTION_FAILED_1 = 8          # 无线网络密码错误，请修改后重试
+uint16 PID_WIFI_CONNECTION_FAILED_1 = 8 # The wireless network password is wrong, please modify it and try again
 
-uint16 PID_WIFI_CONNECTION_FAILED_2 = 9          # 无法连接网络，请检查网络状况并重新
+uint16 PID_WIFI_CONNECTION_FAILED_2 = 9 # Unable to connect to the network, please check the network status and try again
 
-                                                 # 尝试
+                                                  # try
 
-uint16 PID_WIFI_EXIT_CONNECTION_MODE_0 = 10      # 退出连网模式
+uint16 PID_WIFI_EXIT_CONNECTION_MODE_0 = 10 # Exit networking mode
 
-uint16 PID_WIFI_SCAN_CODE_IP_ERROR = 13          # 二维码信息错误，请使用正确二维码
+uint16 PID_WIFI_SCAN_CODE_IP_ERROR = 13 # The QR code information is wrong, please use the correct QR code
 
-uint16 PID_WIFI_SCAN_CODE_INFO_ERROR = 14        # 二维码失效，请重新生成
+uint16 PID_WIFI_SCAN_CODE_INFO_ERROR = 14 # The QR code is invalid, please regenerate it
 
-uint16 PID_FACE_ENTRY_ADD_FACE = 21              # 开始录入人脸，请正对摄像头，且勿遮
+uint16 PID_FACE_ENTRY_ADD_FACE = 21 # Start recording faces. Please face the camera and do not cover it.
 
-                                                 # 挡人脸，保持稳定
+                                                  # Block people’s faces and stay stable
 
-uint16 PID_FACE_ENTRY_CANCLE_ADD_FACE = 22       # 取消录入人脸
+uint16 PID_FACE_ENTRY_CANCLE_ADD_FACE = 22 # Cancel face entry
 
-uint16 PID_FACE_ENTRY_CONFIRM_LAST_FACE = 23     # 确认录入人脸
+uint16 PID_FACE_ENTRY_CONFIRM_LAST_FACE = 23 # Confirm face entry
 
-uint16 PID_FACE_ENTRY_UPDATE_FACE_ID = 24        # 更新录入人脸
+uint16 PID_FACE_ENTRY_UPDATE_FACE_ID = 24 # Update the input face
 
-uint16 PID_FACE_ENTRY_DELETE_FACE = 25           # 删除录入人脸
+uint16 PID_FACE_ENTRY_DELETE_FACE = 25 # Delete the entered face
 
-uint16 PID_FACE_ENTRY_GET_ALL_FACES = 26         # 获取录入人脸信息
+uint16 PID_FACE_ENTRY_GET_ALL_FACES = 26 # Get the entered face information
 
-uint16 PID_FACE_ENTRY_FIX_POSE  = 27             # 请正对摄像头
+uint16 PID_FACE_ENTRY_FIX_POSE = 27 # Please face the camera
 
-uint16 PID_FACE_ENTRY_FIX_POSE_LEFT = 28         # 请向左扭头
+uint16 PID_FACE_ENTRY_FIX_POSE_LEFT = 28 # Please turn your head to the left
 
-uint16 PID_FACE_ENTRY_FIX_POSE_RIGHT = 29        # 请向右扭头
+uint16 PID_FACE_ENTRY_FIX_POSE_RIGHT = 29 # Please turn your head to the right
 
-uint16 PID_FACE_ENTRY_FIX_POSE_UP = 30           # 请向上抬头
+uint16 PID_FACE_ENTRY_FIX_POSE_UP = 30 # Please look up
 
-uint16 PID_FACE_ENTRY_FIX_POSE_DOWN = 31         # 请向下低头
+uint16 PID_FACE_ENTRY_FIX_POSE_DOWN = 31 # Please lower your head
 
-uint16 PID_FACE_ENTRY_FIX_DISTANCE_CLOSE = 32    # 请距狗头近一点
+uint16 PID_FACE_ENTRY_FIX_DISTANCE_CLOSE = 32 # Please stay closer to the dog’s head
 
-uint16 PID_FACE_ENTRY_FIX_DISTANCE_NEAR = 33     # 请距狗头远一点
+uint16 PID_FACE_ENTRY_FIX_DISTANCE_NEAR = 33 # Please stay away from the dog’s head
 
-uint16 PID_FACE_ENTRY_FIX_STABLE = 34            # 请保持稳定
+uint16 PID_FACE_ENTRY_FIX_STABLE = 34 # Please keep it stable
 
-uint16 PID_FACE_ENTRY_MUTIPLE_FACES = 35         # 检测到多个人脸
+uint16 PID_FACE_ENTRY_MUTIPLE_FACES = 35 # Multiple faces detected
 
-uint16 PID_FACE_ENTRY_NONE_FACES = 36            # 没有检测到人脸
+uint16 PID_FACE_ENTRY_NONE_FACES = 36 # No face detected
 
-uint16 PID_FACE_ENTRY_TIMEOUT = 37               # 录入超时，请重新录入
+uint16 PID_FACE_ENTRY_TIMEOUT = 37 # Entry timed out, please enter again
 
-uint16 PID_FACE_ENTRY_FINISH = 38                # 录入成功
+uint16 PID_FACE_ENTRY_FINISH = 38 # Entry successful
 
-uint16 PID_FACE_RECOGNITION_REQUEST = 39         # 开始人脸识别，请正对摄像头，且勿遮
+uint16 PID_FACE_RECOGNITION_REQUEST = 39 # To start face recognition, please face the camera and do not cover it.
 
-                                                 # 挡人脸
+                                                  # cover people’s faces
 
-uint16 PID_FACE_DEGREE_HEAD_TILT = 40            # 请不要歪头
+uint16 PID_FACE_DEGREE_HEAD_TILT = 40 # Please don’t tilt your head
 
-uint16 PID_FACE_RECGONITION_FINISH = 41          # 人脸识别成功
+uint16 PID_FACE_RECGONITION_FINISH = 41 # Face recognition successful
 
-uint16 PID_FACE_RECGONITION_TIMEOUT = 42         # 人脸识别已经超时，请重新尝试
+uint16 PID_FACE_RECGONITION_TIMEOUT = 42 # Face recognition has timed out, please try again
 
-uint16 PID_FACE_ALREADY_EXIST = 43               # 人脸已存在，请不要录入同一张脸
+uint16 PID_FACE_ALREADY_EXIST = 43 # The face already exists, please do not enter the same face
 
-uint16 PID_CAMERA_START_PIC_TRANSFER = 50        # 启动图传
+uint16 PID_CAMERA_START_PIC_TRANSFER = 50 # Start image transmission
 
-uint16 PID_CAMERA_START_PHOTOS = 51              # 拍照
+uint16 PID_CAMERA_START_PHOTOS = 51 # Take photos
 
-uint16 PID_CAMERA_TAKE_VIDEOS = 52               # 启动录像
+uint16 PID_CAMERA_TAKE_VIDEOS = 52 # Start recording
 
-uint16 PID_CAMERA_VIDEO_RECORDING = 53           # 录像中
+uint16 PID_CAMERA_VIDEO_RECORDING = 53 # Recording
 
-uint16 PID_BATTERY_CAPICITY_LOW = 101            # 电量低于10%
+uint16 PID_BATTERY_CAPICITY_LOW = 101 # The battery is less than 10%
 
-uint16 PID_BATTERY_IN_CHARGING = 102             # 现在开始充电
+uint16 PID_BATTERY_IN_CHARGING = 102 # Start charging now
 
-uint16 PID_BATTERY_CHARGE_COMPELETE = 104        # 充电完成了 
+uint16 PID_BATTERY_CHARGE_COMPELETE = 104 # Charging completed
 
-uint16 PID_AI_PLEASE_ENABLE = 124                # 请登录app账号以启用小爱在线功能
+uint16 PID_AI_PLEASE_ENABLE = 124 # Please log in to the app account to enable Xiao Ai online function
 
-uint16 PID_AI_ENABLE_SUCCESS = 125               # 小爱在线功能启动
+uint16 PID_AI_ENABLE_SUCCESS = 125 # Xiaoai online function starts
 
-uint16 PID_AI_SERVICE_EXPIRED = 127              # 语音登录已过期
+uint16 PID_AI_SERVICE_EXPIRED = 127 # Voice login has expired
 
-uint16 PID_TEST_HARDWARE_AUDIO = 3000            # 当前为语音硬件测试
+uint16 PID_TEST_HARDWARE_AUDIO = 3000 # Currently it is voice hardware test
 
-uint16 PID_TEST_STAGE_ONE = 3001                 # 第一阶段测试结束。请查看测试结果并
+uint16 PID_TEST_STAGE_ONE = 3001 # The first phase of testing is over. Please review the test results and
 
-                                                 # 记录后，进行第二阶段测试
+                                                  # After recording, perform the second phase of testing
 
-uint16 PID_TEST_STAGE_THREE = 3003               # 第三阶段测试结束，请查看测试结果并
+uint16 PID_TEST_STAGE_THREE = 3003 # The third phase of testing is over, please check the test results and
 
-                                                 # 记录
+                                                  # Record
 
-uint16 PID_SOUND_EFFECT_READY = 9000             # 整机就绪音效
+uint16 PID_SOUND_EFFECT_READY = 9000 # Machine ready sound effect
 
-uint16 PID_STOP_AUDIO_PLAY = 9999                # 打断当前正在播放的语音
+uint16 PID_STOP_AUDIO_PLAY = 9999 # Interrupt the currently playing voice
 
 
 
-string module_name                               # 模块名
+string module_name # module name
 
-uint16 play_id                                   # 播放ID，取如上常量值
+uint16 play_id #Play ID, take the above constant value
 ```
 
-#### 离线/在线语音播放服务 
+#### Offline/online voice playback service
 
-- 具体功能：离线不需要访问互联网的能力，在线需要访问互联网的能力。离线播放是播放预置的音频文件。在线播放是通过tts（text to speech）过程将文字转为语音进行播放。此功能的播放过程是阻塞式播放，在任一时刻只能播放一条语音阻塞其它播放请求。若在播放当前语音的时刻，接收到其他其他播放请求，会继续当前正在播放的语音直至播放完，然后接着播放下一条语音请求。
-- 接口形式：ros service
-- 接口名字："speech_text_play"
-- 服务文件：protocol/srv/AudioTextPlay
-- 服务内容：
+- Specific functions: Offline does not require the ability to access the Internet, online requires the ability to access the Internet. Offline playback is to play preset audio files. Online playback uses the tts (text to speech) process to convert text into speech for playback. The playback process of this function is blocking playback. Only one voice can be played at any time, blocking other playback requests. If other playback requests are received while the current voice is being played, the currently playing voice will continue until the playback is completed, and then the next voice request will be played.
+- Interface form: ros service
+- Interface name: "speech_text_play"
+- Service file: protocol/srv/AudioTextPlay
+- Service Content:
 
 ```js
 # request
 
-string     module_name    # 播放者（模块）名字
+string module_name #Player (module) name
 
-bool       is_online      # true：在线；false：离线
+bool is_online # true: online; false: offline
 
-AudioPlay  speech         # 离线播放信息
+AudioPlay speech # Offline playback information
 
-string     text           # 在线播放文本
+string text # Play text online
 
 ---
 
-# response
+#response
 
-uint8      status         # 0播放完毕,1播放失败
+uint8 status # 0 Playing completed, 1 Playing failed
 ```
 
-- 引用消息：
-  - 消息文件：protocol/msg/AudioPlay
-  - 消息内容：
+- Quote message:
+   - Message file: protocol/msg/AudioPlay
+   - Message content:
 
 ```js
-uint16 PID_WIFI_ENTER_CONNECTION_MODE_0 = 1      # 进入连网模式
+uint16 PID_WIFI_ENTER_CONNECTION_MODE_0 = 1 # Enter networking mode
 
-uint16 PID_WIFI_WAIT_FOR_SCAN_CODE_0 = 3         # 等待扫描二维码（1次/5s）
+uint16 PID_WIFI_WAIT_FOR_SCAN_CODE_0 = 3 # Wait for scanning QR code (1 time/5s)
 
-uint16 PID_WIFI_SCAN_CODE_SUCCEEDED_0 = 4        # 扫码成功，网络连接中
+uint16 PID_WIFI_SCAN_CODE_SUCCEEDED_0 = 4 # Scan code successfully, network connection is in progress
 
-uint16 PID_WIFI_CONNECTION_SUCCEEDED_0 = 5       # 连网成功
+uint16 PID_WIFI_CONNECTION_SUCCEEDED_0 = 5 # Network connection successful
 
-uint16 PID_WIFI_CONNECTION_FAILED_0 = 7          # 无线网络名称错误，请修改后重试
+uint16 PID_WIFI_CONNECTION_FAILED_0 = 7 # The wireless network name is wrong, please modify it and try again
 
-uint16 PID_WIFI_CONNECTION_FAILED_1 = 8          # 无线网络密码错误，请修改后重试
+uint16 PID_WIFI_CONNECTION_FAILED_1 = 8 # The wireless network password is wrong, please modify it and try again
 
-uint16 PID_WIFI_CONNECTION_FAILED_2 = 9          # 无法连接网络，请检查网络状况并重新
+uint16 PID_WIFI_CONNECTION_FAILED_2 = 9 # Unable to connect to the network, please check the network status and try again
 
-                                                 # 尝试
+                                                  # try
 
-uint16 PID_WIFI_EXIT_CONNECTION_MODE_0 = 10      # 退出连网模式
+uint16 PID_WIFI_EXIT_CONNECTION_MODE_0 = 10 # Exit networking mode
 
-uint16 PID_WIFI_SCAN_CODE_IP_ERROR = 13          # 二维码信息错误，请使用正确二维码
+uint16 PID_WIFI_SCAN_CODE_IP_ERROR = 13 # The QR code information is wrong, please use the correct QR code
 
-uint16 PID_WIFI_SCAN_CODE_INFO_ERROR = 14        # 二维码失效，请重新生成
+uint16 PID_WIFI_SCAN_CODE_INFO_ERROR = 14 # The QR code is invalid, please regenerate it
 
-uint16 PID_FACE_ENTRY_ADD_FACE = 21              # 开始录入人脸，请正对摄像头，且勿遮
+uint16 PID_FACE_ENTRY_ADD_FACE = 21 # Start recording faces. Please face the camera and do not cover it.
 
-                                                 # 挡人脸，保持稳定
+                                                  # Block people’s faces and stay stable
 
-uint16 PID_FACE_ENTRY_CANCLE_ADD_FACE = 22       # 取消录入人脸
+uint16 PID_FACE_ENTRY_CANCLE_ADD_FACE = 22 # Cancel face entry
 
-uint16 PID_FACE_ENTRY_CONFIRM_LAST_FACE = 23     # 确认录入人脸
+uint16 PID_FACE_ENTRY_CONFIRM_LAST_FACE = 23 # Confirm face entry
 
-uint16 PID_FACE_ENTRY_UPDATE_FACE_ID = 24        # 更新录入人脸
+uint16 PID_FACE_ENTRY_UPDATE_FACE_ID = 24 # Update the input face
 
-uint16 PID_FACE_ENTRY_DELETE_FACE = 25           # 删除录入人脸
+uint16 PID_FACE_ENTRY_DELETE_FACE = 25 # Delete the entered face
 
-uint16 PID_FACE_ENTRY_GET_ALL_FACES = 26         # 获取录入人脸信息
+uint16 PID_FACE_ENTRY_GET_ALL_FACES = 26 # Get the entered face information
 
-uint16 PID_FACE_ENTRY_FIX_POSE  = 27             # 请正对摄像头
+uint16 PID_FACE_ENTRY_FIX_POSE = 27 # Please face the camera
 
-uint16 PID_FACE_ENTRY_FIX_POSE_LEFT = 28         # 请向左扭头
+uint16 PID_FACE_ENTRY_FIX_POSE_LEFT = 28 # Please turn your head to the left
 
-uint16 PID_FACE_ENTRY_FIX_POSE_RIGHT = 29        # 请向右扭头
+uint16 PID_FACE_ENTRY_FIX_POSE_RIGHT = 29 # Please turn your head to the right
 
-uint16 PID_FACE_ENTRY_FIX_POSE_UP = 30           # 请向上抬头
+uint16 PID_FACE_ENTRY_FIX_POSE_UP = 30 # Please look up
 
-uint16 PID_FACE_ENTRY_FIX_POSE_DOWN = 31         # 请向下低头
+uint16 PID_FACE_ENTRY_FIX_POSE_DOWN = 31 # Please lower your head
 
-uint16 PID_FACE_ENTRY_FIX_DISTANCE_CLOSE = 32    # 请距狗头近一点
+uint16 PID_FACE_ENTRY_FIX_DISTANCE_CLOSE = 32 # Please stay closer to the dog’s head
 
-uint16 PID_FACE_ENTRY_FIX_DISTANCE_NEAR = 33     # 请距狗头远一点
+uint16 PID_FACE_ENTRY_FIX_DISTANCE_NEAR = 33 # Please stay away from the dog’s head
 
-uint16 PID_FACE_ENTRY_FIX_STABLE = 34            # 请保持稳定
+uint16 PID_FACE_ENTRY_FIX_STABLE = 34 # Please keep it stable
 
-uint16 PID_FACE_ENTRY_MUTIPLE_FACES = 35         # 检测到多个人脸
+uint16 PID_FACE_ENTRY_MUTIPLE_FACES = 35 # Multiple faces detected
 
-uint16 PID_FACE_ENTRY_NONE_FACES = 36            # 没有检测到人脸
+uint16 PID_FACE_ENTRY_NONE_FACES = 36 # No face detected
 
-uint16 PID_FACE_ENTRY_TIMEOUT = 37               # 录入超时，请重新录入
+uint16 PID_FACE_ENTRY_TIMEOUT = 37 # Entry timed out, please enter again
 
-uint16 PID_FACE_ENTRY_FINISH = 38                # 录入成功
+uint16 PID_FACE_ENTRY_FINISH = 38 # Entry successful
 
-uint16 PID_FACE_RECOGNITION_REQUEST = 39         # 开始人脸识别，请正对摄像头，且勿遮
+uint16 PID_FACE_RECOGNITION_REQUEST = 39 # To start face recognition, please face the camera and do not cover it.
 
-                                                 # 挡人脸
+                                                  # cover people’s faces
 
-uint16 PID_FACE_DEGREE_HEAD_TILT = 40            # 请不要歪头
+uint16 PID_FACE_DEGREE_HEAD_TILT = 40 # Please don’t tilt your head
 
-uint16 PID_FACE_RECGONITION_FINISH = 41          # 人脸识别成功
+uint16 PID_FACE_RECGONITION_FINISH = 41 # Face recognition successful
 
-uint16 PID_FACE_RECGONITION_TIMEOUT = 42         # 人脸识别已经超时，请重新尝试
+uint16 PID_FACE_RECGONITION_TIMEOUT = 42 # Face recognition has timed out, please try again
 
-uint16 PID_FACE_ALREADY_EXIST = 43               # 人脸已存在，请不要录入同一张脸
+uint16 PID_FACE_ALREADY_EXIST = 43 # The face already exists, please do not enter the same face
 
-uint16 PID_CAMERA_START_PIC_TRANSFER = 50        # 启动图传
+uint16 PID_CAMERA_START_PIC_TRANSFER = 50 # Start image transmission
 
-uint16 PID_CAMERA_START_PHOTOS = 51              # 拍照
+uint16 PID_CAMERA_START_PHOTOS = 51 # Take photos
 
-uint16 PID_CAMERA_TAKE_VIDEOS = 52               # 启动录像
+uint16 PID_CAMERA_TAKE_VIDEOS = 52 # Start recording
 
-uint16 PID_CAMERA_VIDEO_RECORDING = 53           # 录像中
+uint16 PID_CAMERA_VIDEO_RECORDING = 53 # Recording
 
-uint16 PID_BATTERY_CAPICITY_LOW = 101            # 电量低于10%
+uint16 PID_BATTERY_CAPICITY_LOW = 101 # The battery is less than 10%
 
-uint16 PID_BATTERY_IN_CHARGING = 102             # 现在开始充电
+uint16 PID_BATTERY_IN_CHARGING = 102 # Start charging now
 
-uint16 PID_BATTERY_CHARGE_COMPELETE = 104        # 充电完成了 
+uint16 PID_BATTERY_CHARGE_COMPELETE = 104 # Charging completed
 
-uint16 PID_AI_PLEASE_ENABLE = 124                # 请登录app账号以启用小爱在线功能
+uint16 PID_AI_PLEASE_ENABLE = 124 # Please log in to the app account to enable Xiao Ai online function
 
-uint16 PID_AI_ENABLE_SUCCESS = 125               # 小爱在线功能启动
+uint16 PID_AI_ENABLE_SUCCESS = 125 # Xiaoai online function starts
 
-uint16 PID_AI_SERVICE_EXPIRED = 127              # 语音登录已过期
+uint16 PID_AI_SERVICE_EXPIRED = 127 # Voice login has expired
 
-uint16 PID_TEST_HARDWARE_AUDIO = 3000            # 当前为语音硬件测试
+uint16 PID_TEST_HARDWARE_AUDIO = 3000 # Currently it is voice hardware test
 
-uint16 PID_TEST_STAGE_ONE = 3001                 # 第一阶段测试结束。请查看测试结果并
+uint16 PID_TEST_STAGE_ONE = 3001 # The first phase of testing is over. Please review the test results and
 
-                                                 # 记录后，进行第二阶段测试
+                                                  # After recording, perform the second phase of testing
 
-uint16 PID_TEST_STAGE_THREE = 3003               # 第三阶段测试结束，请查看测试结果并
+uint16 PID_TEST_STAGE_THREE = 3003 # The third phase of testing is over, please check the test results and
 
-                                                 # 记录
+                                                  # Record
 
-uint16 PID_SOUND_EFFECT_READY = 9000             # 整机就绪音效
+uint16 PID_SOUND_EFFECT_READY = 9000 # Machine ready sound effect
 
-uint16 PID_STOP_AUDIO_PLAY = 9999                # 打断当前正在播放的语音
+uint16 PID_STOP_AUDIO_PLAY = 9999 # Interrupt the currently playing voice
 
 
 
-string module_name                               # 模块名
+string module_name # module name
 
-uint16 play_id                                   # 播放ID，取如上常量值
+uint16 play_id #Play ID, take the above constant value
 ```
 
-### 声纹识别 
+### Voiceprint recognition
 
-- 具体功能：在App端通过声纹注册流程，关联了主人的昵称及主人的声纹信息。在对着机器狗喊“铁蛋铁蛋”，会识别出主人的声纹信息，然后获取到关联的主人昵称信息对外发布出来。
-- 接口形式：ros topic
-- 接口名字："voice_dlg_info"
-- 消息文件：std_msgs/msg/String
-- 消息内容：
+- Specific functions: Through the voiceprint registration process on the App side, the owner's nickname and the owner's voiceprint information are associated. When you shout "Tiedan, ironed," to the robot dog, the owner's voiceprint information will be recognized, and then the associated owner's nickname information will be obtained and released to the outside world.
+- Interface form: ros topic
+- Interface name: "voice_dlg_info"
+- Message file: std_msgs/msg/String
+- Message content:
 
 ```js
-string   data          # 主人昵称
+string data #Master nickname
 ```
 
-# 组合能力（出厂内置场景） 
+# Combination capabilities (factory built-in scenes)
 
-## 导航功能 
+## Navigation function
 
-具体功能：导航功能包含了建图、AB点导航、视觉跟随、UWB跟随方面的内容，这些功能的启动与关闭都通过统一的接口实现管理，同时提供了当前任务状态的查询接口。下文描述了每一项功能的具体内容，以及具体的启动、关闭方式。 
+Specific functions: The navigation function includes mapping, AB point navigation, visual following, and UWB following. The startup and shutdown of these functions are managed through a unified interface, and a query interface for the current task status is provided. The following describes the specific content of each function, as well as the specific startup and shutdown methods.
 
-### 通用接口 
+### Common interface
 
-#### 启动任务 
+#### Start task
 
-- 接口形式：ros action
-- 接口名字："start_algo_task"
-- 接口文件：protocol/ros/srv/Navigation.action
-- 接口内容：
+- Interface form: ros action
+- Interface name: "start_algo_task"
+- Interface file: protocol/ros/srv/Navigation.action
+- Interface content:
 
 ```js
-uint8                         nav_type         # 任务类型
+uint8 nav_type #Task type
 
-geometry_msgs/PoseStamped[]   poses            # AB点导航时设定的目标点
+geometry_msgs/PoseStamped[] poses # The target point set during AB point navigation
 
-string                        map_name  
+string map_name
 
-bool                          outdoor          # 室内室外建图标志位                           
+bool outdoor # Indoor and outdoor mapping flag
 
-sensor_msgs/RegionOfInterest  tracking_roi     # 跟随时的roi信息
+sensor_msgs/RegionOfInterest tracking_roi #roi information when following
 
-bool                          object_tracking  # 万物跟随标志位
+bool object_tracking # Everything follows the flag
 
 ---
 
-uint8                         result           # 结果
+uint8 result # result
 
 ---
 
-int32                         feedback_code    # 状态反馈
+int32 feedback_code # Status feedback
 
-string                        feedback_msg     # 状态信息  
+string feedback_msg # status information
 ```
 
-#### 关闭任务 
+#### Close task
 
-- 接口形式： ros service
-- 接口名字： "stop_algo_task"
-- 接口文件：protocol/ros/srv/StopAlgoTask.srv
-- 接口内容：
+- Interface form: ros service
+- Interface name: "stop_algo_task"
+- Interface file: protocol/ros/srv/StopAlgoTask.srv
+- Interface content:
 
 ```js
-uint8 task_id    # 任务的ID
+uint8 task_id # ID of the task
 
 ---
 
-bool  result     # true: 任务正常结束, false: 任务结束异常
+bool result # true: the task ends normally, false: the task ends abnormally
 ```
 
-#### 任务状态查询 
+#### Task status query
 
-- 接口形式： ros topic
-- 接口名字： "algo_task_status"
-- 接口文件：protocol/ros/msg/AlgoTaskStatus.msg
-- 接口内容：
+- Interface form: ros topic
+- Interface name: "algo_task_status"
+- Interface file: protocol/ros/msg/AlgoTaskStatus.msg
+- Interface content:
 
 ```Go
-uint8 task_status 
+uint8 task_status
 
 int32 task_sub_status
 ```
 
-### 激光建图 
+### Laser mapping
 
-- 激光建图主要在室内环境下采用单线激光数据，完成约30cm高度上的二维平面地图绘制。平面地图供定位、导航使用。
-- 完成地图绘制后可以在地图上标注点位信息标签，例如卧室、客厅等语义信息。
-- 启动方式见启动任务action接口，其中所需的关键goal字段包含：
+- Laser mapping mainly uses single-line laser data in indoor environments to complete two-dimensional flat map drawing at a height of about 30cm. Flat maps are used for positioning and navigation.
+- After completing the map drawing, you can mark point information labels on the map, such as bedroom, living room and other semantic information.
+- For the startup method, see the startup task action interface, where the required key goal fields include:
 
 ```js
-"nav_type: 1"         # 1表示启动建图
+"nav_type: 1" # 1 means to start mapping
 
-"out_door: false"     # false表示室内建图，即激光建图
+"out_door: false" # false means indoor mapping, that is, laser mapping
 ```
 
-- 关闭方式见关闭任务service接口，其中所需的关键request字段包含：
+- For the shutdown method, see the shutdown task service interface, where the required key request fields include:
 
 ```js
-"task_id: 1"          # 1表示关闭建图
+"task_id: 1" # 1 means to turn off mapping
 ```
 
-### 视觉建图 
+### Visual mapping
 
-- 视觉建图应用在室外环境中，使用相机数据，完成同时定位和建图功能，生成的二维平面地图供导航使用。
-- 初始位置处的重定位功能，即狗在开机后，可根据平面地图定位自身的位置。
-- 与激光地图相同，可以在绘制的视觉地图上标注语义信息。
-- 启动方式见启动任务action接口，其中所需的关键goal字段包含：
+- Visual mapping is applied in outdoor environments, using camera data to complete simultaneous positioning and mapping functions, and generate a two-dimensional flat map for navigation.
+- Relocation function at the initial position, that is, the dog can locate its own position according to the flat map after turning on the phone.
+- Like laser maps, semantic information can be annotated on the drawn visual map.
+- For the startup method, see the startup task action interface, where the required key goal fields include:
 
 ```js
-"nav_type: 1"         # 1表示启动建图
+"nav_type: 1" # 1 means to start mapping
 
-"out_door: true"      # true表示室外建图，即视觉建图
+"out_door: true" # true means outdoor mapping, that is, visual mapping
 ```
 
-- 关闭方式见关闭任务service接口，其中所需的关键request字段包含：
+- For the shutdown method, see the shutdown task service interface, where the required key request fields include:
 
 ```js
-"task_id: 1"          # 1表示关闭建图
+"task_id: 1" # 1 means to turn off mapping
 ```
 
-### AB点导航 
+### AB point navigation
 
-- 在激光或者视觉建图提供的二维平面地图的基础上，根据绘制的语义标签可以控制狗自主导航到选择的目标点
-- 在自主导航的过程中可以根据激光或者视觉信息实现自主避障
-- 启动方式见启动任务action接口，其中所需的关键goal字段包含：
-
-```js
-"nav_type: 5"         # 5表示启动AB点导航
-
-"poses: 
-
- position: ...
-
- orientation: ..."    # poses的第一个元素为目标点位姿
-```
-
- 
-
-- 关闭方式见关闭任务service接口，其中所需的关键request字段包含：
+- Based on the two-dimensional flat map provided by laser or visual mapping, the dog can be controlled to autonomously navigate to the selected target point based on the drawn semantic labels.
+- During the process of autonomous navigation, autonomous obstacle avoidance can be achieved based on laser or visual information.
+- For the startup method, see the startup task action interface, where the required key goal fields include:
 
 ```js
-"task_id: 5"          # 5表示关闭AB点导航
+"nav_type: 5" # 5 means starting AB point navigation
+
+"poses:
+
+  position: ...
+
+  orientation: ..." # The first element of poses is the target point pose
 ```
 
  
 
-### 视觉跟随 
-
-视觉跟随可以分为人体跟随和万物跟随，其中 
-
-- 人体跟随可以根据图传中的人体检测结果，选择要跟随的目标进行自主跟随
-- 万物跟随在图传中可以选择任一确定的物体后进行跟随
-- 人体跟随和万物跟随中都可以实现自主避障
-- 如果人体或者跟随的物体偏出跟随视野，机器狗会自主运动（例如原地旋转）尝试找回目标，当目标重新回到视野后可以继续进行跟随
-- 启动方式见启动任务action接口，其中所需的关键goal字段包含：
+- For the shutdown method, see the shutdown task service interface, where the required key request fields include:
 
 ```js
-"nav_type: 13"           # 13表示启动视觉跟随
-
-"object_tracking: true"  # true表示启动万物跟随，false表示启动人体跟随
-
-"relative_pos: 200:      # 200: 自主选择跟随位置
-
-                         # 201: 在目标后侧跟随
-
-                         # 202: 在目标的左侧跟随
-
-                         # 203: 在目标的右侧跟随
-
-"keep_distance: 1.2"     # 设定的跟随距离
+"task_id: 5" # 5 means turning off point AB navigation
 ```
 
  
 
-- 关闭方式见关闭任务service接口，其中所需的关键request字段包含：
+### Visual follow
+
+Visual following can be divided into human body following and all things following, among which
+
+- Human body following can select the target to follow based on the human body detection results in the image transmission and follow it autonomously
+- Everything can be followed in the image transmission by selecting any certain object to follow.
+- Autonomous obstacle avoidance can be achieved in both human body following and all things following.
+- If the human body or the object being followed deviates from the following field of view, the robot dog will move autonomously (such as rotating in place) to try to find the target. When the target returns to the field of view, it can continue to follow.
+- For the startup method, see the startup task action interface, where the required key goal fields include:
 
 ```js
-"task_id: 13"             # 13表示关闭视觉跟随
+"nav_type: 13" # 13 means starting visual following
+
+"object_tracking: true" # true means to start tracking of all things, false means to start following of human body
+
+"relative_pos: 200: # 200: Independently choose to follow the position
+
+                          #201: Follow behind the target
+
+                          #202: Follow left of target
+
+                          #203: Follow on the right side of the target
+
+"keep_distance: 1.2" # Set following distance
 ```
 
  
 
-### UWB跟随 
-
-- 在人手持UWB标签时，机器狗可以根据人的移动进行跟踪
-- UWB跟随不受跟随视野的限制，只要人手持UWB标签与机器狗的距离在UWB的检测范围内即可保持跟随状态
-- 在UWB跟随中可以识别路径上7-25cm的平台，并实现自主跳上台阶保持跟随状态
-- 在UWB跟随中会检测目标的运动状态，当目标静止时，机器狗会模拟真实场景下遛狗时的自主模式如扭屁股、坐下、趴下等动作，等待主人的行动，当目标移动后恢复继续跟随
-- 启动方式见启动任务action接口，其中所需的关键goal字段包含：
+- For the shutdown method, see the shutdown task service interface, where the required key request fields include:
 
 ```js
-"nav_type: 11"           # 11表示启动UWB跟随
-
-"relative_pos: 200:      # 200: 自主选择跟随位置
-
-                         # 201: 在目标后侧跟随
-
-                         # 202: 在目标的左侧跟随
-
-                         # 203: 在目标的右侧跟随
-
-"keep_distance: 1.2"     # 设定的跟随距离
+"task_id: 13" # 13 means turning off visual following
 ```
 
  
 
-- 关闭方式见关闭任务service接口，其中所需的关键request字段包含：
+### UWB Follow
+
+- When a person holds a UWB tag, the robot dog can track the person's movements
+- UWB following is not restricted by the following field of view. As long as the distance between the person holding the UWB tag and the robot dog is within the UWB detection range, the following state can be maintained.
+- In UWB following, you can identify platforms 7-25cm on the path, and realize autonomous jumping up the steps to keep following.
+- During UWB following, the target's motion status will be detected. When the target is stationary, the robot dog will simulate the autonomous mode of walking a dog in a real scene, such as twisting its butt, sitting down, lying down, etc., and wait for the owner's action. When the target moves, Continue to follow after recovery
+- For the startup method, see the startup task action interface, where the required key goal fields include:
 
 ```js
-"task_id: 11"             # 11表示关闭UWB跟随
+"nav_type: 11" # 11 means to start UWB following
+
+"relative_pos: 200: # 200: Independently choose to follow the position
+
+                          #201: Follow behind the target
+
+                          #202: Follow left of target
+
+                          #203: Follow on the right side of the target
+
+"keep_distance: 1.2" # Set following distance
 ```
 
  
 
-## 图像功能 
+- For the shutdown method, see the shutdown task service interface, where the required key request fields include:
 
-### 图传 
+```js
+"task_id: 11" # 11 means turning off UWB following
+```
 
-- 可将AI相机的图像传输到APP端
-  - 开启图传
-  - 停止图传
-  - 设定开启图传的分辨率（宽高比）
-  - 对齐方式：顶、中、底
+ 
 
-#### 信令通信，下行（APP→NX） 
+## Image function
 
-- 接口形式：ros topic
-- 接口名字："img_trans_signal_in"
-- 话题文件：std_msgs/msg/String
-- 话题内容：
+### Image transmission
+
+- Images from AI cameras can be transferred to the APP
+   - Turn on image transmission
+   - Stop image transmission
+   - Set the resolution (aspect ratio) to enable image transmission
+   - Alignment: Top, Center, Bottom
+
+#### Signaling communication, downlink (APP→NX)
+
+- Interface form: ros topic
+- Interface name: "img_trans_signal_in"
+- Topic file: std_msgs/msg/String
+- Topic content:
 
 ```js
 string data
 ```
 
-data的内容格式为json，有两种： 
+The content format of data is json, there are two types:
 
-##### offer_sdp 
-
-```JSON
-{
-
-    "offer_sdp" : {
-
-        "sdp" : "sdp内容",
-
-        "type" : "sdp类型"
-
-    },
-
-    "uid" : "识别码",
-
-    "height" : "手机屏幕的高",
-
-    "width" : "手机屏幕的宽",
-
-    "alignment" : "top或middle或bottom"
-
-}
-```
-
-##### ice candidate 
+##### offer_sdp
 
 ```JSON
 {
 
-    "c_sdp" : {
+     "offer_sdp" : {
 
-        "sdpMid" : "If present, this is the value of the \"a=mid\" attribute of the candidate's m= section in SDP, which identifies the m= section",
+         "sdp" : "sdp content",
 
-        "sdpMLineIndex" : "This indicates the index (starting at zero) of m= section this candidate is associated with. Needed when an endpoint doesn't support MIDs",
+         "type" : "sdp type"
 
-        "candidate" : "ice candidate内容"
+     },
 
-    },
+     "uid" : "identification code",
 
-    "uid" : "识别码"
+     "height" : "The height of the mobile phone screen",
+
+     "width" : "Width of the mobile phone screen",
+
+     "alignment" : "top or middle or bottom"
 
 }
 ```
 
-#### 信令通信，上行（NX→APP） 
+##### ice candidate
 
-- 接口形式：ros topic
-- 接口名字："img_trans_signal_out"
-- 话题文件：std_msgs/msg/String
-- 话题内容：
+```JSON
+{
+
+     "c_sdp" : {
+
+         "sdpMid" : "If present, this is the value of the \"a=mid\" attribute of the candidate's m= section in SDP, which identifies the m= section",
+
+         "sdpMLineIndex" : "This indicates the index (starting at zero) of m= section this candidate is associated with. Needed when an endpoint doesn't support MIDs",
+
+         "candidate" : "ice candidate content"
+
+     },
+
+     "uid" : "identification code"
+
+}
+```
+
+#### Signaling communication, uplink (NX→APP)
+
+- Interface form: ros topic
+- Interface name: "img_trans_signal_out"
+- Topic file: std_msgs/msg/String
+- Topic content:
 
 ```js
 string data
 ```
 
-data的内容格式为json，有两种： 
+The content format of data is json, there are two types:
 
-##### answer_sdp 
-
-```JSON
-{
-
-    "answer_sdp" : {
-
-        "sdp" : "sdp内容",
-
-        "type" : "sdp类型"
-
-    },
-
-    "uid" : "识别码",
-
-}
-```
-
-##### ice candidate 
+##### answer_sdp
 
 ```JSON
 {
 
-    "c_sdp" : {
+     "answer_sdp" : {
 
-        "sdpMid" : "If present, this is the value of the \"a=mid\" attribute of the candidate's m= section in SDP, which identifies the m= section",
+         "sdp" : "sdp content",
 
-        "sdpMLineIndex" : "This indicates the index (starting at zero) of m= section this candidate is associated with. Needed when an endpoint doesn't support MIDs",
+         "type" : "sdp type"
 
-        "candidate" : "ice candidate内容"
+     },
 
-    },
-
-    "uid" : "识别码"
+     "uid" : "identification code",
 
 }
 ```
 
-### 拍照 
+##### ice candidate
 
-- 在图传开启状态下，通过AI相机拍摄高分辨率照片，并传输给手机相册
-  - 触发拍照
-  - 传输失败的情况下，重连APP时重新传输照片文件
-- 接口形式：ros service
-- 接口名字："camera_service"
-- 服务文件：protocol/srv/CameraService
-- 服务内容：
+```JSON
+{
+
+     "c_sdp" : {
+
+         "sdpMid" : "If present, this is the value of the \"a=mid\" attribute of the candidate's m= section in SDP, which identifies the m= section",
+
+         "sdpMLineIndex" : "This indicates the index (starting at zero) of m= section this candidate is associated with. Needed when an endpoint doesn't support MIDs",
+
+         "candidate" : "ice candidate content"
+
+     },
+
+     "uid" : "identification code"
+
+}
+```
+
+### Photograph 
+
+- When image transmission is turned on, take high-resolution photos through the AI camera and transfer them to the mobile phone album
+   - Trigger photo
+   - If the transfer fails, the photo files will be re-transmitted when reconnecting to the APP
+- Interface form: ros service
+- Interface name: "camera_service"
+- Service file: protocol/srv/CameraService
+- Service Content:
 
 ```js
-uint8 SET_PARAMETERS = 0      #设置内部参数
+uint8 SET_PARAMETERS = 0 #Set internal parameters
 
-uint8 TAKE_PICTURE = 1        #拍照指令，每发一次拍一张照片，照片文件保存在/home/mi/Camera
+uint8 TAKE_PICTURE = 1 #Photography command, take a photo each time, the photo file is saved in /home/mi/Camera
 
-uint8 START_RECORDING = 2     #开始录像指令
+uint8 START_RECORDING = 2 #Start recording command
 
-uint8 STOP_RECORDING = 3      #结束录像指令，录像文件保存在/home/mi/Camera
+uint8 STOP_RECORDING = 3 #End recording command, the video file is saved in /home/mi/Camera
 
-uint8 GET_STATE = 4           #获取当前是否在录像中的状态
+uint8 GET_STATE = 4 #Get the status of whether it is currently recording or not
 
-uint8 DELETE_FILE = 5         #删除指定的照片或录像文件
+uint8 DELETE_FILE = 5 #Delete the specified photo or video file
 
-uint8 GET_ALL_FILES = 6       #获取所有已保存的照片和录像文件名
+uint8 GET_ALL_FILES = 6 #Get the file names of all saved photos and videos
 
-uint8 START_LIVE_STREAM = 7   #开启图传指令
+uint8 START_LIVE_STREAM = 7 #Enable image transmission command
 
-uint8 STOP_LIVE_STREAM = 8    #结束图传指令
+uint8 STOP_LIVE_STREAM = 8 #End image transmission command
 
-uint8 START_IMAGE_PUBLISH = 9 #开启图像发布指令，topic名：/image
+uint8 START_IMAGE_PUBLISH = 9 #Enable image publishing command, topic name: /image
 
-uint8 STOP_IMAGE_PUBLISH = 10 #关闭图像发布指令
+uint8 STOP_IMAGE_PUBLISH = 10 #Close image publishing instruction
 
 
 
@@ -2126,21 +2126,21 @@ uint16 fps
 
 ---
 
-uint8 RESULT_SUCCESS = 0       #成功
+uint8 RESULT_SUCCESS = 0 #Success
 
-uint8 RESULT_INVALID_ARGS = 1  #无效参数
+uint8 RESULT_INVALID_ARGS = 1 #Invalid parameters
 
-uint8 RESULT_UNSUPPORTED = 2   #不支持
+uint8 RESULT_UNSUPPORTED = 2 #Not supported
 
-uint8 RESULT_TIMEOUT = 3       #超时
+uint8 RESULT_TIMEOUT = 3 #Timeout
 
-uint8 RESULT_BUSY = 4          #繁忙
+uint8 RESULT_BUSY = 4 #Busy
 
-uint8 RESULT_INVALID_STATE = 5 #无效状态
+uint8 RESULT_INVALID_STATE = 5 #Invalid state
 
-uint8 RESULT_INNER_ERROR = 6   #内部错误
+uint8 RESULT_INNER_ERROR = 6 #Internal error
 
-uint8 RESULT_UNDEFINED_ERROR = 255 #未定义错误
+uint8 RESULT_UNDEFINED_ERROR = 255 #Undefined error
 
 
 
@@ -2149,42 +2149,42 @@ uint8 result
 string msg
 ```
 
-拍照会调用此服务，command为TAKE_PICTURE 
+This service will be called when taking pictures, and the command is TAKE_PICTURE
 
-### 录像 
+### Video
 
-- 在图传开启状态下，通过AI相机录制高分辨率视频，并传输给手机相册
-  - 开启录像
-  - 停止录像
-  - 传输过程中可开启下一段录像
-  - 传输失败的情况下，重连APP时重新传输视频文件
-- 接口形式：ros service
-- 接口名字："camera_service"
-- 服务文件：protocol/srv/CameraService
-- 服务内容：
+- When image transmission is turned on, record high-resolution video through the AI camera and transfer it to the mobile phone album
+   - Start recording
+   - Stop recording
+   - The next video can be started during the transfer process
+   - In case of transmission failure, the video file will be re-transmitted when reconnecting to the APP
+- Interface form: ros service
+- Interface name: "camera_service"
+- Service file: protocol/srv/CameraService
+- Service Content:
 
 ```js
-uint8 SET_PARAMETERS = 0      #设置内部参数
+uint8 SET_PARAMETERS = 0 #Set internal parameters
 
-uint8 TAKE_PICTURE = 1        #拍照指令，每发一次拍一张照片，照片文件保存在/home/mi/Camera
+uint8 TAKE_PICTURE = 1 #Photography command, take a photo each time, the photo file is saved in /home/mi/Camera
 
-uint8 START_RECORDING = 2     #开始录像指令
+uint8 START_RECORDING = 2 #Start recording command
 
-uint8 STOP_RECORDING = 3      #结束录像指令，录像文件保存在/home/mi/Camera
+uint8 STOP_RECORDING = 3 #End recording command, the video file is saved in /home/mi/Camera
 
-uint8 GET_STATE = 4           #获取当前是否在录像中的状态
+uint8 GET_STATE = 4 #Get the status of whether it is currently recording or not
 
-uint8 DELETE_FILE = 5         #删除指定的照片或录像文件
+uint8 DELETE_FILE = 5 #Delete the specified photo or video file
 
-uint8 GET_ALL_FILES = 6       #获取所有已保存的照片和录像文件名
+uint8 GET_ALL_FILES = 6 #Get the file names of all saved photos and videos
 
-uint8 START_LIVE_STREAM = 7   #开启图传指令
+uint8 START_LIVE_STREAM = 7 #Enable image transmission command
 
-uint8 STOP_LIVE_STREAM = 8    #结束图传指令
+uint8 STOP_LIVE_STREAM = 8 #End image transmission command
 
-uint8 START_IMAGE_PUBLISH = 9 #开启图像发布指令，topic名：/image
+uint8 START_IMAGE_PUBLISH = 9 #Enable image publishing command, topic name: /image
 
-uint8 STOP_IMAGE_PUBLISH = 10 #关闭图像发布指令
+uint8 STOP_IMAGE_PUBLISH = 10 #Close image publishing instruction
 
 
 
@@ -2202,21 +2202,21 @@ uint16 fps
 
 ---
 
-uint8 RESULT_SUCCESS = 0       #成功
+uint8 RESULT_SUCCESS = 0 #Success
 
-uint8 RESULT_INVALID_ARGS = 1  #无效参数
+uint8 RESULT_INVALID_ARGS = 1 #Invalid parameters
 
-uint8 RESULT_UNSUPPORTED = 2   #不支持
+uint8 RESULT_UNSUPPORTED = 2 #Not supported
 
-uint8 RESULT_TIMEOUT = 3       #超时
+uint8 RESULT_TIMEOUT = 3 #Timeout
 
-uint8 RESULT_BUSY = 4          #繁忙
+uint8 RESULT_BUSY = 4 #Busy
 
-uint8 RESULT_INVALID_STATE = 5 #无效状态
+uint8 RESULT_INVALID_STATE = 5 #Invalid state
 
-uint8 RESULT_INNER_ERROR = 6   #内部错误
+uint8 RESULT_INNER_ERROR = 6 #Internal error
 
-uint8 RESULT_UNDEFINED_ERROR = 255 #未定义错误
+uint8 RESULT_UNDEFINED_ERROR = 255 #Undefined error
 
 
 
@@ -2225,129 +2225,129 @@ uint8 result
 string msg
 ```
 
-## 快速连接 
+## Quick connection
 
-- 通过外设touch触发联网功能
-- RGB相机服务拍摄二维码照片
-- AI模块解析二维码信息
-- wifi模块连接网络
-- 语音播放联网结果
+- Trigger networking function through peripheral touch
+- RGB camera service to take QR code photos
+- AI module parses QR code information
+- wifi module connects to the network
+- Voice playback of Internet results
 
-### touch触发联网 
+### Touch triggers networking
 
-- 具体功能：获取touch动作，当touch_state=7，执行联网功能
-- 接口形式：ros topic
-- 接口名字："touch_status"
-- 消息文件：protocol/msg/TouchStatus
-- 消息内容
+- Specific function: Get touch action, when touch_state=7, perform networking function
+- Interface form: ros topic
+- Interface name: "touch_status"
+- Message file: protocol/msg/TouchStatus
+- Message content
 
 ```js
-std_msgs/Header header   # 消息头
+std_msgs/Header header # Message header
 
 
 
-int32    touch_state     # 0x01 ：单击， 0x03:双击 ， 0x07: 长按
+int32 touch_state # 0x01: single click, 0x03: double click, 0x07: long press
 
-uint64   timestamp       # 时间戳
+uint64 timestamp # timestamp
 ```
 
-### 状态获取 
+### Status acquisition
 
-- 具体功能：获取当前连接状态
-- 接口形式：ros topic
-- 接口名字："connector_status"
-- 消息文件：protocol/msg/ConnectorStatus
-- 服务内容：
+- Specific function: Get the current connection status
+- Interface form: ros topic
+- Interface name: "connector_status"
+- Message file: protocol/msg/ConnectorStatus
+- Service Content:
 
 ```js
-bool   is_connected    # 是否连接了网络， true: 是； false: 否；
+bool is_connected # Whether the network is connected, true: yes; false: no;
 
-bool   is_internet     # 是否连接了网络， true: 是； false: 否；
+bool is_internet # Whether the network is connected, true: yes; false: no;
 
-string ssid            # wifi名字（若未连接，该字段无效）
+string ssid #wifi name (if not connected, this field is invalid)
 
-string robot_ip        # 机器人ip
+string robot_ip #robot ip
 
-string provider_ip     # wifi提供方（移动端）IP
+string provider_ip #wifi provider (mobile terminal) IP
 
-uint8  strength        # 信号强度，取值范围 0 - 100，0：无信号，100：信号最强；
+uint8 strength # Signal strength, value range 0 - 100, 0: no signal, 100: strongest signal;
 
-int32  code            # 执行（状态）结果， 详情请参考cyberdog_system定义文档
+int32 code #Execution (status) result, please refer to the cyberdog_system definition document for details
 ```
 
-### 连接WiFi及APP设备 
+### Connect to WiFi and APP devices
 
-- 具体功能：连接目标WiFi及目标设备
-- 接口形式：ros service
-- 接口名字："connect"
-- 服务文件：protocol/srv/Connector
-- 服务内容：
+- Specific functions: Connect to target WiFi and target device
+- Interface form: ros service
+- Interface name: "connect"
+- Service file: protocol/srv/Connector
+- Service Content:
 
 ```js
-string wifi_name        # 目标 WiFi 名称
+string wifi_name # Target WiFi name
 
-string wifi_password    # 目标 WiFi 密码
+string wifi_password # Target WiFi password
 
-string provider_ip      # 目标 终端 IP
+string provider_ip # Target terminal IP
 
 ---
 
-bool   connected        # WiFi 是否连成功
+bool connected # WiFi is connected successfully
 ```
 
-### 断开当前设备的连接 
+### Disconnect the current device
 
-- 具体功能：断开当前设备的连接
-- 接口形式：ros topic
-- 接口名字："disconnect_app"
-- 消息文件：std_msgs/msg/Bool
-- 服务内容：
+- Specific function: Disconnect the current device
+- Interface form: ros topic
+- Interface name: "disconnect_app"
+- Message file: std_msgs/msg/Bool
+- Service Content:
 
 ```js
-bool data               # true: 断开当前wifi与当前app连接，反之无效
+bool data # true: Disconnect the current wifi connection with the current app, otherwise it will be invalid.
 ```
 
-## 日常逗狗 
+## Daily funny dog
 
-- 狗进入运动坐姿模式
-- 人手抚摸狗下巴，TOF传感器识别出人手
-- 运动进行扭动
+- Dog enters sport sitting mode
+- A human hand touches the dog's chin, and the TOF sensor recognizes the human hand
+- Movement for twisting
 
-## 声音事件提醒 
+## Sound event reminder
 
-- 监听周边环境音
-- 预设环境音对应的行为
-- 在发生敲门、哭泣、喷嚏等超出白噪音的声音时，狗做出反应
+- Monitor surrounding environment sounds
+- Preset behaviors corresponding to ambient sounds
+- Dogs react to sounds like knocking, crying, sneezing, etc. that go beyond white noise
 
-# 可视化编程 
+# Visual programming
 
-参考：[图形化编程帮助文档](https://xiaomi.f.mioffice.cn/docs/dock42yTK5kj89KQZppS8RXFXPd)  
+Reference: [Graphical Programming Help Document](https://xiaomi.f.mioffice.cn/docs/dock42yTK5kj89KQZppS8RXFXPd)
 
-## 可视化编程接口能力 
+## Visual programming interface capabilities
 
-- 操作方面：包括创建、删除、调试、运行、暂停、继续、终止；
-- 属性方面：包括立即执行、周期运行、定时运行、函数模块等；
-- 支持运算符：算术运算符、比较运算符、复制运算符、逻辑运算符、位运算符；
-- 支持的数据类型：整型、浮点型、字符串、列表、元组、字典；
-- 能力集：基础状态信息、网络模块、跟随模块、运动模块、导航模块、人员信息模块（年龄、声纹、人脸等）、AI人体动作模块、语音模块、Led模块、触摸板模块、全球定位系统模块、激光测距模块、雷达模块、超声波模块、里程计魔模块、惯导模块；
+- Operations: including creation, deletion, debugging, running, pausing, continuing, and terminating;
+- Attributes: including immediate execution, periodic operation, scheduled operation, function modules, etc.;
+- Support operators: arithmetic operators, comparison operators, copy operators, logical operators, bitwise operators;
+- Supported data types: integer, floating point, string, list, tuple, dictionary;
+- Capability set: basic status information, network module, following module, motion module, navigation module, personnel information module (age, voiceprint, face, etc.), AI human movement module, voice module, Led module, touch pad module, global Positioning system module, laser ranging module, radar module, ultrasonic module, odometer magic module, inertial navigation module;
 
-## 场景案例 
+## Scenario case
 
-通过组合一系列的能力集，用户可以自由创建场景 
+By combining a series of capability sets, users can freely create scenarios
 
-譬如：亲近主人： 
+For example: getting close to the master:
 
-- 通过人员信息模块检测家庭成员声纹和人脸；
-- 通过跟随模块跑向主人；
-- 通过运动模块围绕主人转圈、做出一些可爱动作（扭头、扭屁股、伸懒腰、跳舞等）；
-- 通过语音模块播报一些语音；
-- 可以通过AI人体动作模块检测主人手势动作，做出相应的反应（手掌拉近：狗子过来；手掌推开：狗子离开；手向左推：狗子左移；手向右推：狗子右移；手向下压：狗子扒下；大拇指朝上：狗子起立；等..）；
+- Detect voiceprints and faces of family members through the personnel information module;
+- Run to the owner by following the module;
+- Use the movement module to circle around the owner and perform some cute actions (turning the head, twisting the butt, stretching, dancing, etc.);
+- Broadcast some voices through the voice module;
+- The AI human action module can detect the owner's gestures and respond accordingly (pull the palm closer: the dog comes; push the palm away: the dog leaves; push the hand to the left: the dog moves left; push the hand to the right: the dog Move the dog to the right; press down with your hand: the dog will pick it off; thumb up: the dog will stand up; etc.);
 
-譬如：早起闹钟任务： 
+For example: early morning alarm clock task:
 
-- 创建一个任务；
-- 铁蛋通过定位模块定位自己位置；
-- 通过导航模块规划到达目的地的路线；
-- 运动过程通过雷达和视觉模块进行自动避障；
-- 到达目的地主人卧室；
-- 通过语音模块播放音乐或者自定义语音；
+- Create a task;
+- Tiedan locates its position through the positioning module;
+- Plan the route to your destination through the navigation module;
+- The movement process uses radar and vision modules to automatically avoid obstacles;
+- Arrive at the destination master bedroom;
+- Play music or customize your voice through the voice module;
