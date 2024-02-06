@@ -1,442 +1,437 @@
-# Cyberdog开发者刷机操作说明文档
+# Cyberdog Developer Flash Operation Instructions Document
 
-## 1. 刷机流程
+## 1. Flashing process
 
-1. 首先升级感知主板Xavier NX
-2. 然后升级机器狗内部其他各个子板
-3. 刷机过程中无论成功或者失败，均会有相应的提示音
+1. First upgrade the sensing motherboard Xavier NX
+2. Then upgrade other sub-boards inside the robot dog
+3. During the flashing process, no matter whether it is successful or failed, there will be a corresponding prompt sound.
 
-## 2. 刷机配置文件说明
+## 2. Flash configuration file description
 
-刷机流程中，升级感知主板Xavier NX为必选，其他各个子板可根据该配置文件来决定是否升级。
+During the flashing process, the upgrade-aware motherboard Xavier NX is required, and other daughter boards can decide whether to upgrade based on this configuration file.
 
-### 2.1 具体文件格式示例
+### 2.1 Specific file format examples
 
 ```tex
 r329 = on
 mr813 = on
-power = on
-imu = on
-head-tof = on
-tail-tof = on   
-mini-led = on
-head-uwb = on    
-tail-uwb = on
-check-battery = 40
-force-update = off
+power=on
+imu=on
+head-tof=on
+tail-tof=on
+mini-led=on
+head-uwb=on
+tail-uwb=on
+check-battery=40
+force-update=off
 ```
 
-参数解释：
+Parameter explanation:
 
-- **前9行，每行包括三个部分，以第一行来举例说明：**
-  - r329代表要升级的主板名称
+- **The first 9 lines, each line includes three parts, take the first line as an example: **
+   - r329 represents the name of the motherboard to be upgraded
 
-  - 符号 “=”
+   - Symbol "="
 
-  - 是否升级其他主板，升级为"on"，不升级为"off"   (建议同步更新所有主板保证系统稳定性)
+   - Whether to upgrade other motherboards, upgrade is "on", not upgrade is "off" (it is recommended to update all motherboards simultaneously to ensure system stability)
 
 
-- **“check-battery”表示是否在升级NX板前检测电量或者检测电量的临界值：**
-  - 取值范围为0—100
-  - 0表示不检测电量
-  - 大于0，比如30，表示如果当前机器电量低于30%则停止整机刷机，此时应该给机器充电，直到大于30%再次进行整机刷机
+- **"check-battery" indicates whether to check the power or detect the critical value of the power before upgrading the NX board: **
+   - The value range is 0-100
+   - 0 means no power detection
+   - Greater than 0, such as 30, means that if the current power of the machine is less than 30%, the whole machine will stop flashing. At this time, the machine should be charged until it is greater than 30% and the whole machine will be flashed again.
 
-- **“force-update”表示是否在升级NX板后强制升级其他主板，也即是否检测其他主板与NX板的通信状态，提前检测通信状态能在升级NX板前发现不能进行升级的其他主板：**
+- **"force-update" indicates whether to force the upgrade of other motherboards after upgrading the NX board, that is, whether to detect the communication status of other motherboards and the NX board. Detecting the communication status in advance can discover other motherboards that cannot be upgraded before upgrading the NX board: **
 
-  - “on”表示强制升级，也即不检测通信状态
+   - "on" means forced upgrade, that is, the communication status is not detected
 
-  - “off”表示不强制升级，也即检测通信状态
+   - "off" means not to force the upgrade, that is, to detect the communication status
 
-### 2.2 配置文件格式要求
+### 2.2 Configuration file format requirements
 
-- **文件格式必须为linux下的文本格式（换行符LF）**
+- **The file format must be text format under linux (line break LF)**
 
-  ![](./image/cyberdog_flash/conf_file_format.png)
+   ![](./image/cyberdog_flash/conf_file_format.png)
 
-- **文件行数必须为11行，第11行之后不能有换行**
+- **The number of lines in the file must be 11, and there must be no line breaks after the 11th line**
 
-- **每行三部分之间必须有最少一个空格隔开**
+- **There must be at least one space separating the three parts of each line**
 
-- **每行的第一部分、第二部分必须和2.1中的示例文件相同**
+- **The first and second parts of each line must be the same as the sample file in 2.1**
 
-- **每行的第三部分，必须为on或者off中的一个，或者“check-battery”的0—100**
+- **The third part of each line must be one of on or off, or 0-100 of "check-battery"**
 
-### 2.3 不指定配置文件情况下的默认值
+### 2.3 Default value without specifying a configuration file
 
-- 各个主板默认为“off”，也即不升级
+- Each motherboard defaults to "off", which means it will not be upgraded.
 
-- “check-battery”默认为0，也即不检查电量
+- "check-battery" defaults to 0, which means the battery is not checked
 
-- “force-update”默认为“on”，也即强制升级，在升级前不再检查各个主板与NX板的通信情况
+- "force-update" defaults to "on", which means forced upgrade. The communication between each motherboard and the NX board is no longer checked before the upgrade.
 
-## 3. 刷机方式介绍
+## 3. Introduction to flashing method
 
-目前机器狗有两种刷机方式：
+Currently there are two ways to flash the robot dog:
 
-- PC线刷方式
+- PC wire brushing method
 
-​		使用该方式进行刷机需要装有Ubuntu系统的PC一台以及一根特制下载线，时间根据PC配置不同而定，基本需要15分钟左右。
+​ Using this method to flash the computer requires a PC with Ubuntu system and a special download cable. The time depends on the PC configuration, and it basically takes about 15 minutes.
 
-​		该方式对刷机配置文件的名称无要求。
+​ This method has no requirement for the name of the flash configuration file.
 
-- U盘卡刷方式
+- U disk card swiping method
 
-​		使用该方式进行刷机需要U盘一个，时间根据U盘速度不同而定，基本需要10分钟左右，并且不需要刷机线的参与，也会更加方便。
+​Using this method to flash the phone requires a USB flash drive. The time depends on the speed of the USB flash drive. It basically takes about 10 minutes, and does not require the participation of the flashing line, which will be more convenient.
 
-​		该方式要求刷机配置文件的名称必须固定为ota_others.conf，其他均与PC线刷方式相同。
+​ This method requires that the name of the flash configuration file must be fixed to ota_others.conf, and everything else is the same as the PC wire flash method.
 
-​		**关于U盘卡刷方式，需要注意的是：**
+​ ** Regarding the USB flash drive card swiping method, you need to pay attention to the following: **
 
-​		1. 该方式下U盘不支持通过Usb Hub连接，必须直接插入到机器狗中！
+​ 1. In this method, the USB flash drive does not support connection through the USB Hub and must be directly inserted into the robot dog!
 
-​		2. 目前不支持usb接口的固态硬盘作为刷机U盘
+2. Currently, solid state drives with USB interface are not supported as flash USB flash drives.
 
-​		3. 每刷机一次都需要重新开启刷机标志，具体参见“5.7需要再次刷机”
+3. Each time you flash the phone, you need to re-enable the flash flag. For details, please refer to "5.7 Need to flash again"
 
-​		4. U盘只支持type-c接口，并且由于机器狗的外形设计，提供给U盘插入的空间不是很大，所以需要大小适合的U盘。如果需要购买的话可以参考如下链接：
+​ 4. U disk only supports type-c interface, and due to the shape design of the robot dog, the space provided for U disk insertion is not very large, so a U disk of suitable size is required. If you need to purchase, you can refer to the following link:
 
-​		https://item.jd.com/5522803.html?bbtf=1#crumb-wrap
+​ https://item.jd.com/5522803.html?bbtf=1#crumb-wrap
 
-以上两种刷机方式均需要一台装有Ubuntu系统的PC，目前暂时不支持Windows系统。
+The above two flashing methods require a PC with Ubuntu system installed, and currently do not support Windows system.
 
-## 4. PC线刷方式
+## 4. PC wire brushing method
 
-### 4.1 解压刷机包
+### 4.1 Unzip the flash package
 
-执行如下命令，解压官方提供的release刷机包到PC的目录下（该目录的路径以及名称不做要求）
+Execute the following command to unzip the official release flash package to the PC directory (the path and name of the directory are not required)
 
 ```bash
-$ sudo tar -xvf 刷机包路径 -C 解压到的目录
+$ sudo tar -xvf flash package path -C directory to extract to
 ```
 
-### 4.2 配置刷机环境
+### 4.2 Configure the flashing environment
 
-解压完成后，进入到解压后的目录下，执行如下命令配置刷机环境
+After decompression is completed, go to the decompressed directory and execute the following command to configure the flashing environment
 
 ```bash
 $ tools/otf_tools/setup.sh
 ```
 
-> 注意：
+> Note:
 >
-> 1. 如提示权限问题，请执行：
+> 1. If prompted with permission issues, please execute:
 >
->       $ chmod +x tools/otf_tools/setup.sh
+> $ chmod +x tools/otf_tools/setup.sh
 >
-> 2. 该脚本执行期间可能需要输入“Y”以确定继续安装，如遇到直接输入即可。
+> 2. During the execution of the script, you may need to enter "Y" to confirm the installation. If you encounter it, you can enter it directly.
 
-### 4.3 进入刷机模式
+### 4.3 Enter flash mode
 
-保持机器狗头部朝向前方的状态下，将附带的刷机线插入到最右边的usb typec接口中，然后按照下述说明进行操作：
+With the robot dog's head facing forward, insert the included flash cable into the USB TypeC interface on the far right, and then follow the instructions below:
 
-- 如果当前处于关机状态，长按电源键5秒，此时表示机器狗已经进入刷机模式
-- 如果当前处于开机状态，长按电源键5秒，松开电源键，再长按电源键5秒，此时表示机器狗已经进入刷机模式
+- If it is currently powered off, press and hold the power button for 5 seconds. This will indicate that the robot dog has entered flash mode.
+- If it is currently on, press and hold the power button for 5 seconds, release the power button, and then press and hold the power button for 5 seconds. This means that the robot dog has entered the flash mode.
 
-### 4.4 进行刷机
+### 4.4 Flash the machine
 
-机器狗进入刷机模式后，继续执行如下命令进行刷机（其中**flash_conf_file_path**即为前述提到的刷机配置文件在PC中的路径，具体路径以及名称不做要求）
+After the robot dog enters the flash mode, continue to execute the following command to flash the machine (where **flash_conf_file_path** is the path of the flash configuration file mentioned above in the PC, and the specific path and name are not required)
 
 ```Shell
 $ sudo ./flashall.sh --others-ota-conf-path flash_conf_file_path
 ```
 
-### 4.5 等待刷机完成
+### 4.5 Wait for flashing to complete
 
-时间依赖于具体PC的配置情况，大概15分钟左右，具体会按照下述顺序进行：
+The time depends on the specific PC configuration, about 15 minutes, and will be carried out in the following order:
 
-1. 执行上一步骤命令后，如果最终显示"Flash Successfully !"，表示感知主板Xavier NX升级成功，此时可以拔掉刷机线；
-2. 语音提示“开始更新其他主板”，表示开始更新除了感知主板Xavier NX之外的其他各个子板，在更新过程中会循环播报“开始更新其他主板”；
-3. 语音提示“其他主板更新成功”，表示其他各个子板更新成功，此时全部刷机完成；
-4. 重启机器狗，具体的话，长按电源键5秒，松开电源键，再长按电源键5秒，此时机器狗重启成功并进入正常使用状态。
+1. After executing the command in the previous step, if "Flash Successfully!" is finally displayed, it means that the motherboard Xavier NX has been successfully upgraded. At this time, you can unplug the flash cable;
+2. The voice prompt "Start updating other motherboards" means starting to update various sub-boards except the sensing motherboard Xavier NX. During the update process, "Start updating other motherboards" will be broadcast in a loop;
+3. The voice prompt "Other motherboards have been updated successfully" means that the other sub-boards have been updated successfully, and all flashing is completed at this time;
+4. Restart the robot dog. Specifically, press and hold the power button for 5 seconds, release the power button, and then press and hold the power button for 5 seconds. At this time, the robot dog restarts successfully and enters normal use state.
 
-> 注意：目前已知安装ros环境时，如果配置如下有关字符集的内容：
+> Note: It is currently known that when installing the ros environment, if the following content about the character set is configured:
 >
-> ```bash
+> ````bash
 > sudo apt update && sudo apt install locales
 > sudo locale-gen en_US en_US.UTF-8
 > sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 > export LANG=en_US.UTF-8
 > ```
 >
-> 会导致上述第一步升级完感知主板Xavier NX后不会继续执行之后的步骤。
+> This will cause the subsequent steps to not continue after upgrading the sensing motherboard Xavier NX in the first step above.
 >
-> 此时需要手动重启机器狗才能继续执行上述第二步以及之后的步骤。
+> At this time, you need to manually restart the robot dog to continue the second and subsequent steps above.
 
-## 5. U盘卡刷方式
+## 5. U disk card swiping method
 
-**以下操作会导致U盘之前的所有数据全部丢失！！请提前做好备份！！**
+**The following operations will cause all data on the USB flash drive to be lost! ! Please make a backup in advance! ! **
 
-### 5.1 准备脚本工具
+### 5.1 Prepare script tools
 
-1. 如果已经使用过了PC线刷方式进行刷机，因为脚本工具放在了官方提供的release刷机包中，那么可以跳过该步骤，否则需要进行后面的操作
+1. If you have already used the PC wire flash method to flash the phone, because the script tool is placed in the official release flash package, you can skip this step, otherwise you need to perform the following operations.
 
-2. 执行如下命令，解压刷机包到PC的目录下（该目录的路径以及名称不做要求）
+2. Execute the following command to unzip the flash package to the PC directory (the path and name of the directory are not required)
 
-   ```bash
-   $ sudo tar -xvf 刷机包路径 -C 解压到的目录
-   ```
+    ```bash
+    $ sudo tar -xvf flash package path -C directory to extract to
+    ```
 
 
-### 5.2 制作符合要求的U盘
+### 5.2 Make a USB flash drive that meets the requirements
 
-#### 5.2.1 确定U盘设备名称
+#### 5.2.1 Determine the USB device name
 
-因为该名称后面的操作需要用到，所以需要首先确定。
+Because the operation behind this name is needed, it needs to be determined first.
 
-方法可参考如下：
+The method can be referenced as follows:
 
-1. 在未插入U盘到PC的情况下，执行如下命令：
+1. Without inserting the USB flash drive into the PC, execute the following command:
 
-   ```bash
-   $ ls /dev/sd*
-   /dev/sda  /dev/sda1  /dev/sda2
-   ```
+    ```bash
+    $ ls /dev/sd*
+    /dev/sda /dev/sda1 /dev/sda2
+    ```
 
-2. 将U盘插入PC，再次执行上述命令：
+2. Insert the USB flash drive into the PC and execute the above command again:
 
    ```bash
    $ ls /dev/sd*
    /dev/sda  /dev/sda1  /dev/sda2  /dev/sdb  /dev/sdb1
    ```
 
-​		可以看到，多出了“/dev/sdb”以及“/dev/sdb1”，其中：
+​ As you can see, there are "/dev/sdb" and "/dev/sdb1", among which:
 
-​			/dev/sdb：表示U盘这个设备，这里称为**设备名称**
+​/dev/sdb: Represents the U disk device, here called **device name**
 
-​			/dev/sdb1：表示设备的第一个分区，这里称为**设备分区名称**
+​/dev/sdb1: Represents the first partition of the device, here called **device partition name**
 
-**需要注意的是上述的/dev/sdb以及/dev/sdb1会随着PC的不同而有所变化，并不固定，需要根据个人情况而定。**
+**It should be noted that the above /dev/sdb and /dev/sdb1 will change with different PCs and are not fixed. They need to be determined according to personal circumstances. **
 
-#### 5.2.2 进行制作
+#### 5.2.2 Make
 
-目前支持两种制作方式：
+Currently two production methods are supported:
 
-1. 第一种制作方式将所有的步骤都集成到了一个脚本工具中，方便快捷，推荐使用
-2. 第二种制作方式将所有的步骤全部分解并需要手动去一步步操作，适用于第一种方式出现问题后备用
+1. The first production method integrates all steps into a script tool, which is convenient and fast. It is recommended to use
+2. The second production method breaks down all the steps and requires manual operation step by step. It is suitable for backup in case of problems with the first method.
 
-##### 5.2.2.1 制作方式1
+##### 5.2.2.1 Production method 1
 
-1. 将U盘插入到PC
+1. Insert the USB flash drive into the PC
 
-2. 执行如下命令，进入到“5.1 准备脚本工具”步骤中解压到的目录中的脚本工具存放目录
+2. Execute the following command to enter the directory where the script tool is stored in the directory extracted in step "5.1 Preparing the script tool".
 
-   ```bash
-   cd 解压目录/tools/otf_tools
-   ```
+    ```bash
+    cd unzip directory/tools/otf_tools
+    ```
 
-3. 执行如下命令，开始进行制作（“U盘设备名称”为上一步示例中确定的设备名称）
+3. Execute the following command to start production ("U disk device name" is the device name determined in the previous example)
 
-   ```bash
-   $ sudo ./mkudisk.sh U盘设备名称
-   ```
+    ```bash
+    $ sudo ./mkudisk.sh U disk device name
+    ```
    
-   出现如下显示则表示制作成功
+    If the following display appears, the production is successful.
    
-   ```bash
-   make udisk successfully!
-   ```
+    ```bash
+    makeudisk successfully!
+    ```
 
-##### 5.2.2.2 制作方式2
+##### 5.2.2.2 Production method 2
 
-1. 卸载默认挂载的分区
+1. Unmount the default mounted partition
 
-   在“5.2.1 确定U盘设备名称”步骤中，由于最后插入了U盘，默认会自动挂载到某个目录下，但是之后的操作需要卸载，所以执行如下命令进行卸载（其中参数“/dev/sdb1”即为步骤“5.2.1 确定U盘设备名称”中确定的设备分区名称）
+    In the step "5.2.1 Determine the name of the U disk device", since the U disk is inserted at the end, it will be automatically mounted to a certain directory by default. However, subsequent operations require uninstallation, so execute the following command to uninstall (the parameter "/ "dev/sdb1" is the device partition name determined in step "5.2.1 Determine the U disk device name")
 
-   ```bash
-   $ umount /dev/sdb1
-   ```
+    ```bash
+    $ umount /dev/sdb1
+    ```
 
-​		**保持U盘的插入状态，不要拔出，继续进行下面的操作！！**
+​ **Keep the U disk inserted, do not pull it out, and continue with the following operations! ! **
 
-2. 修改分区表为gpt格式
+2. Modify the partition table to gpt format
 
-   由于该刷机功能需要U盘拥有gpt格式的分区表，但是一般新的U盘的分区表格式为msdos，所以需要进行修改。具体可以使用parted命令完成该要求，具体操作如下（其中参数“/dev/sdb”即为步骤“5.2.1 确定U盘设备名称”中确定的设备名称）
+    Since the flashing function requires the U disk to have a partition table in gpt format, but generally the partition table format of new U disks is msdos, so it needs to be modified. Specifically, you can use the parted command to complete this requirement. The specific operations are as follows (the parameter "/dev/sdb" is the device name determined in step "5.2.1 Determine the U disk device name")
 
-   ```bash
-   $ sudo parted /dev/sdb                   
-   GNU Parted 3.3
-   使用 /dev/sdb
-   欢迎使用 GNU Parted！输入 'help' 来查看命令列表。
-   (parted) mklabel                                                          
-   新的磁盘卷标类型？ gpt                                                    
-   警告: 现有 /dev/sdd 上的磁盘卷标将被销毁，而所有在这个磁盘上的数据将会丢失。您要继续吗？
-   是/Yes/否/No? y                                                           
-   (parted) quit                                                             
-   信息: 你可能需要 /etc/fstab。   
-   ```
+    ```bash
+    $ sudo parted /dev/sdb
+    GNU Parted 3.3
+    Use /dev/sdb
+    Welcome to GNU Parted! Type 'help' to see a list of commands.
+    (parted) mklabel
+    New disk volume label type? gpt
+    Warning: The existing disk volume on /dev/sdd will be destroyed and all data on this disk will be lost. Do you want to continue?
+    Yes/Yes/No/No? y
+    (parted) quit
+    INFO: You may need /etc/fstab.
+    ```
    
-3. 重新分区
+3. Repartition
 
-   分区表格式修改为gpt之后，之前的数据会全部丢失，所以需要重新分区。具体地，同样可以使用parted命令，具体操作如下（其中参数“/dev/sdb”即为步骤“5.2.1 确定U盘设备名称”中确定的设备名称）
+    After the partition table format is changed to gpt, all previous data will be lost, so repartitioning is required. Specifically, you can also use the parted command, and the specific operations are as follows (the parameter "/dev/sdb" is the device name determined in step "5.2.1 Determine the U disk device name")
 
-   ```bash
-   $ sudo parted /dev/sdb
-   GNU Parted 3.3
-   使用 /dev/sdb
-   欢迎使用 GNU Parted！输入 'help' 来查看命令列表。
-   (parted) mkpart 
-   分区名称？  []? otf                                                       
-   文件系统类型？  [ext2]? ext4                                              
-   起始点？ 0%                                                               
-   结束点？ 100%                                                             
-   (parted) quit                                                             
-   信息: 你可能需要 /etc/fstab。
-   ```
+    ```bash
+    $ sudo parted /dev/sdb
+    GNU Parted 3.3
+    Use /dev/sdb
+    Welcome to GNU Parted! Type 'help' to see a list of commands.
+    (parted) mkpart
+    Partition name? []?otf
+    File system type? [ext2]? ext4
+    Starting point? 0%
+    Ending point? 100%
+    (parted) quit
+    INFO: You may need /etc/fstab.
+    ```
 
-4. 格式化并固定U盘的挂载目录名称
+4. Format and fix the mounting directory name of the USB flash drive
 
-    a. 在Ubuntu系统下搜索“磁盘”软件，打开并找到U盘的对应界面，本例中为左边的第四个（根据个人实际情况找到U盘的对应磁盘）
+     a. Search for the "disk" software under the Ubuntu system, open and find the corresponding interface of the U disk, in this example it is the fourth one on the left (find the corresponding disk of the U disk according to personal actual situation)
     
-    <img src="./image/cyberdog_flash/format_udisk1.png" style="zoom:80%;" />
+     <img src="./image/cyberdog_flash/format_udisk1.png" style="zoom:80%;" />
 
-​	   b. 点击设置按钮，选择格式化分区，如下图所示
+​ b. Click the Settings button and select format partition, as shown in the figure below
 
-​												<img src="./image/cyberdog_flash/format_udisk2.png" style="zoom:80%;" />
+​ <img src="./image/cyberdog_flash/format_udisk2.png" style="zoom:80%;" />
 
-​		c. 进入到格式化界面，按照如下选择即可：
+​ c. Enter the formatting interface and make the following selections:
 
-​				卷名：固定为“**otf_usb**”（注意，此处必须为此名称，否则之后的操作不会成功）
+Volume name: Fixed to "**otf_usb**" (note that this name must be used here, otherwise subsequent operations will not be successful)
 
-​				擦除：不选择默认即可
+​ Erase: Just don’t select the default
 
-​				类型：选择第一项“只用于Linux系统的内部磁盘(Ext4)(I)
+Type: Select the first item "Internal disk (Ext4) (I) for Linux systems only"
 
-​				最终如下图所示
+​ Finally, as shown in the figure below
 
-​										 	![](./image/cyberdog_flash/format_udisk3.png)
+​ ![](./image/cyberdog_flash/format_udisk3.png)
 
-​		d. 最后点击右上角的下一个，然后点击右上角的格式化，等待完成即可
+​ d. Finally click Next in the upper right corner, then click Format in the upper right corner and wait for completion
 
-​											<img src="./image/cyberdog_flash/format_udisk4.png" style="zoom:80%;" />
+​ <img src="./image/cyberdog_flash/format_udisk4.png" style="zoom:80%;" />
 
-### 5.3 复制镜像到U盘
+### 5.3 Copy image to U disk
 
-1. 确保制作的U盘已经挂载到PC
+1. Make sure that the created USB flash drive has been mounted on the PC
 
-1. 执行如下命令，进入到“5.1 准备脚本工具”步骤中解压到的目录中的脚本工具存放目录
+1. Execute the following command to enter the directory where the script tool is stored in the directory extracted in step "5.1 Preparing the script tool"
 
-   ```bash
-   cd 解压目录/tools/otf_tools
-   ```
+    ```bash
+    cd unzip directory/tools/otf_tools
+    ```
 
-1. 在PC中打开一个终端，执行如下命令（其中脚本参数为官方提供的release刷机包在PC中的路径全称，刷机包名称后缀也需要写全）
+1. Open a terminal in the PC and execute the following command (the script parameter is the full path name of the official release flash package in the PC, and the suffix of the flash package name also needs to be written in full)
 
-   ```bash
-   $ ./mkimage.sh 官方提供的release刷机包路径全称
-   ```
+    ```bash
+    $ ./mkimage.sh The full name of the official release flash package path
+    ```
 
-   该命令大概需要10分钟左右的时间，请耐心等待。
+This command may take about 10 minutes, please be patient.
 
-> 注意：
+> Note:
 >
-> 1. 执行命令后需要输入密码，如果终端记住后则不再需要。
+> 1. You need to enter the password after executing the command. If the terminal remembers it, it is no longer required.
 >
-> 2. 如果提示 bash: ./mkimage.sh: 权限不够，执行以下命令即可：
+> 2. If it prompts bash: ./mkimage.sh: Insufficient permissions, just execute the following command:
 >
->       $ chmod +x mkimage.sh
+> $ chmod +x mkimage.sh
 
-4. 最终显示如下内容则表示成功：
+4. The following content is finally displayed to indicate success:
 
-​			Make udisk image successfully!
+​ Make udisk image successfully!
 
-​	   最终显示如下内容则表示失败：
+The final display of the following content indicates failure:
 
-​			Fail to make udisk image!
+​ Fail to make udisk image!
 
-> 注意：
+> Note:
 >
-> ​	如果长时间停留在Wait for the udisk to be ready...，需要检查U盘是否已经插入到PC中，如果已经插入到PC中则可以重新插拔试一试。
+> ​ If it stays in Wait for the udisk to be ready... for a long time, you need to check whether the USB flash drive has been inserted into the PC. If it has been inserted into the PC, you can try to plug it in again.
 
-### 5.4 将刷机配置文件放置到U盘根目录中
+### 5.4 Place the flash configuration file into the root directory of the U disk
 
-该刷机方式下，对于配置文件的要求，除了名称要求必须固定为ota_others.conf之外，其他与PC卡刷方式完全相同。
+In this flashing method, the configuration file requirements are exactly the same as the PC card flashing method except that the name must be fixed to ota_others.conf.
 
-### 5.5 将U盘插入到机器狗并重启
+### 5.5 Insert the USB disk into the robot dog and restart
 
-1. 将U盘插入到机器狗的最左边的usb typec口，如下图所示：
+1. Insert the USB flash drive into the leftmost USB TypeC port of the robot dog, as shown in the figure below:
 
 <img src="./image/cyberdog_flash/flash_usb_port.png" style="zoom: 67%;" />
 
-2. 按照下述方式重启机器狗：
+2. Restart the robot dog as follows:
 
-- 如果当前处于关机状态，长按电源键5秒，此时表示机器狗已经启动，开始进入刷机模式
+- If it is currently powered off, press and hold the power button for 5 seconds. This will indicate that the robot dog has started and will enter the flash mode.
 
-- 如果当前处于开机状态，长按电源键5秒，松开电源键，再长按电源键5秒，此时表示机器狗已经启动，开始进入刷机模式
+- If it is currently on, press and hold the power button for 5 seconds, release the power button, and then press and hold the power button for 5 seconds. At this time, it means that the robot dog has started and entered the flash mode.
 
-### 5.6 等待刷机完成
+### 5.6 Wait for flashing to complete
 
-#### 5.6.1 提示音
+#### 5.6.1 Prompt tone
 
-升级过程中，会依次播放如下提示音：
+During the upgrade process, the following prompts will be played in sequence:
 
-1. 语音提示“开始应用板刷机”，表示开始升级感知主板Xavier NX；
+1. The voice prompt "Start application board flashing" indicates that the upgrade of the sensing motherboard Xavier NX has begun;
 
-1. 语音提示“应用板刷机成功”，表示感知主板Xavier NX升级成功；
+1. The voice prompt “App flashing successful” indicates that the Xavier NX motherboard has been upgraded successfully;
 
-1. 语音提示“开始更新其他主板”，表示开始更新除了感知主板Xavier NX之外的其他各个子板，需要注意的是在更新过程中会循环播报“开始更新其他主板”；
+1. The voice prompt "Start updating other motherboards" means starting to update various sub-boards except the sensing motherboard Xavier NX. It should be noted that during the update process, "Start updating other motherboards" will be broadcast cyclically;
 
-1. 语音提示“其他主板更新成功”，表示其他各个子板更新成功；
+1. The voice prompt "Other motherboards have been updated successfully" means that the other sub-boards have been updated successfully;
 
-1. 至此，刷机过程全部完成，可以拔掉U盘；
+1. At this point, the flashing process is complete and you can unplug the USB flash drive;
 
-1. 重启机器狗，具体的话，长按电源键5秒，松开电源键，再长按电源键5秒，此时机器狗重启成功并进入正常使用状态。
+1. Restart the robot dog. Specifically, press and hold the power button for 5 seconds, release the power button, and then press and hold the power button for 5 seconds. At this time, the robot dog restarts successfully and enters normal use state.
 
-#### 5.6.2 所需时间
+#### 5.6.2 Time required
 
-根据U盘的速度不同而定，大概需要10分钟。
+Depending on the speed of the USB flash drive, it may take about 10 minutes.
 
-### 5.7 需要再次刷机
+### 5.7 Need to flash again
 
-#### 5.7.1 准备好前述制作的U盘
+#### 5.7.1 Prepare the USB disk made above
 
-#### 5.7.2 接下来分为两种情况，请确认好属于哪一种后再进行操作
+#### 5.7.2 There are two situations below. Please confirm which one you belong to before proceeding.
 
-##### 5.7.2.1 不需要更新版本
+##### 5.7.2.1 No updated version required
 
-1. 在PC中进入到准备好的U盘挂载的目录下，执行如下命令重新打开刷机标志（如下显示即为修改成功）
+1. Enter the directory where the prepared USB disk is mounted on the PC, and execute the following command to reopen the flashing logo (the following display means the modification is successful)
 
 ```Shell
-$ ./enable_otf.sh 
+$ ./enable_otf.sh
 enable otf function successfully!
 ```
 
-2. 执行步骤"5.4 将刷机配置文件放置到U盘根目录中"
+2. Perform step "5.4 Place the flash configuration file into the root directory of the USB flash drive"
 
-3. 执行步骤"5.5 将U盘插入到机器狗并重启"
+3. Perform step "5.5 Insert the USB flash drive into the robot dog and restart"
 
-4. 根据步骤"5.6 等待刷机完成“的说明，等待刷机完成
+4. Follow the instructions in step "5.6 Wait for the flashing to complete" and wait for the flashing to complete.
 
-##### 5.7.2.2 需要更新版本
+##### 5.7.2.2 requires an updated version
 
-1. 执行步骤"5.3 复制镜像到U盘"
+1. Perform step "5.3 Copy image to USB disk"
 
-1. 执行步骤"5.4 将刷机配置文件放置到U盘根目录中"
+1. Perform step "5.4 Place the flash configuration file into the root directory of the USB flash drive"
 
-1. 执行步骤"5.5 将U盘插入到机器狗并重启"
+1. Perform step "5.5 Insert the USB flash drive into the robot dog and restart"
 
-1. 根据步骤"5.6 等待刷机完成“的说明，等待刷机完成
+1. Follow the instructions in step "5.6 Wait for the flashing to complete" and wait for the flashing to complete.
 
-## 6. 调试方法
+## 6. Debugging method
 
-**默认情况下所有的调试接口都是封禁的，可以用过申请开发者权限来开启调试接口。**
+**By default, all debugging interfaces are blocked. You can apply for developer permissions to enable the debugging interface. **
 
-调试接口权限开启后，拆开调试盖板，有两种方式可以在PC中连接到机器狗：
+After the debugging interface permission is turned on, remove the debugging cover. There are two ways to connect to the robot dog in the PC:
 
-1. 通过网线将PC与机器狗直接连接，之后在PC端输入如下命令即可连接到机器狗（密码：123）：
+1. Connect the PC to the robot dog directly through a network cable, and then enter the following command on the PC to connect to the robot dog (password: 123):
 
-   ```shell
-   $ ssh mi@192.168.44.1
-   ```
+    ```shell
+    $ ssh mi@192.168.44.1
+    ```
 
-2. 通过USB type-c线连接到机器狗（接口位于中间充电口的右侧），之后在PC端输入如下命令即可连接到机器狗（密码：123）：
+2. Connect to the robot dog through a USB type-c cable (the interface is located on the right side of the middle charging port), and then enter the following command on the PC to connect to the robot dog (password: 123):
 
-   ```shell
-   $ ssh mi@192.168.55.1
-   ```
-
-
-
-
-
+    ```shell
+    $ ssh mi@192.168.55.1
+    ```
 
 
