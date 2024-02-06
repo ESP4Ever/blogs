@@ -73,33 +73,33 @@ Parameter explanation:
 
 Currently there are two ways to flash the robot dog:
 
-- PC wire brushing method
+- PC wire flashing method
 
 ​ Using this method to flash the computer requires a PC with Ubuntu system and a special download cable. The time depends on the PC configuration, and it basically takes about 15 minutes.
 
 ​ This method has no requirement for the name of the flash configuration file.
 
-- U disk card swiping method
+- U-disk card flashing method
 
-​Using this method to flash the phone requires a USB flash drive. The time depends on the speed of the USB flash drive. It basically takes about 10 minutes, and does not require the participation of the flashing line, which will be more convenient.
+​Using this method to flash the Cyberdog requires a USB flash drive. The time depends on the speed of the USB flash drive. It basically takes about 10 minutes, and does not require the participation of the flashing line, which will be more convenient.
 
 ​ This method requires that the name of the flash configuration file must be fixed to ota_others.conf, and everything else is the same as the PC wire flash method.
 
-​ ** Regarding the USB flash drive card swiping method, you need to pay attention to the following: **
+​ ** Regarding the USB flash drive card flashing method, you need to pay attention to the following: **
 
 ​ 1. In this method, the USB flash drive does not support connection through the USB Hub and must be directly inserted into the robot dog!
 
 2. Currently, solid state drives with USB interface are not supported as flash USB flash drives.
 
-3. Each time you flash the phone, you need to re-enable the flash flag. For details, please refer to "5.7 Need to flash again"
+3. Each time you flash the Cyberdog, you need to re-enable the flash flag. For details, please refer to "5.7 Need to flash again"
 
-​ 4. U disk only supports type-c interface, and due to the shape design of the robot dog, the space provided for U disk insertion is not very large, so a U disk of suitable size is required. If you need to purchase, you can refer to the following link:
+​ 4. U-disk only supports Type-C interface, and due to the shape design of the robot dog, the space provided for U-disk insertion is not very large, so a U-disk of suitable size is required. If you need to purchase, you can refer to the following link:
 
 ​ https://item.jd.com/5522803.html?bbtf=1#crumb-wrap
 
 The above two flashing methods require a PC with Ubuntu system installed, and currently do not support Windows system.
 
-## 4. PC wire brushing method
+## 4. PC wire flashing method
 
 ### 4.1 Unzip the flash package
 
@@ -162,13 +162,13 @@ The time depends on the specific PC configuration, about 15 minutes, and will be
 >
 > At this time, you need to manually restart the robot dog to continue the second and subsequent steps above.
 
-## 5. U disk card swiping method
+## 5. U-disk flashing method
 
 **The following operations will cause all data on the USB flash drive to be lost! ! Please make a backup in advance! ! **
 
 ### 5.1 Prepare script tools
 
-1. If you have already used the PC wire flash method to flash the phone, because the script tool is placed in the official release flash package, you can skip this step, otherwise you need to perform the following operations.
+1. If you have already used the PC wire flash method to flash the Cyberdog, because the script tool is placed in the official release flash package, you can skip this step, otherwise you need to perform the following operations.
 
 2. Execute the following command to unzip the flash package to the PC directory (the path and name of the directory are not required)
 
@@ -201,7 +201,7 @@ The method can be referenced as follows:
 
 ​ As you can see, there are "/dev/sdb" and "/dev/sdb1", among which:
 
-​/dev/sdb: Represents the U disk device, here called **device name**
+​/dev/sdb: Represents the U-disk device, here called **device name**
 
 ​/dev/sdb1: Represents the first partition of the device, here called **device partition name**
 
@@ -224,10 +224,10 @@ Currently two production methods are supported:
     cd unzip directory/tools/otf_tools
     ```
 
-3. Execute the following command to start production ("U disk device name" is the device name determined in the previous example)
+3. Execute the following command to start production ("U-disk device name" is the device name determined in the previous example)
 
     ```bash
-    $ sudo ./mkudisk.sh U disk device name
+    $ sudo ./mkudisk.sh U-disk device name
     ```
    
     If the following display appears, the production is successful.
@@ -240,17 +240,17 @@ Currently two production methods are supported:
 
 1. Unmount the default mounted partition
 
-    In the step "5.2.1 Determine the name of the U disk device", since the U disk is inserted at the end, it will be automatically mounted to a certain directory by default. However, subsequent operations require uninstallation, so execute the following command to uninstall (the parameter "/ "dev/sdb1" is the device partition name determined in step "5.2.1 Determine the U disk device name")
+    In the step "5.2.1 Determine the name of the U-disk device", since the U-disk is inserted at the end, it will be automatically mounted to a certain directory by default. However, subsequent operations require uninstallation, so execute the following command to uninstall (the parameter "/ "dev/sdb1" is the device partition name determined in step "5.2.1 Determine the U-disk device name")
 
     ```bash
     $ umount /dev/sdb1
     ```
 
-​ **Keep the U disk inserted, do not pull it out, and continue with the following operations! ! **
+​ **Keep the U-disk inserted, do not pull it out, and continue with the following operations! ! **
 
 2. Modify the partition table to gpt format
 
-    Since the flashing function requires the U disk to have a partition table in gpt format, but generally the partition table format of new U disks is msdos, so it needs to be modified. Specifically, you can use the parted command to complete this requirement. The specific operations are as follows (the parameter "/dev/sdb" is the device name determined in step "5.2.1 Determine the U disk device name")
+    Since the flashing function requires the U-disk to have a partition table in gpt format, but generally the partition table format of new U-disks is msdos, so it needs to be modified. Specifically, you can use the parted command to complete this requirement. The specific operations are as follows (the parameter "/dev/sdb" is the device name determined in step "5.2.1 Determine the U-disk device name")
 
     ```bash
     $ sudo parted /dev/sdb
@@ -267,7 +267,7 @@ Currently two production methods are supported:
    
 3. Repartition
 
-    After the partition table format is changed to gpt, all previous data will be lost, so repartitioning is required. Specifically, you can also use the parted command, and the specific operations are as follows (the parameter "/dev/sdb" is the device name determined in step "5.2.1 Determine the U disk device name")
+    After the partition table format is changed to gpt, all previous data will be lost, so repartitioning is required. Specifically, you can also use the parted command, and the specific operations are as follows (the parameter "/dev/sdb" is the device name determined in step "5.2.1 Determine the U-disk device name")
 
     ```bash
     $ sudo parted /dev/sdb
@@ -285,7 +285,7 @@ Currently two production methods are supported:
 
 4. Format and fix the mounting directory name of the USB flash drive
 
-     a. Search for the "disk" software under the Ubuntu system, open and find the corresponding interface of the U disk, in this example it is the fourth one on the left (find the corresponding disk of the U disk according to personal actual situation)
+     a. Search for the "disk" software under the Ubuntu system, open and find the corresponding interface of the U-disk, in this example it is the fourth one on the left (find the corresponding disk of the U-disk according to personal actual situation)
     
      <img src="./image/cyberdog_flash/format_udisk1.png" style="zoom:80%;" />
 
@@ -309,7 +309,7 @@ Type: Select the first item "Internal disk (Ext4) (I) for Linux systems only"
 
 ​ <img src="./image/cyberdog_flash/format_udisk4.png" style="zoom:80%;" />
 
-### 5.3 Copy image to U disk
+### 5.3 Copy image to U-disk
 
 1. Make sure that the created USB flash drive has been mounted on the PC
 
@@ -347,7 +347,7 @@ The final display of the following content indicates failure:
 >
 > ​ If it stays in Wait for the udisk to be ready... for a long time, you need to check whether the USB flash drive has been inserted into the PC. If it has been inserted into the PC, you can try to plug it in again.
 
-### 5.4 Place the flash configuration file into the root directory of the U disk
+### 5.4 Place the flash configuration file into the root directory of the U-disk
 
 In this flashing method, the configuration file requirements are exactly the same as the PC card flashing method except that the name must be fixed to ota_others.conf.
 
@@ -428,7 +428,7 @@ After the debugging interface permission is turned on, remove the debugging cove
     $ ssh mi@192.168.44.1
     ```
 
-2. Connect to the robot dog through a USB type-c cable (the interface is located on the right side of the middle charging port), and then enter the following command on the PC to connect to the robot dog (password: 123):
+2. Connect to the robot dog through a USB Type-C cable (the interface is located on the right side of the middle charging port), and then enter the following command on the PC to connect to the robot dog (password: 123):
 
     ```shell
     $ ssh mi@192.168.55.1
