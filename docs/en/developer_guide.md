@@ -1110,39 +1110,21 @@ float64 lat # latitude
 ```js
 std_msgs/Header header
 
-
-
-uint16 batt_volt # Voltage
-
-int16 batt_curr # current
-
-uint8 batt_soc # power
-
-int16 batt_temp # battery temperature
-
-uint8 batt_st #Battery status
-
-int8 batt_health # Battery health
-
-int16 batt_loop_number # Number of battery cycles
-
-
-
-bool power_normal # normal mode
-
-bool power_wired_charging # Wired charging
-
-bool power_finished_charging # Charging completed
-
-bool power_motor_shutdown # Motor power down
-
-bool power_soft_shutdown # Soft shutdown
-
-bool power_wp_place # Wireless charging in place
-
-bool power_wp_charging # Wireless charging
-
-bool power_expower_supply # External power supply
+uint16 batt_volt               # Voltage
+int16 batt_curr                # Current
+uint8 batt_soc                 # Power
+int16 batt_temp                # Battery temperature
+uint8 batt_st                  # Battery status
+int8 batt_health               # Battery health
+int16 batt_loop_number         # Number of battery cycles
+bool power_normal              # Normal mode
+bool power_wired_charging      # Wired charging
+bool power_finished_charging   # Charging completed
+bool power_motor_shutdown      # Motor power down
+bool power_soft_shutdown       # Soft shutdown
+bool power_wp_place            # Wireless charging in place
+bool power_wp_charging         # Wireless charging
+bool power_expower_supply      # External power supply
 ```
 
  
