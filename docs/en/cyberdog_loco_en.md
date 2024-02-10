@@ -55,7 +55,7 @@ struct example_t
 }
 ```
 
-For more details on usage, please refer to the [official documentation](https://lcm-proj.github.io/).
+For more details on usage, please refer to the [official documentation](http://lcm-proj.github.io/lcm/).
 
 ### 1.3 Coordinate System and Joints
 
