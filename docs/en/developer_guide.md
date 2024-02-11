@@ -327,27 +327,27 @@ topic: "face_entry_msg"
 
 ```Go
 # request
-int32 ADD_FACE               = 0    #Add face
-int32 CANCEL_ADD_FACE        = 1    #Cancel adding face
-int32 CONFIRM_LAST_FACE      = 2    #Confirm the last face
-int32 UPDATE_FACE_ID         = 3    #Update face ID
-int32 DELETE_FACE            = 4    #Delete face
-int32 GET_ALL_FACES          = 5    #Get all faces
-int32 command                       #Face input command
-string username                     #User name
-string origine                      #User’s original name
-bool ishost                         #Whether it is the owner
+int32 ADD_FACE               = 0    # Add face
+int32 CANCEL_ADD_FACE        = 1    # Cancel adding face
+int32 CONFIRM_LAST_FACE      = 2    # Confirm the last face
+int32 UPDATE_FACE_ID         = 3    # Update face ID
+int32 DELETE_FACE            = 4    # Delete face
+int32 GET_ALL_FACES          = 5    # Get all faces
+int32 command                       # Face input command
+string username                     # User name
+string origine                      # User’s original name
+bool ishost                         # Whether it is the owner
 ---
-int32 RESULT_SUCCESS         = 0    #Request for entry service successful
-int32 RESULT_INVALID_ARGS    = 5910 #The input parameters are invalid parameters
-int32 RESULT_UNSUPPORTED     = 5908 #Does not support entry
-int32 RESULT_TIMEOUT         = 5907 #Input timeout
-int32 RESULT_BUSY            = 5911 #Input busy
-int32 RESULT_INVALID_STATE   = 5903 #Input invalid status
-int32 RESULT_INNER_ERROR     = 5904 #Internal error
-int32 RESULT_UNDEFINED_ERROR = 5901 #Unknown error
-int32 result                        #Request entry service result
-string allfaces                     #Get all faces
+int32 RESULT_SUCCESS         = 0    # Request for entry service successful
+int32 RESULT_INVALID_ARGS    = 5910 # The input parameters are invalid parameters
+int32 RESULT_UNSUPPORTED     = 5908 # Does not support entry
+int32 RESULT_TIMEOUT         = 5907 # Input timeout
+int32 RESULT_BUSY            = 5911 # Input busy
+int32 RESULT_INVALID_STATE   = 5903 # Input invalid status
+int32 RESULT_INNER_ERROR     = 5904 # Internal error
+int32 RESULT_UNDEFINED_ERROR = 5901 # Unknown error
+int32 result                        # Request entry service result
+string allfaces                     # Get all faces
 ```
 
 - Message file: protocol/msg/FaceEntryResult.msg
@@ -355,11 +355,11 @@ string allfaces                     #Get all faces
 
 ```Go
 // protocol/msg/FaceEntryResult.msg
-int32 RESULT_SUCCESS            = 0    #The entry result is successful
-int32 RESULT_TIMEOUT            = 5907 #Input timeout
-int32 RESULT_FACE_ALREADY_EXIST = 5921 #Face already exists
-int32 result                           #Input result
-string username                        #Entered name
+int32 RESULT_SUCCESS            = 0    # The entry result is successful
+int32 RESULT_TIMEOUT            = 5907 # Input timeout
+int32 RESULT_FACE_ALREADY_EXIST = 5921 # Face already exists
+int32 result                           # Input result
+string username                        # Entered name
 ```
 
 #### Face recognition
@@ -377,21 +377,21 @@ topic: "face_rec_msg"
 
 ```Go
 #request
-int32 COMMAND_RECOGNITION_ALL    = 0    #Request to identify everyone
-int32 COMMAND_RECOGNITION_SINGLE = 1    #Request to identify a person
-int32 COMMAND_RECOGNITION_CANCEL = 2    #Cancel face recognition
-int32 MAX_TIMEOUT                = 300  #Identify the maximum duration
-int32 MIN_TIMEOUT                = 30   #Identify the hour length
-int32 DEFAULT_TIMEOUT            = 60   #Default recognition duration
-int32 command                           #Request identification command
-string username                         #Name of face recognition
-string id                               #identify the id of the face
-int32 timeout                           #valid time 30s～300s, default = 60
-                                        #If this field is not added, the default value will be used
+int32 COMMAND_RECOGNITION_ALL    = 0    # Request to identify everyone
+int32 COMMAND_RECOGNITION_SINGLE = 1    # Request to identify a person
+int32 COMMAND_RECOGNITION_CANCEL = 2    # Cancel face recognition
+int32 MAX_TIMEOUT                = 300  # Identify the maximum duration
+int32 MIN_TIMEOUT                = 30   # Identify the hour length
+int32 DEFAULT_TIMEOUT            = 60   # Default recognition duration
+int32 command                           # Request identification command
+string username                         # Name of face recognition
+string id                               # Identify the id of the face
+int32 timeout                           # Valid time 30s～300s, default = 60
+                                        # If this field is not added, the default value will be used
 ---
-int32 ENABLE_SUCCESS             = 0    #Request identification successful
-int32 ENABLE_FAIL                = 5901 #Request identification failed
-int32 result                            #Request identification result
+int32 ENABLE_SUCCESS             = 0    # Request identification successful
+int32 ENABLE_FAIL                = 5901 # Request identification failed
+int32 result                            # Request identification result
 ```
 
 - Message file: protocol/msg/FaceRecognitionResult.msg
@@ -399,13 +399,13 @@ int32 result                            #Request identification result
 
 ```C%2B%2B
 // protocol/msg/FaceRecognitionResult.msg
-int32 RESULT_SUCCESS              = 0    #Identification successful
-int32 RESULT_TIMEOUT              = 5907 #Identification timeout
-string username                          #The name of the recognized face
-int32 result                             #recognition result
-string id                                #The ID of the face recognized
-float32 age                              #Recognized age
-float32 emotion                          #Recognized emotion
+int32 RESULT_SUCCESS              = 0    # Identification successful
+int32 RESULT_TIMEOUT              = 5907 # Identification timeout
+string username                          # The name of the recognized face
+int32 result                             # Recognition result
+string id                                # The ID of the face recognized
+float32 age                              # Recognized age
+float32 emotion                          # Recognized emotion
 ```
 
 ### Dynamic gesture recognition
@@ -423,29 +423,15 @@ topic: gesture_action_msg
 
 ```C%2B%2B
 // protocol/srv/GestureActionControl.srv
-
 uint8 START_ALGO = 0
-
 uint8 STOP_ALGO = 1
-
 int32 DEFAUT_TIMEOUT = 60 #Algorithm duration defaults to 60s
-
-
-
 uint8 command #Open or stop gesture action recognition algorithm
-
 int32 timeout #The algorithm duration is valid for (1s-300s), this keyword is ignored in the request
-
                                          #The value range is not (1s-300s) and the algorithm duration defaults to 60s.
-
 ---
-
-int32 RESULT_SUCCESS = 0 #Request success receipt
-
-int32 RESULT_BUSY = 1 #Repeat request to turn on/off algorithm request receipt
-
-
-
+int32 RESULT_SUCCESS = 0 # Request success receipt
+int32 RESULT_BUSY = 1 # Repeat request to turn on/off algorithm request receipt
 int32 code #request receipt
 ```
 
@@ -454,33 +440,18 @@ int32 code #request receipt
 
 ```C%2B%2B
 // protocol/msg/GestureActionResult.msg
-
 int32 NO_GESTURE =0 #No gesture
-
 int32 PULLING_HAND_OR_TWO_FINGERS_IN =1 #Pull your palm closer
-
 int32 PUSHING_HAND_OR_TWO_FINGERS_AWAY =2 #Push away with palm
-
 int32 SLIDING_HAND_OR_TWO_FINGERS_UP = 3 #Raise hand up
-
 int32 SLIDING_HAND_OR_TWO_FINGERS_DOWN =4 #Hand down
-
 int32 SLIDING_HAND_OR_TWO_FINGERS_LEFT =5 #Push your hand to the left
-
 int32 SLIDING_HAND_OR_TWO_FINGERS_RIGHT =6 #Push your hand to the right
-
 int32 STOP_SIGN =7 #Stop gesture
-
 int32 THUMB_UP =8 #Thumbs up
-
 int32 ZOOMING_IN_WITH_HAND_OR_TWO_FINGERS = 9 #Open your palm or fingers
-
 int32 ZOOMING_OUT_WITH_HAND_OR_TWO_FINGERS =10 #Close the palm or fingers
-
 int32 THUMB_DOWN =11 #Thumbs down
-
-
-
 int32 id #gesture recognition result id
 ```
 
