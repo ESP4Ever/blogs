@@ -138,13 +138,13 @@ struct robot_control_cmd_lcmt {
 > **_Notes_**: 
 >1. **mode**：A state or mode defined by the state machine of locomotion control. All the available modes are listed in Table 1 of Appendix.
 >2. **gait_id**：The sub-state or sub-mode under "mode". All the available gait_id are listed in Table 1 of Appendix.
->3. **contact**：The lower four bits are used to define the foot contact status in the pose control mode (mode|gait_id:21|0). The default value is 0x0F, which means that all four legs are on the ground. If you need to lift a leg, you can set like this: 0b1110 lift the right front leg, 0b1101 lift the left front leg, 0b1011 lift the right rear leg, and 0b0111 lift the left rear leg.
+>3. **contact**：The lower four bits are used to define the foot contact status in the pose control mode (mode | gait_id :21 | 0). The default value is 0x0F, which means that all four legs are on the ground. If you need to lift a leg, you can set like this: 0b1110 lift the right front leg, 0b1101 lift the left front leg, 0b1011 lift the right rear leg, and 0b0111 lift the left rear leg.
 >4. **life_count**：Incremental heartbeat signal (0~255), used to determine whether the communication is okay, avoid timeout, and ensure that the one-shot motions are only triggered once. If its value is the same as the previous command, the content of the current command will be ignored to avoid repeatedly adding to the task stack.
 >5. **vel_des/rpy_des**：desired forward speed, lateral speed, steering speed, roll angle, pitch angle, and yaw angle respectively.
->6. **pos_des**：In the pose control mode (mode|gait_id:21|0), it refers to the body offset and pos_des[2] indicates the body height in other modes.
->7. **acc_des**：Used for jump motion control (mode:22).
->8. **ctrl_point**：define the rotation centre of body pitch angle in the pose control mode (mode|gait_id:21|0).
->9. **foot_pose**：In the pose control mode (mode|gait_id:21|0), define the coordinate offset of the lifted foot end for tasks like shaking hands, etc.
+>6. **pos_des**：In the pose control mode (mode | gait_id: 21 | 0), it refers to the body offset and pos_des[2] indicates the body height in other modes.
+>7. **acc_des**：Used for jump motion control (mode: 22).
+>8. **ctrl_point**：define the rotation centre of body pitch angle in the pose control mode (mode | gait_id: 21 | 0).
+>9. **foot_pose**：In the pose control mode (mode | gait_id: 21 | 0), define the coordinate offset of the lifted foot end for tasks like shaking hands, etc.
 >10. **step_height**：The ground clearness of the front and rear swing legs at walking, the range is 0~0.06m
 >11. **value(bit0~bit31)** : Other parameters related to specific modes, such as:
 >   - Normal gait:
