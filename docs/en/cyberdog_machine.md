@@ -42,7 +42,7 @@
 - **OTA**：This state is an online upgrade mode. During the upgrade, cyberdog will lie down and all sports-related functions will be disabled.；
 - **TearDown**：In this state, cyberdog will shut down the modules loaded in the Setup one by one, and then execute the shutdown。
 
-## 状态机流转图示
+## State machine flow diagram
 
 The overall flow of the state machine is shown in the figure below. After the cyberdog is turned on, the state machine first performs Setup, and then enters the selfcheck stage after the startup is completed. After the self-test is successful, it will enter Acticve, and then the state of the state machine will be determined by various factors such as battery power, exercise status, and users. Perform control switching; before shutdown, the state machine will switch to TearDown mode, and the loaded components will be closed in turn.
 
@@ -84,7 +84,7 @@ states = ["SetUp", "TearDown", "SelfCheck", "Active", "DeActive", "Protected", "
 times = [100, 100, 100, 100, 100, 100, 100, 100, 100]
 ```
 
-其中：
+Where:
 
 - The controller configuration uses 'default' as the default parameter; 'actuators' and 'state' need to correspond to the actual ones, which will affect whether the state machine initialization passes or not.；
 - The actuator is the configuration of the executor, and only those added in the controller will be detected；
