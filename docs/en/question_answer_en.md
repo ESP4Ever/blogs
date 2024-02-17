@@ -22,7 +22,7 @@ Just restart after execution
 
 ``Plain
 1. Enter the tools directory and use the Dockerfile file to compile the image.
-2. Refer to the Dockerfile document https://github.com/MiRoboticsLab/blogs/blob/rolling/docs/cn/dockerfile_instructions_cn.md to compile. If you have other questions, you can ask in the issue.
+2. Refer to the Dockerfile document [Docker File Instructions](https://github.com/ESP4Ever/blogs/blob/rolling/docs/en/dockerfile_instructions_en.md) to compile. If you have other questions, you can ask in the issue.
 ```
 
 ## Cyberdog and cyberdog2 corresponding warehouse
