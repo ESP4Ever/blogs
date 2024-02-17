@@ -1,32 +1,32 @@
-**可视化编程-协议及接口文档**
+**Visual Programming-Protocol and Interface Documentation**
 
-**概述**
+**Overview**
 
-当前协议为可视化编程唯一合法协议，协议属于python3语法的子集，故本协议一二三节内支持的任何内容有任何不清楚的都可通过python书籍查阅。
+The current protocol is the only legal protocol for visual programming. The protocol belongs to a subset of python3 syntax. Therefore, if you are unclear about any content supported in Sections 1, 2 and 3 of this protocol, you can check it through python books.
 
-**零、交互约束**
+**Zero, interaction constraints**
 
-**0.1 交互时ros/grpc格式**
+**0.1 ros/grpc format during interaction**
 
-术语约束：
+Terminology constraints:
 
-> ‘前端’：代指APP及WEB可视化编程控制端；
-> 
-> ‘机器人端’：代指机器人侧可视化编程引擎。
+> ‘Front-end’: refers to APP and WEB visual programming control end;
+>
+> ‘Robot side’: refers to the visual programming engine on the robot side.
 
-**0.1.1 GRPC协议简介**
+**0.1.1 Introduction to GRPC protocol**
 
-> 关于grpc详情参见附件3。
+> For details about grpc, see Appendix 3.
 
-**0.1.2 机器人端监听GRPC消息约束**
+**0.1.2 Robot-side listening GRPC message constraints**
 
-消息类型：std\_msgs/msg/string
+Message type: std\_msgs/msg/string
 
-消息名称：/frontend\_message
+Message name: /frontend\_message
 
-消息内容：要符合下一节交互时json格式约束
+Message content: must comply with the json format constraints during interaction in the next section
 
-其他约束：
+Other constraints:
 
 <table>
 <tbody>
@@ -37,15 +37,15 @@ VISUAL_FRONTEND_MSG = 2002;</td>
 </tbody>
 </table>
 
-**0.1.3 GRPC监听机器人端消息约束**
+**0.1.3 GRPC listening robot side message constraints**
 
-消息类型：std\_msgs/msg/string
+Message type: std\_msgs/msg/string
 
-消息名称：/backend\_message
+Message name: /backend\_message
 
-消息内容：要符合下一节交互时json格式约束
+Message content: must comply with the json format constraints during interaction in the next section
 
-其他约束：
+Other constraints:
 
 <table>
 <tbody>
@@ -56,13 +56,13 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-**0.2 任务及模块功能：**
+**0.2 Task and module functions:**
 
-**0.2.1 \<前端-机器人端\>/\<机器人端-后端\>交互时json格式**
+**0.2.1 \<front-end-robot-side\>/\<robot-side-back-end\> json format during interaction**
 
-**0.2.1.1 \[前端-\>机器人端\]/\[机器人端-\>后端\]：下发数据json格式**
+**0.2.1.1 \[Front-end-\>Robot-side\]/\[Robot-\>Back-end\]: Send data in json format**
 
-**0.2.1.1.1 协议约束**
+**0.2.1.1.1 Agreement Constraints**
 
 <table>
 <tbody>
@@ -88,143 +88,143 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-**0.2.1.1.2 协议说明**
+**0.2.1.1.2 Protocol Description**
 
-**0.2.1.1.2.1 通用字段**
+**0.2.1.1.2.1 Common fields**
 
-**type:** \[必须\] 字符串类型，标识当前json数据类型。
+**type:** \[Required\] String type, identifying the current json data type.
 
-合法参数：
+Legal parameters:
 
-任务:'task'
+Task:'task'
 
-模块:'module'
+Module: 'module'
 
-模块:'AI'
+Module:'AI'
 
-模块:‘SLAM’
+Module: ‘SLAM’
 
-**id**: \[必须\] 字符串类型，标识当前数据帧的唯一id，用于反馈对齐；
+**id**: \[Required\] String type, identifying the unique id of the current data frame, used for feedback alignment;
 
-合法参数要求：符合变量命名规则的唯一标识当前数据帧的id。
+Legal parameter requirements: an id that uniquely identifies the current data frame and conforms to the variable naming rules.
 
-**operate**: \[必须\] 字符串类型，标识当前任务操作类型。
+**operate**: \[Required\] String type, identifying the current task operation type.
 
-仅当'type'字段值为'task'或' module'时该字段有效且必须。
+This field is valid and required only when the 'type' field value is 'task' or 'module'.
 
-合法参数：
+Legal parameters:
 
-保存任务/模块:'save'
+Save task/module:'save'
 
-删除任务/模块:'delete'
+Delete tasks/modules: 'delete'
 
-查询任务/模块/AI:'inquiry'
+Query task/module/AI:'inquiry'
 
-调试任务:'debug'
+Debugging task: 'debug'
 
-运行任务:'run'
+Run task: 'run'
 
-终止任务:'shutdown'
+Terminate task:'shutdown'
 
-暂停任务:'suspend'
+Suspend task:'suspend'
 
-继续任务:'recover'
+Continue task:'recover'
 
-**target\_id**: \[必须\] 字符串数组类型，用于标识当前操作目标，根据场景可分为任务id、模块id。
+**target\_id**: \[Required\] String array type, used to identify the current operation target, which can be divided into task id and module id according to the scenario.
 
-合法参数要求：符合变量命名规则的唯一标识当前数据帧的id。
+Legal parameter requirements: an id that uniquely identifies the current data frame and conforms to the variable naming rules.
 
-当operate字段为'debug'时候，target\_id固定为\["debug"\]。
+When the operate field is 'debug', target\_id is fixed to \["debug"\].
 
-任务id，当用于保存、删除、查询、调试、运行、暂停、继续、终止任务时，值为要操作的任务id；
+Task id, when used to save, delete, query, debug, run, pause, continue, or terminate tasks, the value is the task id to be operated;
 
-模块id，当用于保存、删除、查询及调试模块时，值为要操作的模块id；
+Module id, when used to save, delete, query and debug modules, the value is the module id to be operated;
 
-注意：仅当查询场景时，该字段允许为空，详情如下：
+Note: This field is allowed to be empty only when querying the scene. Details are as follows:
 
-保存、运行场景时，若**target\_id**数组为空**，**则不执行，反之仅操作首个target\_id约束的目标（也就是说仅第一个id有效）；
+When saving and running the scene, if the **target\_id** array is empty**, it will not be executed. Otherwise, only the target constrained by the first target\_id will be operated (that is, only the first id is valid);
 
-运行任务时，会根据保存的任务属性进行运行；
+When running a task, it will be run according to the saved task attributes;
 
-暂停、继续、终止任务场景时，若**target\_id**数组为空**，**则不执行，反之仅执行target\_id约束的所有目标；
+When pausing, continuing, or terminating task scenarios, if the **target\_id** array is empty**, it will not be executed. Otherwise, only all targets constrained by target\_id will be executed;
 
-删除场景时，若**target\_id**数组为空**，**则不执行删除操作，反之仅删除target\_id约束的所有目标；
+When deleting a scene, if the **target\_id** array is empty**, the deletion operation will not be performed. Otherwise, only all targets constrained by target\_id will be deleted;
 
-查询场景时，若**target\_id**数组为空**，**则返回type约束的所有目标，反之仅返回target\_id约束的所有目标；
+When querying the scene, if the **target\_id** array is empty**, **all targets constrained by type will be returned, otherwise only all targets constrained by target\_id will be returned;
 
-**describe**: \[可选\] 字符串类型，描述当前数据帧功能，比如任务或模块场景。
+**describe**: \[optional\] String type, describing the current data frame function, such as task or module scenario.
 
-仅当'operate'字段值为‘save’或'debug'时该字段有效且必须。
+This field is valid and required only when the 'operate' field value is 'save' or 'debug'.
 
-合法参数要求：不可包含三个连续的双引号(""")。
+Legal parameter requirements: It cannot contain three consecutive double quotes (""").
 
-**style**: \[可选\] 字符串类型，标识当前消息样式，即当前执行主体内容的呈现方式。
+**style**: \[optional\] String type, identifying the current message style, that is, the presentation method of the current execution body content.
 
-仅当'operate'字段值为'save'或'debug'时该字段有效且必须。
+This field is valid and required only when the 'operate' field value is 'save' or 'debug'.
 
-**0.2.1.1.2.2 差异字段**
+**0.2.1.1.2.2 Difference field**
 
 **0.2.1.1.2.2.1 type=task**
 
-**mode**: \[可选\] 字符串类型，标识当前任务模式类型。
+**mode**: \[optional\] String type, identifying the current task mode type.
 
-当'operate'字段值为'debug'时该字段固定为'single'
+This field is fixed to 'single' when the 'operate' field value is 'debug'
 
-当'operate'字段值为'save'时该字段有效且必须
+This field is valid and required when the 'operate' field value is 'save'
 
-当'operate'字段值为'run'时该字段可选，如果赋值将修改原始对应字段属性；
+This field is optional when the 'operate' field value is 'run'. If assigned, the original corresponding field attributes will be modified;
 
-合法参数：
+Legal parameters:
 
-单次任务：'single'
+Single task: 'single'
 
-周期任务：'cycle'
+Periodic task: 'cycle'
 
-**condition**: \[可选\] 当前帧为操作任务时，标识任务约束，详情如下：
+**condition**: \[Optional\] When the current frame is an operation task, identify the task constraints. The details are as follows:
 
-> 符合下述约束的字符串类型，标识当前任务执行的先决条件。
+> A string type that conforms to the following constraints and identifies the prerequisites for the execution of the current task.
 
-当'operate'字段值为'debug'时该字段固定为'now'；
+When the 'operate' field value is 'debug', this field is fixed to 'now';
 
-当'mode'字段值非空时该字段有效且必须，用于标识任务的默认约束；
+This field is valid and required when the 'mode' field value is non-empty, and is used to identify the default constraints of the task;
 
-当'operate'字段值为'save'或‘debug’时该字段标识当前任务的默认执行约束条件；
+When the 'operate' field value is 'save' or 'debug', this field identifies the default execution constraints of the current task;
 
-当'operate'字段值为'run'时该字段将修改默认的执行约束条件；
+When the 'operate' field value is 'run', this field will modify the default execution constraints;
 
-赋值方式有如下两种，第一种用于单次任务（mode = single），第二种用于周期任务（mode = cycle），格式分别如下：
+There are two assignment methods: the first is used for single tasks (mode = single), and the second is used for periodic tasks (mode = cycle). The formats are as follows:
 
-第一种：单次任务（mode = single）
+The first type: single task (mode = single)
 
-可采用绝对时间或相对时间格式进行约束，如果时间已过，则它会在第二天的同一时间执行。
+The constraint can be in absolute time or relative time format, if the time has passed then it will be executed at the same time the next day.
 
-格式分别如下：
+The formats are as follows:
 
-绝对时间格式：
+Absolute time format:
 
-**'now'**：采用当前时间为约束时间，即立刻执行。
+**'now'**: Use the current time as the constraint time, that is, execute it immediately.
 
-**HH:MM**：采用“小时:分钟”形式指定约束时间。
+**HH:MM**: Specify the constraint time in the form of "hour:minute".
 
-**HH:MM YYYY-MM-DD**：采用“小时:分钟 年-月-日”形式指定约束时间。
+**HH:MM YYYY-MM-DD**: Specify the constraint time in the form of "hour:minute year-month-day".
 
 <table>
 <tbody>
 <tr class="odd">
 <td>JSON<br />
-// <strong>举例</strong><br />
+// <strong>Example</strong><br />
 {...,<br />
-"condition": "now", //1. 立即执行当前任务<br />
-"condition": "16:50", //2. 当天16:50执行当前任务<br />
-"condition": "00:01 2022-12-01", //3. 在2022年12月1日00:01执行当前任务<br />
+"condition": "now", //1. Execute the current task immediately<br />
+"condition": "16:50", //2. Execute the current task at 16:50 that day<br />
+"condition": "00:01 2022-12-01", //3. Execute the current task at 00:01 on December 1, 2022<br />
 ...}</td>
 </tr>
 </tbody>
 </table>
 
-相对时间格式：
+Relative time format:
 
-**绝对时间 + number\[minutes|hours|days|weeks|months|years\]:**采用“绝对时间 + n\[分|时|天|周|月|年\]”形式指定约束时间，根据绝对时间格式可分为如下三种：
+**Absolute time + number\[minutes|hours|days|weeks|months|years\]:** Specify the constraint time in the form of "absolute time + n\[minutes|hours|days|weeks|months|years\]" , according to the absolute time format, it can be divided into the following three types:
 
 **now + number\[minutes|hours|days|weeks|months|years\]**
 
@@ -236,156 +236,156 @@ VISUAL_BACKEND_MSG = 2001;</td>
 <tbody>
 <tr class="odd">
 <td>JSON<br />
-// <strong>举例</strong><br />
-// "condition": <strong>绝对时间 + number[minutes|hours|days|weeks|months|years]</strong><br />
+// <strong>Example</strong><br />
+// "condition": <strong>Absolute time + number[minutes|hours|days|weeks|months|years]</strong><br />
 {...,<br />
-"condition": "now + 5minutes", // 1. 5分钟后执行当前任务<br />
-"condition": "16:50 + 5days", // 2. 5天后的16:50执行当前任务<br />
-"condition": "00:01 2022-12-01 + 5years", // 3. 相对与2022年12月1日00:01而言，5年后执行当前任务<br />
+"condition": "now + 5minutes", // 1. Execute the current task after 5 minutes<br />
+"condition": "16:50 + 5days", // 2. Execute the current task at 16:50 5 days later<br />
+"condition": "00:01 2022-12-01 + 5years", // 3. Relative to 00:01 on December 1, 2022, the current task will be executed 5 years later<br />
 ...}</td>
 </tr>
 </tbody>
 </table>
 
-第二种：周期任务（mode = cycle）
+The second type: periodic task (mode = cycle)
 
-> 采用格式如下：
+> The format is as follows:
 
 **minute hour day month week**
 
-其中：
+in:
 
-**minute**：分钟 (0 - 59)
+**minute**: minute (0 - 59)
 
-**hour**：小时 (0 - 23)
+**hour**: hour (0 - 23)
 
-**day**：一个月中的第几天(1 - 31)
+**day**: day of the month (1 - 31)
 
-**month**：月份 (1 - 12)
+**month**: month (1 - 12)
 
-**week**：周几 (0 - 6)
+**week**: day of the week (0 - 6)
 
-备注：
+Remark:
 
-**\*** 取值范围内的所有数字
+**\*** All numbers within the value range
 
-**/** 每过多少个数字
+**/** How many numbers have passed each time?
 
-**-** 从X到Z
+**-** From X to Z
 
-**，**散列数字
+**, **Hash number
 
 <table>
 <tbody>
 <tr class="odd">
 <td>JSON<br />
-// 举例<br />
+// Example<br />
 // <strong>minute hour day month week</strong><br />
 {...,<br />
-"condition": "* * * * *", // 1. 每分钟执行一次当前任务<br />
-"condition": "*/1 * * * *", // 2. 每秒钟执行一次当前任务<br />
-"condition": "01 * * * *", // 3. 每小时执行一次当前任务<br />
-"condition": "3,15 * * * *", // 4. 每天每小时的第3和第15分钟执行一次当前任务<br />
-"condition": "3,15 8-11 * * *", // 5. 每天上午8点到11点的第3和第15分钟执行<br />
-"condition": "3,15 8-11 */2 * *", // 6. 每隔两天的上午8点到11点的第3和第15分钟执行一次当前任务<br />
-"condition": "3,15 8-11 * * 1", // 7. 每个星期一的上午8点到11点的第3和第15分钟执行一次当前任务<br />
-"condition": "30 21 * * *", // 8. 每晚的21:30执行一次当前任务<br />
-"condition": "45 4 1,10,22 * *", // 9. 每月1、10、22日的4:45执行一次当前任务<br />
-"condition": "0,30 18-23 * * *", // 10. 每天18:00至23:00之间每隔30分钟执行一次当前任务<br />
+"condition": "* * * * *", // 1. Execute the current task once every minute<br />
+"condition": "*/1 * * * *", // 2. Execute the current task once every second<br />
+"condition": "01 * * * *", // 3. Execute the current task once every hour<br />
+"condition": "3,15 * * * *", // 4. Execute the current task at the 3rd and 15th minutes of every hour<br />
+"condition": "3,15 8-11 * * *", // 5. Executed at the 3rd and 15th minutes from 8 am to 11 am every day<br />
+"condition": "3,15 8-11 */2 * *", // 6. Execute the current task at the 3rd and 15th minutes from 8 am to 11 am every two days<br />
+"condition": "3,15 8-11 * * 1", // 7. Execute the current task at the 3rd and 15th minutes from 8 am to 11 am every Monday<br />
+"condition": "30 21 * * *", // 8. Execute the current task at 21:30 every night<br />
+"condition": "45 4 1,10,22 * *", // 9. Execute the current task at 4:45 on the 1st, 10th, and 22nd of each month<br />
+"condition": "0,30 18-23 * * *", // 10. Execute the current task every 30 minutes between 18:00 and 23:00 every day<br />
 ...}</td>
 </tr>
 </tbody>
 </table>
 
-单独动作
+individual action
 
 <table>
 <tbody>
 <tr class="odd">
 <td>JSON<br />
-// 举例<br />
+// Example<br />
 {...,<br />
-"condition": "@reboot", // 1. 每次启动时运行一次当前任务<br />
+"condition": "@reboot", // 1. Run the current task once every time it is started<br />
 ...}</td>
 </tr>
 </tbody>
 </table>
 
-**body**: \[可选\] 字符串类型，标识当前消息正文，即当前执行的主体内容。
+**body**: \[optional\] String type, identifying the current message body, that is, the main content of the current execution.
 
-仅当'operate'字段值为'save'或'debug'时该字段有效且必须
+This field is valid and required only when the 'operate' field value is 'save' or 'debug'
 
-数据字段缩进要求最小单位为4个空格。
+The minimum unit of indentation for data fields is 4 spaces.
 
 **0.2.1.1.2.2.2 type=module**
 
-**mode**: \[可选\] 字符串类型，标识当前模块模式类型。
+**mode**: \[optional\] String type, identifying the current module mode type.
 
-仅当'operate'字段值为'add'时该字段有效且必须
+This field is valid and required only when the 'operate' field value is 'add'
 
-合法参数：
+Legal parameters:
 
-普通模块：'common'
+Common module: 'common'
 
-普通逻辑模块；
+Ordinary logic module;
 
-序列模块：'sequence'
+Sequence module: 'sequence'
 
-用于设置动作序列的模块。
+Module for setting up action sequences.
 
-**condition**: \[可选\] 字符串类型，标识当前模块接口。
+**condition**: \[optional\] String type, identifying the current module interface.
 
-接口格式约束："函数名(参数)"。
+Interface format constraint: "Function name (parameter)".
 
-仅当'operate'字段值为'add'时该字段有效且必须。
+This field is valid and required only when the 'operate' field value is 'add'.
 
-要求符合变量命名规则，注意不能和现有模块名称冲突。
+It is required to comply with the variable naming rules, and be careful not to conflict with existing module names.
 
-**body**: \[可选\] 字符串类型，标识当前模块正文，即当前执行的主体内容。
+**body**: \[optional\] String type, identifying the body of the current module, that is, the main content of the current execution.
 
-仅当'operate'字段值为'add'时该字段有效且必须
+This field is valid and required only when the 'operate' field value is 'add'
 
-数据字段缩进要求最小单位为4个空格，后期缩进为4的整数倍递增。
+The minimum unit of indentation for data fields is 4 spaces, and the later indentation is an integer multiple of 4.
 
-备注：模块不支持重载。
+Note: Modules do not support overloading.
 
 **0.2.1.1.2.2.3 type=AI**
 
-**mode**: \[可选\] 字符串类型，标识当前模块模式类型。
+**mode**: \[optional\] String type, identifying the current module mode type.
 
-仅当'operate'字段值为'inquiry'时该字段有效且必须
+This field is valid and required only when the 'operate' field value is 'inquiry'
 
-合法参数：
+Legal parameters:
 
-所有AI数据:'all'
+All AI data: 'all'
 
-人员:'personnel'
+Personnel:'personnel'
 
-人脸:'face'
+Face:'face'
 
-声纹:'voiceprint'
+Voiceprint:'voiceprint'
 
-训练词:'training\_words'
+Training words:'training\_words'
 
 **0.2.1.1.2.2.4 type=SLAM**
 
-**mode**: \[可选\] 字符串类型，标识当前模块模式类型。
+**mode**: \[optional\] String type, identifying the current module mode type.
 
-仅当'operate'字段值为'inquiry'时该字段有效且必须
+This field is valid and required only when the 'operate' field value is 'inquiry'
 
-合法参数：
+Legal parameters:
 
-地图:'map'，当前机器人所有地图信息。
+Map: 'map', all map information of the current robot.
 
-预置点:'preset'，当前机器人所在地图中预先设置好的点，可以直接用来导航。
+Preset point: 'preset', a preset point in the map where the current robot is located, which can be used directly for navigation.
 
-**0.2.1.1.3 协议举例**
+**0.2.1.1.3 Protocol Example**
 
-**0.2.1.1.3.1 task 协议举例**
+**0.2.1.1.3.1 task protocol example**
 
-**0.2.1.1.3.1.1 调试代码**
+**0.2.1.1.3.1.1 Debug code**
 
-先站立，等待60秒钟，再趴下。
+Stand first, wait 60 seconds, and then lie down.
 
 <table>
 <tbody>
@@ -408,9 +408,9 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-**0.2.1.1.3.1.2 保存任务**
+**0.2.1.1.3.1.2 Save task**
 
-保存一条立即执行的任务：先站立，等待60秒钟，再趴下。
+Save an immediate task: stand, wait 60 seconds, then lie down.
 
 <table>
 <tbody>
@@ -433,11 +433,11 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-保存一条定时单次任务：
+Save a scheduled single task:
 
-要求最近一次的21:30分执行一次当前任务。
+The current task is required to be executed at the latest 21:30.
 
-任务内容：先站立，等待5秒钟，再趴下。
+Task content: Stand first, wait 5 seconds, and then lie down.
 
 <table>
 <tbody>
@@ -460,11 +460,11 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-保存一条定时周期任务：
+Save a scheduled periodic task:
 
-要求每天的21:30分执行一次当前任务，直到任务被终止。
+The current task is required to be executed at 21:30 every day until the task is terminated.
 
-任务内容：先站立，等待5秒钟，再趴下。
+Task content: Stand first, wait 5 seconds, and then lie down.
 
 <table>
 <tbody>
@@ -486,9 +486,9 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-**0.2.1.1.3.1.3 运行任务**
+**0.2.1.1.3.1.3 Run task**
 
-运行一条已经保存的目标任务。
+Run a saved target task.
 
 <table>
 <tbody>
@@ -504,9 +504,9 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-**0.2.1.1.3.1.4 暂停任务**
+**0.2.1.1.3.1.4 Pause task**
 
-暂停一条正在运行的目标任务。
+Pause a running target task.
 
 <table>
 <tbody>
@@ -522,7 +522,7 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-暂停多条正在运行的目标任务。
+Pause multiple running target tasks.
 
 <table>
 <tbody>
@@ -538,9 +538,9 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-**0.2.1.1.3.1.5 继续任务**
+**0.2.1.1.3.1.5 Continue mission**
 
-继续一条已暂停的目标任务。
+Resume a paused target task.
 
 <table>
 <tbody>
@@ -556,7 +556,7 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-继续多条已暂停的目标任务。
+Resume multiple paused target tasks.
 
 <table>
 <tbody>
@@ -572,9 +572,9 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-**0.2.1.1.3.1.6 终止任务**
+**0.2.1.1.3.1.6 Terminate task**
 
-终止一条正在运行的目标任务。
+Terminate a running target task.
 
 <table>
 <tbody>
@@ -590,7 +590,7 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-终止多条正在运行的目标任务。
+Terminate multiple running target tasks.
 
 <table>
 <tbody>
@@ -606,9 +606,9 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-**0.2.1.1.3.1.7 删除任务**
+**0.2.1.1.3.1.7 Delete task**
 
-删除一条已经保存且处于终止状态的目标任务。
+Delete a saved and terminated target task.
 
 <table>
 <tbody>
@@ -624,7 +624,7 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-删除多条已经保存且处于终止状态的目标任务。
+Delete multiple saved and terminated target tasks.
 
 <table>
 <tbody>
@@ -640,9 +640,9 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-**0.2.1.1.3.1.8 查询任务**
+**0.2.1.1.3.1.8 Query Task**
 
-查询一条已经保存的目标任务。
+Query a saved target task.
 
 <table>
 <tbody>
@@ -658,7 +658,7 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-查询多条已经保存的目标任务。
+Query multiple saved target tasks.
 
 <table>
 <tbody>
@@ -674,7 +674,7 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-查询所有已经保存的任务。
+Query all saved tasks.
 
 <table>
 <tbody>
@@ -690,11 +690,11 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-**0.2.1.1.3.2 module 协议举例**
+**0.2.1.1.3.2 module protocol example**
 
-**0.2.1.1.3.2.1 保存模块**
+**0.2.1.1.3.2.1 Save module**
 
-保存一条带参数的模块。
+Save a module with parameters.
 
 <table>
 <tbody>
@@ -708,7 +708,7 @@ VISUAL_BACKEND_MSG = 2001;</td>
 <strong>"mode": "common",</strong><br />
 <strong>"condition": "usr_behavior_hunger_1(name, size)",</strong><br />
 <strong>"body": "</strong><br />
-<strong>print("我的", name, "只有 ", size, "%，先趴一会儿。")</strong><br />
+<strong>print("My", name, "Only ", size, "%, lie down for a while.")</strong><br />
 <strong>cyberdog.get_down()</strong><br />
 <strong>"</strong><br />
 <strong>}</strong></td>
@@ -716,7 +716,7 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-保存一条不带参数的模块。
+Save a module without parameters.
 
 <table>
 <tbody>
@@ -730,7 +730,7 @@ VISUAL_BACKEND_MSG = 2001;</td>
 <strong>"mode": "common",</strong><br />
 <strong>"condition": "usr_behavior_hunger_2()",</strong><br />
 <strong>"body": "</strong><br />
-<strong>print("我的处于饥饿状态")</strong><br />
+<strong>print("I'm hungry")</strong><br />
 <strong>cyberdog.get_down()</strong><br />
 <strong>"</strong><br />
 <strong>}</strong></td>
@@ -738,7 +738,7 @@ VISUAL_BACKEND_MSG = 2001;</td>
 </tbody>
 </table>
 
-保存一条序列模块。
+Save a sequence module.
 
 <table>
 <tbody>
@@ -755,9 +755,9 @@ VISUAL_BACKEND_MSG = 2001;</td>
 <br />
 sequ = MotionSequence()<br />
 sequ.name = 'test_sequ'<br />
-sequ.describe = '测试序列'<br />
+sequ.describe = 'Test sequence'<br />
 <br />
-# 原始步态配置文件为：./user_gait_00.toml.<br />
+# The original gait configuration file is: ./user_gait_00.toml.<br />
 <br />
 gait_meta = MotionSequenceGait()<br />
 <br />
@@ -782,7 +782,7 @@ gait_meta.left_hindfoot = 1<br />
 gait_meta.duration = 1<br />
 sequ.gait_list.push_back(gait_meta)<br />
 <br />
-# 原始步伐配置文件为：./L91_user80_ballet_full.toml.<br />
+# The original program configuration file is: ./L91_user80_ballet_full.toml.<br />
 <br />
 pace_meta = MotionSequencePace()<br />
 <br />
@@ -859,21 +859,21 @@ cyberdog.motion.run_sequence(sequ)<br />
 </tbody>
 </table>
 
-调用刚才添加的模块。
+Call the module just added.
 
 <table>
 <tbody>
 <tr class="odd">
 <td>Python<br />
-<strong>usr_behavior_hunger_1('电量', 16)</strong><br />
+<strong>usr_behavior_hunger_1('Battery', 16)</strong><br />
 <strong>usr_behavior_hunger_2()</strong></td>
 </tr>
 </tbody>
 </table>
 
-**0.2.1.1.3.2.2 删除模块**
+**0.2.1.1.3.2.2 Delete module**
 
-删除一条已经保存且处于终止状态的目标模块。
+Delete a target module that has been saved and is in the terminated state.
 
 <table>
 <tbody>
@@ -889,7 +889,7 @@ cyberdog.motion.run_sequence(sequ)<br />
 </tbody>
 </table>
 
-删除多条已经保存且处于终止状态的目标模块。
+Delete multiple target modules that have been saved and are in the terminated state.
 
 <table>
 <tbody>
@@ -905,9 +905,9 @@ cyberdog.motion.run_sequence(sequ)<br />
 </tbody>
 </table>
 
-**0.2.1.1.3.2.3 查询模块**
+**0.2.1.1.3.2.3 Query module**
 
-查询一条已经保存的目标模块。
+Query a saved target module.
 
 <table>
 <tbody>
@@ -923,7 +923,7 @@ cyberdog.motion.run_sequence(sequ)<br />
 </tbody>
 </table>
 
-查询多条已经保存的目标。
+Query multiple saved targets.
 
 <table>
 <tbody>
@@ -939,7 +939,7 @@ cyberdog.motion.run_sequence(sequ)<br />
 </tbody>
 </table>
 
-查询所有已经保存的模块。
+Query all saved modules.
 
 <table>
 <tbody>
@@ -955,11 +955,11 @@ cyberdog.motion.run_sequence(sequ)<br />
 </tbody>
 </table>
 
-**0.2.1.1.3.3 AI 协议举例**
+**0.2.1.1.3.3 AI protocol example**
 
-**0.2.1.1.3.3.1 查询底库人员信息**
+**0.2.1.1.3.3.1 Query bottom database personnel information**
 
-查询一条已经保存的底库人员信息。
+Query a saved database personnel information.
 
 <table>
 <tbody>
@@ -976,7 +976,7 @@ cyberdog.motion.run_sequence(sequ)<br />
 </tbody>
 </table>
 
-查询多条已经保存的底库人员信息。
+Query multiple saved database personnel information.
 
 <table>
 <tbody>
@@ -993,7 +993,7 @@ cyberdog.motion.run_sequence(sequ)<br />
 </tbody>
 </table>
 
-查询所有已经保存的任务。
+Query all saved tasks.
 
 <table>
 <tbody>
@@ -1010,9 +1010,9 @@ cyberdog.motion.run_sequence(sequ)<br />
 </tbody>
 </table>
 
-**0.2.1.1.3.3.2 查询底库人脸信息**
+**0.2.1.1.3.3.2 Query face information in the base database**
 
-查询底库所有已经录入人脸的人员。
+Query all the people whose faces have been entered in the base database.
 
 <table>
 <tbody>
@@ -1029,11 +1029,11 @@ cyberdog.motion.run_sequence(sequ)<br />
 </tbody>
 </table>
 
-其他查询类举。
+Other query categories.
 
-**0.2.1.1.3.3.3 查询底库声纹信息**
+**0.2.1.1.3.3.3 Query the base database voiceprint information**
 
-查询底库所有已经录入声纹的人员。
+Query all persons whose voiceprints have been recorded in the base database.
 
 <table>
 <tbody>
@@ -1052,13 +1052,13 @@ cyberdog.motion.run_sequence(sequ)<br />
 </tbody>
 </table>
 
-其他查询类举。
+Other query categories.
 
-**0.2.1.1.3.4 SLAM 协议举例**
+**0.2.1.1.3.4 SLAM protocol example**
 
-**0.2.1.1.3.4.1 查询当前地图中的预置点信息**
+**0.2.1.1.3.4.1 Query the preset point information in the current map**
 
-查询当前地图中的预置点。
+Query the preset points in the current map.
 
 <table>
 <tbody>
@@ -1077,9 +1077,9 @@ cyberdog.motion.run_sequence(sequ)<br />
 </tbody>
 </table>
 
-**0.2.1.2 \[机器人端-\> 前端\]/ \[机器人端-\> 后端\]：上报数据json格式**
+**0.2.1.2 \[Robot-\>Front-end\]/ \[Robot-\>Back-end\]: Report data in json format**
 
-**0.2.1.2.1 协议约束**
+**0.2.1.2.1 Agreement Constraints**
 
 <table>
 <tbody>
@@ -1120,9 +1120,9 @@ cyberdog.motion.run_sequence(sequ)<br />
 </tbody>
 </table>
 
-**0.2.1.2.2 协议说明**
+**0.2.1.2.2 Protocol Description**
 
-**0.2.1.2.2.1 普通请求反馈**
+**0.2.1.2.2.1 General request feedback**
 
 <table>
 <tbody>
@@ -1142,127 +1142,127 @@ cyberdog.motion.run_sequence(sequ)<br />
 </tbody>
 </table>
 
-**feedback:** \[必须\]请求消息反馈
+**feedback:** \[Required\]Request message feedback
 
-**feedback.type**：\[必须\]消息类型
+**feedback.type**: \[required\] message type
 
-合法参数：
+Legal parameters:
 
-任务:'task'
+Task:'task'
 
-模块:'module'
+Module: 'module'
 
-**feedback.id**：\[必须\] 消息id
+**feedback.id**: \[required\] message id
 
-响应请求消息时，为原始消息id；
+When responding to a request message, it is the original message id;
 
-反馈任务状态时，为时间戳。
+When feedbacking task status, it is a timestamp.
 
-**feedback.target\_id**：\[必须\] 消息target\_id
+**feedback.target\_id**: \[required\] message target\_id
 
-响应请求消息时，如果原始消息target\_id非空，则为首个元素，反之为空；
+When responding to a request message, if the original message target\_id is not empty, it is the first element, otherwise it is empty;
 
-反馈任务状态时，为任务target\_id。
+When feedbacking task status, it is task target\_id.
 
-**feedback.operate**：\[必须\] 消息操作
+**feedback.operate**: \[required\] message operation
 
-app触发的操作：
+Operations triggered by app:
 
-调试任务/模块:'debug'
+Debug task/module: 'debug'
 
-添加任务/模块:'save'
+Add task/module:'save'
 
-修改任务/模块:'run'
+Modify task/module:'run'
 
-删除任务/模块:'delete'
+Delete tasks/modules: 'delete'
 
-查询任务/模块:'inquiry'
+Query task/module:'inquiry'
 
-终止任务:'shutdown'
+Terminate task:'shutdown'
 
-暂停任务:'suspend'
+Suspend task:'suspend'
 
-继续任务:'recover'
+Continue task:'recover'
 
-任务自动触发的操作：
+Operations automatically triggered by tasks:
 
-开始任务:'start'
+Start task:'start'
 
-停止任务:'stop'
+Stop the task: 'stop'
 
-机器人想服务端反馈的操作：
+Operations that the robot wants to give feedback to the server:
 
-开始任务:'start'
+Start task:'start'
 
-**feedback.state**：\[必须\] 原始消息操作状态
+**feedback.state**: \[Required\] Original message operation status
 
-值约束：
+Value constraints:
 
-0:当前操作成功
+0: The current operation is successful
 
-非0:切换为当前指定类型发生异常
+Non-0: An exception occurs when switching to the currently specified type.
 
-1: 非json格式
+1: non-json format
 
-2: type字段，类型无效
+2: type field, type is invalid
 
-3: id字段，id无效
+3: id field, id is invalid
 
-4: target\_id字段，id无效
+4: target\_id field, id is invalid
 
-5: describe字段，描述无效
+5: describe field, description is invalid
 
-6: style字段，样式无效
+6: style field, style is invalid
 
-7: operate字段，操作无效
+7: operate field, the operation is invalid
 
-8: mode字段，模式无效
+8: mode field, mode is invalid
 
-9: condition字段，条件无效
+9: condition field, the condition is invalid
 
-10: body字段，主体无效
+10: body field, the body is invalid
 
-21: 无法创建路径
+21: Unable to create path
 
-22: 无法打开文件
+22: Unable to open file
 
-23: body字段语法异常，无法构建
+23: The body field syntax is abnormal and cannot be constructed.
 
-24: 无法注册
+24: Unable to register
 
-25: 无法更新列表
+25: Unable to update list
 
-26: 无法执行
+26: Unable to execute
 
-27: 当前操作非法
+27: The current operation is illegal
 
-28: 请求错误
+28: Request error
 
-29: 其他错误
+29: Other errors
 
-30: 服务被打断
+30: Service interrupted
 
-31: 等待服务上线超时
+31: Timeout waiting for the service to come online.
 
-31: 请求服务超时
+31: Request service timeout
 
-**feedback.describe**：\[必须\] 原始消息操作状态描述
+**feedback.describe**: \[Required\] Original message operation status description
 
-**注意**：当请求操作为下述几个时，会收到两次反馈。
+**Note**: When the requested operations are the following, you will receive two feedbacks.
 
-终止任务:'shutdown'
+Terminate task:'shutdown'
 
-暂停任务:'suspend'
+Suspend task:'suspend'
 
-继续任务:'recover'
+Continue task:'recover'
 
-其中：两次反馈的主要区别是：**describe**字段：
+Among them: the main difference between the two feedbacks is: **describe** field:
 
-第一次是引擎反馈收到操作请求且请求合法；
+The first time is when the engine reports that an operation request has been received and the request is legitimate;
 
-第二次是任务响应请求**成功后**的反馈，**describe**字段格式为：“Task loop feedback, now state is xxx”。
+The second time is the feedback after the task response request is successful. The **describe** field format is: "Task loop feedback, now state is xxx".
 
-**0.2.1.2.2.2 任务执行过程中反馈**
+**0.2.1.2.2.2 Feedback during task execution**
 
 <table>
 <tbody>
@@ -1286,125 +1286,125 @@ app触发的操作：
 </tbody>
 </table>
 
-**feedback:** \[必须\]请求消息反馈
+**feedback:** \[Required\]Request message feedback
 
-**feedback.type**：\[必须\]消息类型
+**feedback.type**: \[required\] message type
 
-合法参数：
+Legal parameters:
 
-任务:'task'
+Task:'task'
 
-模块:'module'
+Module: 'module'
 
-**feedback.id**：\[必须\] 消息id
+**feedback.id**: \[required\] message id
 
-响应请求消息时，为原始消息id；
+When responding to a request message, it is the original message id;
 
-反馈任务状态时，为时间戳。
+When feedbacking task status, it is a timestamp.
 
-**feedback.target\_id**：\[必须\] 消息target\_id
+**feedback.target\_id**: \[required\] message target\_id
 
-响应请求消息时，如果原始消息target\_id非空，则为首个元素，反之为空；
+When responding to a request message, if the original message target\_id is not empty, it is the first element, otherwise it is empty;
 
-反馈任务状态时，为任务target\_id。
+When feedbacking task status, it is task target\_id.
 
-**feedback.operate**：\[必须\] 消息操作
+**feedback.operate**: \[required\] message operation
 
-app触发的操作：
+Operations triggered by app:
 
-调试任务/模块:'debug'
+Debug task/module: 'debug'
 
-添加任务/模块:'save'
+Add task/module:'save'
 
-修改任务/模块:'run'
+Modify task/module:'run'
 
-删除任务/模块:'delete'
+Delete tasks/modules: 'delete'
 
-查询任务/模块:'inquiry'
+Query task/module:'inquiry'
 
-终止任务:'shutdown'
+Terminate task:'shutdown'
 
-暂停任务:'suspend'
+Suspend task:'suspend'
 
-继续任务:'recover'
+Continue task:'recover'
 
-任务自动触发的操作：
+Operations automatically triggered by tasks:
 
-开始任务:'start'
+Start task:'start'
 
-停止任务:'stop'
+Stop the task: 'stop'
 
-机器人想服务端反馈的操作：
+Operations that the robot wants to give feedback to the server:
 
-开始任务:'start'
+Start task:'start'
 
-**feedback.state**：\[必须\] 原始消息操作状态
+**feedback.state**: \[Required\] Original message operation status
 
-值约束：
+Value constraints:
 
-0:当前操作成功
+0: The current operation is successful
 
-非0:切换为当前指定类型发生异常
+Non-0: An exception occurs when switching to the currently specified type.
 
-1: 非json格式
+1: non-json format
 
-2: type字段，类型无效
+2: type field, type is invalid
 
-3: id字段，id无效
+3: id field, id is invalid
 
-4: target\_id字段，id无效
+4: target\_id field, id is invalid
 
-5: describe字段，描述无效
+5: describe field, description is invalid
 
-6: style字段，样式无效
+6: style field, style is invalid
 
-7: operate字段，操作无效
+7: operate field, the operation is invalid
 
-8: mode字段，模式无效
+8: mode field, mode is invalid
 
-9: condition字段，条件无效
+9: condition field, the condition is invalid
 
-10: body字段，主体无效
+10: body field, the body is invalid
 
-21: 无法创建路径
+21: Unable to create path
 
-22: 无法打开文件
+22: Unable to open file
 
-23: body字段语法异常，无法构建
+23: The body field syntax is abnormal and cannot be constructed.
 
-24: 无法注册
+24: Unable to register
 
-25: 无法更新列表
+25: Unable to update list
 
-26: 无法执行
+26: Unable to execute
 
-27: 当前操作非法
+27: The current operation is illegal
 
-28: 请求错误
+28: Request error
 
-29: 其他错误
+29: Other errors
 
-30: 服务被打断
+30: Service interrupted
 
-31: 等待服务上线超时
+31: Timeout waiting for the service to come online.
 
-31: 请求服务超时
+31: Request service timeout
 
-**feedback.describe**：\[必须\] 原始消息操作状态描述
+**feedback.describe**: \[Required\] Original message operation status description
 
-**block:** \[可选\]块信息
+**block:** \[optional\] block information
 
-**block.type**：\[必须\] 消息类型
+**block.type**：\[required\] message type
 
-合法参数：
+Legal parameters:
 
-开始执行目标块:'begin'
+Start executing target block: 'begin'
 
-结束执行目标块:'end'
+End execution target block: 'end'
 
-**block**.**id**：\[必须\] 块id
+**block**.**id**: \[required\] block id
 
-**0.2.1.2.2.3 任务、模块查询反馈**
+**0.2.1.2.2.3 Task and module query feedback**
 
 <table>
 <tbody>
@@ -1418,10 +1418,10 @@ app触发的操作：
 <strong>{</strong><br />
 <strong>"id": "id",</strong><br />
 <strong>"describe": "describe",</strong><br />
-<strong>"style": "style"，</strong><br />
+<strong>"style": "style",</strong><br />
 <strong>"operate": "operate",</strong><br />
 <strong>"mode": "mode",</strong><br />
-<strong>"condition": "condition"，</strong><br />
+<strong>"condition": "condition",</strong><br />
 <strong>"dependent": [],</strong><br />
 <strong>"be_depended": []</strong><br />
 <strong>},</strong><br />
@@ -1433,91 +1433,91 @@ app触发的操作：
 </tbody>
 </table>
 
-**response:** \[可选\]用于查询请求的回复信息格式约束
+**response:** \[Optional\]Response information format constraints for query requests
 
-**response.type**：\[必须\] 消息类型
+**response.type**：\[required\] message type
 
-合法参数：
+Legal parameters:
 
-表示当前列表类型为任务列表:'**task**'
+Indicates that the current list type is a task list: '**task**'
 
-表示当前列表类型为模块列表:'**module**'
+Indicates that the current list type is a module list: '**module**'
 
-**response.id**：\[必须\] 消息id
+**response.id**: \[required\] message id
 
-合法参数：
+Legal parameters:
 
-保持和请求id一致。
+Keep it consistent with the request id.
 
-**response**.**list**：\[必须\] 响应列表
+**response**.**list**：\[Required\] Response list
 
-**response.list\[\].id：**\[必须\] 列表元素的id
+**response.list\[\].id: **\[Required\] The id of the list element
 
-根据查询场景可分为：
+According to the query scenario, it can be divided into:
 
-任务id；
+task id;
 
-模块id；
+module id;
 
-数据和下发数据帧该字段保持一致
+The field in the data and the delivered data frame must be consistent.
 
-**response.list\[\].describe：**\[必须\] 列表元素的描述
+**response.list\[\].describe：**\[Required\] Description of list elements
 
-任务描述 或 模块描述
+Task description or module description
 
-数据和下发数据帧保持一致
+The data is consistent with the issued data frame
 
-**response.list\[\].style**: \[可选\] 字符串类型，标识当前消息样式，即当前执行主体内容的呈现方式。
+**response.list\[\].style**: \[optional\] String type, identifying the current message style, that is, the presentation method of the current execution body content.
 
-任务样式 或 模块样式
+task style or module style
 
-数据和下发数据帧该字段保持一致
+The field in the data and the delivered data frame must be consistent.
 
-**response.list\[\].operate：**\[必须\] 列表元素的状态
+**response.list\[\].operate: **\[Required\] The status of the list element
 
-任务状态 或 模块状态，合法值约束如下：
+Task status or module status, the legal value constraints are as follows:
 
-"null" ： \[状态\]无状态（仅保存的内容）
+"null" : \[Status\]No state (only saved content)
 
-"error"： \[状态\]错误状态
+"error": \[status\]error status
 
-"wait\_run" ： \[状态\]等待运行状态
+"wait\_run": \[Status\]Waiting for running status
 
-"run\_wait" ： \[状态\]运行等待状态
+"run\_wait": \[status\]Run wait state
 
-"run" ： \[状态\]运行状态
+"run": \[status\] running status
 
-"suspend" ： \[状态\]暂停
+"suspend": \[status\]suspended
 
-"shutdown" ：\[状态\]终止
+"shutdown": \[status\] terminated
 
-模块状态，合法值约束如下：
+Module status, legal value constraints are as follows:
 
-"null" ： \[状态\]无状态（仅保存的内容）
+"null" : \[Status\]No state (only saved content)
 
-"error"： \[状态\]错误状态
+"error": \[status\]error status
 
-"normal" ： \[状态\]正常状态
+"normal": \[Status\]Normal state
 
-**response.list\[\].mode：**\[必须\] 列表元素的模式类型
+**response.list\[\].mode: **\[required\] mode type of list element
 
-任务模式类型 或 模块模式类型
+Task mode type or module mode type
 
-数据和下发数据帧该字段保持一致
+The field in the data and the delivered data frame must be consistent.
 
-**response.list\[\].condition：**\[必须\] 列表元素的约束条件
+**response.list\[\].condition: **\[Required\] Constraints on list elements
 
-任务执行约束 或 模块接口约束
+Task execution constraints or module interface constraints
 
-数据和下发数据帧该字段保持一致
+The field in the data and the delivered data frame must be consistent.
 
-**response.list\[\]. dependent\[\]：**\[必须\] 列表元素的依赖模块，用于标识当前任务或当前模块依赖哪些模块，也就是调用了哪些模块；
+**response.list\[\]. dependent\[\]: **\[must\] The dependent module of the list element is used to identify which modules the current task or the current module depends on, that is, which modules are called;
 
-**response.list\[\].be\_depended\[\]：**\[必须\] 列表元素（只有模块才会被依赖）的被依赖项，被依赖的可能是任务也可能是模块。
+**response.list\[\].be\_depended\[\]: **\[Required\] The dependency of the list element (only modules will be dependent), which may be a task or a module .
 
-**注意：**当被依赖集合非空（存在其他任务或模块依赖当前模块）时，不允许删除模块。
+**Note:** When the dependent collection is non-empty (there are other tasks or modules that depend on the current module), the module is not allowed to be deleted.
 
-**0.2.1.2.2.4 人员信息查询反馈**
+**0.2.1.2.2.4 Personnel information query feedback**
 
 <table>
 <tbody>
@@ -1543,115 +1543,57 @@ app触发的操作：
 </tbody>
 </table>
 
-**response:** \[可选\]用于查询请求的回复信息格式约束
+**response:** \[Optional\]Response information format constraints for query requests
 
-**response.type**：\[必须\] 消息类型
+**response.type**：\[required\] message type
 
-合法参数：
+Legal parameters:
 
-表示当前列表类型为人工智能列表:'AI'
+Indicates that the current list type is an artificial intelligence list: 'AI'
 
-**response.id**：\[必须\] 消息id
+**response.id**: \[required\] message id
 
-合法参数：
+Legal parameters:
 
-保持和请求id一致。
+Keep it consistent with the request id.
 
-**response**.**list**：\[必须\] 响应列表
+**response**.**list**：\[Required\] Response list
 
-**response.list\[\].id：**\[必须\] 列表元素的id
+**response.list\[\].id: **\[Required\] The id of the list element
 
-根据查询场景可分为：
+According to the query scenario, it can be divided into:
 
-人员id;
+Person ID;
 
-数据和下发数据帧该字段保持一致
+The field in the data and the delivered data frame must be consistent.
 
-**response.list\[\].mode：**\[必须\] 列表元素的模式类型
+**response.list\[\].mode: **\[required\] mode type of list element
 
-人员类型 或 人脸类型 或 声纹类型
+Person type or face type or voiceprint type
 
-数据和下发数据帧该字段保持一致
+The field in the data and the delivered data frame must be consistent.
 
-**response.list\[\].style:** \[必须\] 字符串类型，标识当前人员人脸录入状态。合法值如下：
+**response.list\[\].style:** \[Required\] String type, identifying the current person’s face entry status. Legal values are as follows:
 
-"0"：未录入；
+"0": not entered;
 
-"1"：已录入；
+"1": has been entered;
 
-"2"：正在录入；
+"2": logging in;
 
-**response.list\[\].condition:** \[必须\] 字符串类型，标识当前人员声纹录入状态。合法值如下：
+**response.list\[\].condition:** \[Required\] String type, identifying the current voiceprint entry status of the person. Legal values are as follows:
 
-"0"：未录入；
+"0": not entered;
 
-"1"：已录入；
+"1": has been entered;
 
-"2"：正在录入；
+"2": logging in;
 
-**response.list\[\].describe：**\[必须\] 列表元素的描述
+**response.list\[\].describe：**\[Required\] Description of list elements
 
-人员描述
+Personnel description
 
-**0.2.1.2.2.5 训练词查询反馈**
-
-<table>
-<tbody>
-<tr class="odd">
-<td>Python<br />
-<strong>{</strong><br />
-<strong>"response": {</strong><br />
-<strong>"type": "type",</strong><br />
-<strong>"id": "id",</strong><br />
-<strong>"list": [</strong><br />
-<strong>{</strong><br />
-<strong>"id": "id",</strong><br />
-<strong>"mode": "mode",</strong><br />
-<strong>"style": "style",</strong><br />
-<strong>"condition": "condition",</strong><br />
-<strong>"describe": "describe"，</strong><br />
-<strong>},</strong><br />
-...<br />
-<strong>]</strong><br />
-<strong>}</strong><br />
-<strong>}</strong></td>
-</tr>
-</tbody>
-</table>
-
-**response:** \[可选\]用于查询请求的回复信息格式约束
-
-**response.type**：\[必须\] 消息类型
-
-合法参数：
-
-表示当前列表类型为人工智能列表:'AI'
-
-**response.id**：\[必须\] 消息id
-
-合法参数：
-
-保持和请求id一致。
-
-**response**.**list**：\[必须\] 响应列表
-
-**response.list\[\].id：**\[必须\] 列表元素的id
-
-根据查询场景为训练词id，用于呈现给用户（trigger）
-
-**response.list\[\].mode：**\[必须\] 列表元素的模式类型
-
-训练词类型
-
-**response.list\[\].style：**\[必须\] 字符串类型，标识样式（type）
-
-**response.list\[\].condition：**\[必须\] 字符串类型，标识训练词约束信息（value）
-
-**response.list\[\].describe：**\[必须\] 列表元素的描述
-
-训练词描述
-
-**0.2.1.2.2.6 AI所有信息查询反馈**
+**0.2.1.2.2.5 Training word query feedback**
 
 <table>
 <tbody>
@@ -1667,7 +1609,7 @@ app触发的操作：
 <strong>"mode": "mode",</strong><br />
 <strong>"style": "style",</strong><br />
 <strong>"condition": "condition",</strong><br />
-<strong>"describe": "describe"，</strong><br />
+<strong>"describe": "describe",</strong><br />
 <strong>},</strong><br />
 ...<br />
 <strong>]</strong><br />
@@ -1677,61 +1619,119 @@ app触发的操作：
 </tbody>
 </table>
 
-**response:** \[可选\]用于查询请求的回复信息格式约束
+**response:** \[Optional\]Response information format constraints for query requests
 
-**response.type**：\[必须\] 消息类型
+**response.type**：\[required\] message type
 
-合法参数：
+Legal parameters:
 
-表示当前列表类型为人工智能列表:'AI'
+Indicates that the current list type is an artificial intelligence list: 'AI'
 
-**response.id**：\[必须\] 消息id
+**response.id**: \[required\] message id
 
-合法参数：
+Legal parameters:
 
-保持和请求id一致。
+Keep it consistent with the request id.
 
-**response**.**list**：\[必须\] 响应列表
+**response**.**list**：\[Required\] Response list
 
-**response.list\[\].id：**\[必须\] 列表元素的id
+**response.list\[\].id: **\[Required\] The id of the list element
 
-根据查询场景为训练词id，用于呈现给用户（trigger）
+Based on the query scenario, the training word id is used to present it to the user (trigger)
 
-**response.list\[\].mode：**\[必须\] 列表元素的模式类型
+**response.list\[\].mode: **\[required\] mode type of list element
 
-personnel：人员类型
+Training word type
 
-training\_words：训练词类型
+**response.list\[\].style: **\[required\] string type, identification style (type)
 
-**response.list\[\].style：**\[必须\] 列表元素的样式（类型）
+**response.list\[\].condition: **\[required\] string type, identifying training word constraint information (value)
 
-当mode为personnel时：标识当前人员人脸录入状态。合法值如下：
+**response.list\[\].describe：**\[Required\] Description of list elements
 
-"0"：未录入；
+Training word description
 
-"1"：已录入；
+**0.2.1.2.2.6 AI all information query feedback**
 
-"2"：正在录入；
+<table>
+<tbody>
+<tr class="odd">
+<td>Python<br />
+<strong>{</strong><br />
+<strong>"response": {</strong><br />
+<strong>"type": "type",</strong><br />
+<strong>"id": "id",</strong><br />
+<strong>"list": [</strong><br />
+<strong>{</strong><br />
+<strong>"id": "id",</strong><br />
+<strong>"mode": "mode",</strong><br />
+<strong>"style": "style",</strong><br />
+<strong>"condition": "condition",</strong><br />
+<strong>"describe": "describe",</strong><br />
+<strong>},</strong><br />
+...<br />
+<strong>]</strong><br />
+<strong>}</strong><br />
+<strong>}</strong></td>
+</tr>
+</tbody>
+</table>
 
-当mode为training\_words时：标识当前训练词样式（type）
+**response:** \[Optional\]Response information format constraints for query requests
 
-**response.list\[\]. condition：**\[必须\] 列表元素的约束
+**response.type**：\[required\] message type
 
-当mode为personnel时：标识当前人员声纹录入状态。合法值如下：
+Legal parameters:
 
-"0"：未录入；
+Indicates that the current list type is an artificial intelligence list: 'AI'
 
-"1"：已录入；
+**response.id**: \[required\] message id
 
-"2"：正在录入；
+Legal parameters:
 
-当mode为training\_words时：标识当前训练词操作（value）
+Keep it consistent with the request id.
 
-**response.list\[\].describe：**\[必须\] 列表元素的描述
+**response**.**list**：\[Required\] Response list
 
-训练词描述
+**response.list\[\].id: **\[Required\] The id of the list element
 
-**0.2.1.2.2.7 地图预置点查询反馈**
+Based on the query scenario, the training word id is used to present it to the user (trigger)
+
+**response.list\[\].mode: **\[required\] mode type of list element
+
+personnel: personnel type
+
+training\_words: training word type
+
+**response.list\[\].style: **\[Required\] Style (type) of list elements
+
+When mode is personnel: identifies the current person's face entry status. Legal values are as follows:
+
+"0": not entered;
+
+"1": has been entered;
+
+"2": logging in;
+
+When mode is training\_words: identifies the current training word style (type)
+
+**response.list\[\]. condition: **\[required\] Constraints on list elements
+
+When mode is personnel: identifies the current person's voiceprint entry status. Legal values are as follows:
+
+"0": not entered;
+
+"1": has been entered;
+
+"2": logging in;
+
+When mode is training\_words: identifies the current training word operation (value)
+
+**response.list\[\].describe：**\[Required\] Description of list elements
+
+Training word description
+
+**0.2.1.2.2.7 Map preset point query feedback**
 
 <table>
 <tbody>
@@ -1745,9 +1745,9 @@ training\_words：训练词类型
 <strong>{</strong><br />
 <strong>"id": "id",</strong><br />
 <strong>"mode": "mode"</strong><br />
-<strong>"style": "style"，</strong><br />
+<strong>"style": "style",</strong><br />
 <strong>"condition": "condition"</strong><br />
-<strong>"describe": "describe"，</strong><br />
+<strong>"describe": "describe",</strong><br />
 <strong>},</strong><br />
 ...<br />
 <strong>]</strong><br />
@@ -1757,59 +1757,59 @@ training\_words：训练词类型
 </tbody>
 </table>
 
-**response:** \[可选\]用于查询请求的回复信息格式约束
+**response:** \[Optional\]Response information format constraints for query requests
 
-**response.type**：\[必须\] 消息类型
+**response.type**：\[required\] message type
 
-合法参数：
+Legal parameters:
 
-表示当前列表类型为人工智能列表:'SLAM'
+Indicates that the current list type is an artificial intelligence list: 'SLAM'
 
-**response.id**：\[必须\] 消息id
+**response.id**: \[required\] message id
 
-合法参数：
+Legal parameters:
 
-保持和请求id一致。
+Keep it consistent with the request id.
 
-**response**.**list**：\[必须\] 响应列表
+**response**.**list**：\[Required\] Response list
 
-**response.list\[\].id：**\[必须\] 列表元素的id
+**response.list\[\].id: **\[Required\] The id of the list element
 
-根据查询场景可分为：
+According to the query scenario, it can be divided into:
 
-预置点id;
+Preset point id;
 
-数据和下发数据帧该字段保持一致
+The field in the data and the delivered data frame must be consistent.
 
-**response.list\[\].describe：**\[必须\] 列表元素的描述
+**response.list\[\].describe：**\[Required\] Description of list elements
 
-预置点描述
+Preset point description
 
-**response.list\[\].mode：**\[必须\] 列表元素的模式类型
+**response.list\[\].mode: **\[required\] mode type of list element
 
-预置点类型
+Preset point type
 
-数据和下发数据帧该字段保持一致
+The field in the data and the delivered data frame must be consistent.
 
-**response.list\[\].style：**\[必须\] 列表元素的样式类型
+**response.list\[\].style: **\[required\] style type of list element
 
-存放预置点坐标，数据格式如下：
+Store the preset point coordinates, the data format is as follows:
 
-“\[x, y, z\]”
+"\[x, y, z\]"
 
-**response.list\[\].condition：**\[必须\] 列表元素的约束类型
+**response.list\[\].condition: **\[required\] constraint type of list elements
 
-预置点所在地图名
+Map name where the preset point is located
 
-**0.2.1.2.2.1 协议说明**
+**0.2.1.2.2.1 Protocol Description**
 
-**0.2.1.2.3 协议举例**
+**0.2.1.2.3 Protocol Example**
 
-下发一条保存定时单次任务：
+Send a save scheduled single task:
 
-要求每天的21:30分执行一次当前任务，但第一次执行后就销毁，不再执行。
+The current task is required to be executed once every day at 21:30, but it will be destroyed after the first execution and will not be executed again.
 
-任务内容：先站立，等待5秒钟，再趴下。
+Task content: Stand first, wait 5 seconds, and then lie down.
 
 <table>
 <tbody>
@@ -1835,9 +1835,9 @@ training\_words：训练词类型
 </tbody>
 </table>
 
-**0.2.1.2.3.1 上报任务过程**
+**0.2.1.2.3.1 Reporting task process**
 
-保存成功时上报（以成功场景为例）：
+Report when the save is successful (take the success scenario as an example):
 
 <table>
 <tbody>
@@ -1857,7 +1857,7 @@ training\_words：训练词类型
 </tbody>
 </table>
 
-开始执行任务时上报（以成功场景为例）：
+Report when the task starts (taking a successful scenario as an example):
 
 <table>
 <tbody>
@@ -1877,9 +1877,9 @@ training\_words：训练词类型
 </tbody>
 </table>
 
-**0.2.1.2.3.2 开始执行当前任务块1时上报**
+**0.2.1.2.3.2 Reported when starting execution of current task block 1**
 
-开始执行当前任务块1时上报：
+Reported when starting to execute the current task block 1:
 
 <table>
 <tbody>
@@ -1903,9 +1903,9 @@ training\_words：训练词类型
 </tbody>
 </table>
 
-其他块以此类推。
+The rest of the blocks are similar.
 
-**0.2.1.2.3.3 结束执行当前任务块1时上报**
+**0.2.1.2.3.3 Reported when the execution of current task block 1 ends**
 
 <table>
 <tbody>
@@ -1929,11 +1929,11 @@ training\_words：训练词类型
 </tbody>
 </table>
 
-其他块以此类推。
+The rest of the blocks are similar.
 
-**0.2.1.2.3.4 查询任务列表**
+**0.2.1.2.3.4 Query task list**
 
-当模块列表为空时返回值：
+Return value when module list is empty:
 
 <table>
 <tbody>
@@ -1949,7 +1949,7 @@ training\_words：训练词类型
 </tbody>
 </table>
 
-当模块列表非空时返回值：
+Return value when the module list is not empty:
 
 <table>
 <tbody>
@@ -1962,7 +1962,7 @@ training\_words：训练词类型
 <strong>{</strong><br />
 <strong>"id": "id",</strong><br />
 <strong>"describe": "describe",</strong><br />
-<strong>"style": "style"，</strong><br />
+<strong>"style": "style",</strong><br />
 <strong>"operate": "operate",</strong><br />
 <strong>"mode": "mode",</strong><br />
 <strong>"condition": "condition"</strong><br />
@@ -1970,7 +1970,7 @@ training\_words：训练词类型
 <strong>{</strong><br />
 <strong>"id": "id",</strong><br />
 <strong>"describe": "describe",</strong><br />
-<strong>"style": "style"，</strong><br />
+<strong>"style": "style",</strong><br />
 <strong>"operate": "operate",</strong><br />
 <strong>"mode": "mode",</strong><br />
 <strong>"condition": "condition"</strong><br />
@@ -1983,9 +1983,9 @@ training\_words：训练词类型
 </tbody>
 </table>
 
-**0.2.1.2.3.5 查询模块列表**
+**0.2.1.2.3.5 Query module list**
 
-当模块列表为空时返回值：
+Return value when module list is empty:
 
 <table>
 <tbody>
@@ -2001,7 +2001,7 @@ training\_words：训练词类型
 </tbody>
 </table>
 
-当模块列表非空时返回值：
+Return value when the module list is not empty:
 
 <table>
 <tbody>
@@ -2014,7 +2014,7 @@ training\_words：训练词类型
 <strong>{</strong><br />
 <strong>"id": "id",</strong><br />
 <strong>"describe": "describe",</strong><br />
-<strong>"style": "style"，</strong><br />
+<strong>"style": "style",</strong><br />
 <strong>"operate": "operate",</strong><br />
 <strong>"mode": "mode",</strong><br />
 <strong>"condition": "condition"</strong><br />
@@ -2022,7 +2022,7 @@ training\_words：训练词类型
 <strong>{</strong><br />
 <strong>"id": "id",</strong><br />
 <strong>"describe": "describe",</strong><br />
-<strong>"style": "style"，</strong><br />
+<strong>"style": "style",</strong><br />
 <strong>"operate": "operate",</strong><br />
 <strong>"mode": "mode",</strong><br />
 <strong>"condition": "condition"</strong><br />
@@ -2035,9 +2035,9 @@ training\_words：训练词类型
 </tbody>
 </table>
 
-**0.2.1.3 后端-\>机器人端：上报数据json格式**
+**0.2.1.3 Backend-\>Robot side: Report data in json format**
 
-**0.2.1.3.1 协议约束**
+**0.2.1.3.1 Agreement Constraints**
 
 <table>
 <tbody>
@@ -2075,117 +2075,117 @@ training\_words：训练词类型
 </tbody>
 </table>
 
-**0.2.1.3.2 协议说明**
+**0.2.1.3.2 Protocol Description**
 
-**code**：\[必须\] 字符串类型，标识当前帧状态码；
+**code**: \[Required\] String type, identifying the current frame status code;
 
-200 成功
+200 success
 
-400 访问超时
+400 access timeout
 
-403 拒绝访问
+403 Access Denied
 
-401 未经授权访问
+401 Unauthorized access
 
-404 资源不存在
+404 Resource does not exist
 
-405 不支持当前请求方法
+405 The current request method is not supported
 
-500 服务器运行异常
+500 Server is running abnormally
 
-10001 参数不能为空
+10001 Parameter cannot be empty
 
-**message**：\[必须\] 字符串类型，标识当前帧状态码描述；
+**message**: \[required\] String type, identifying the current frame status code description;
 
-**request\_id**：\[必须\] 字符串类型，标识当前帧id；
+**request\_id**: \[required\] String type, identifying the current frame id;
 
-**data:** \[可选\]块信息，当响应查询请求时是增量查询，即只返回未同步到机器人的收藏内容。
+**data:** \[Optional\] block information, when responding to the query request, it is an incremental query, that is, only the collection content that has not been synchronized to the robot is returned.
 
-**data.type**：\[必须\] 消息类型
+**data.type**：\[required\] message type
 
-合法参数：
+Legal parameters:
 
-表示当前列表类型为任务列表:'**task**'
+Indicates that the current list type is a task list: '**task**'
 
-表示当前列表类型为模块列表:'**module**'
+Indicates that the current list type is a module list: '**module**'
 
-表示当前列表类型为记录列表:'**record**'
+Indicates that the current list type is a record list: '**record**'
 
-**data**.**list**：\[必须\] 响应列表
+**data**.**list**: \[required\] response list
 
-**data.list\[\].id：**\[必须\] 列表元素的id
+**data.list\[\].id: **\[Required\] The id of the list element
 
-任务id 或 模块id
+task id or module id
 
-数据和下发数据帧该字段保持一致
+The field in the data and the delivered data frame must be consistent.
 
-**data.list\[\].describe：**\[必须\] 列表元素的描述
+**data.list\[\].describe：**\[Required\] Description of list elements
 
-任务描述 或 模块描述
+Task description or module description
 
-数据和下发数据帧保持一致
+The data is consistent with the issued data frame
 
-**data.list\[\].style**: \[可选\] 字符串类型，标识当前消息样式，即当前执行主体内容的呈现方式。
+**data.list\[\].style**: \[optional\] String type, identifying the current message style, that is, the presentation method of the current execution body content.
 
-任务样式 或 模块样式
+task style or module style
 
-数据和下发数据帧该字段保持一致
+The field in the data and the delivered data frame must be consistent.
 
-**data.list\[\].operate：**\[必须\] 列表元素的状态
+**data.list\[\].operate: **\[Required\] Status of list elements
 
-任务状态 或 模块状态
+Task status or module status
 
-数据为当前真实状态
+The data is the current real state
 
-**data.list\[\].mode：**\[必须\] 列表元素的模式类型
+**data.list\[\].mode: **\[Required\] Mode type of list elements
 
-任务模式类型 或 模块模式类型
+Task mode type or module mode type
 
-数据和下发数据帧该字段保持一致
+The field in the data and the delivered data frame must be consistent.
 
-**data.list\[\].condition：**\[必须\] 列表元素的约束条件
+**data.list\[\].condition: **\[Required\] Constraints on list elements
 
-任务执行约束 或 模块接口约束
+Task execution constraints or module interface constraints
 
-数据和下发数据帧该字段保持一致
+The field in the data and the delivered data frame must be consistent.
 
-**data.list\[\].body：**\[必须\] 列表元素的脚本数据
+**data.list\[\].body: **\[required\] script data of list elements
 
-任务脚本 或 模块脚本
+task script or module script
 
-数据和下发数据帧该字段保持一致
+The field in the data and the delivered data frame must be consistent.
 
-**data.list\[\].state：**\[必须\] 列表元素的脚本状态，合法值如下：
+**data.list\[\].state: **\[Required\] The script state of the list element. The legal values are as follows:
 
-任务状态 或 模块状态，合法值约束如下：
+Task status or module status, the legal value constraints are as follows:
 
-"null" ： \[状态\]无状态（仅保存的内容）
+"null" : \[Status\]No state (only saved content)
 
-"error"： \[状态\]错误状态
+"error": \[status\]error status
 
-"wait\_run" ： \[状态\]等待运行状态
+"wait\_run": \[Status\]Waiting for running status
 
-"run\_wait" ： \[状态\]运行等待状态
+"run\_wait": \[status\]Run wait state
 
-"run" ： \[状态\]运行状态
+"run": \[status\] running status
 
-"suspend" ： \[状态\]暂停
+"suspend": \[status\]suspended
 
-"shutdown" ：\[状态\]终止
+"shutdown": \[status\] terminated
 
-模块状态，合法值约束如下：
+Module status, legal value constraints are as follows:
 
-"null" ： \[状态\]无状态（仅保存的内容）
+"null" : \[Status\]No state (only saved content)
 
-"error"： \[状态\]错误状态
+"error": \[status\]error status
 
-"normal" ： \[状态\]正常状态
+"normal": \[Status\]Normal state
 
-**0.2.1.3.3 协议举例**
+**0.2.1.3.3 Protocol Example**
 
-**0.2.1.3.3.1 查询任务列表**
+**0.2.1.3.3.1 Query task list**
 
-当模块列表为空时返回值：
+Return value when module list is empty:
 
 <table>
 <tbody>
@@ -2201,7 +2201,7 @@ training\_words：训练词类型
 </tbody>
 </table>
 
-当模块列表非空时返回值：
+Return value when the module list is not empty:
 
 <table>
 <tbody>
@@ -2239,9 +2239,9 @@ training\_words：训练词类型
 </tbody>
 </table>
 
-**0.2.1.3.3.2 查询模块列表**
+**0.2.1.3.3.2 Query module list**
 
-当模块列表为空时返回值：
+Return value when module list is empty:
 
 <table>
 <tbody>
@@ -2257,7 +2257,7 @@ training\_words：训练词类型
 </tbody>
 </table>
 
-当模块列表非空时返回值：
+Return value when the module list is not empty:
 
 <table>
 <tbody>
@@ -2295,306 +2295,306 @@ training\_words：训练词类型
 </tbody>
 </table>
 
-**0.2.2 机器人端状态流转关系**
+**0.2.2 Robot-side status transfer relationship**
 
-**0.2.2.1 机器人端任务状态流转关系**
+**0.2.2.1 Robot-side task status transfer relationship**
 
-|                 |             |             |            |             |         |             |             |              |           |             |
-| --------------- | ----------- | ----------- | ---------- | ----------- | ------- | ----------- | ----------- | ------------ | --------- | ----------- |
-| 状态流转关系表         |             |             |            |             |         |             |             |              |           |             |
-| 当前状态            | 当前操作请求      |             |            |             |         |             |             |              | 任务自动触发    |             |
-|                 | 查询(inquiry) | 保存(save)    | 删除(delete) | 调试(debug)   | 运行(run) | 暂停(suspend) | 继续(recover) | 终止(shutdown) | 启动(start) | 停止(stop)    |
-| 空（null）         | 空状态         | 错误状态,等待运行状态 | 空状态        | 错误状态,运行等待状态 | 非法操作    | 非法操作        | 非法操作        | 非法操作         | 非法操作      | 非法操作        |
-| 错误(error)       | 错误状态        | 错误状态,等待运行状态 | 空状态        | 错误状态,运行等待状态 | 非法操作    | 非法操作        | 非法操作        | 非法操作         | 非法操作      | 非法操作        |
-| 等待运行(wait\_run) | 等待运行状态      | 错误状态,等待运行状态 | 空状态        | 错误状态,运行等待状态 | 运行等待状态  | 非法操作        | 非法操作        | 终止状态         | 非法操作      | 非法操作        |
-| 运行等待(run\_wait) | 运行等待状态      | 非法操作        | 非法操作       | 错误状态,运行等待状态 | 非法操作    | 非法操作        | 非法操作        | 终止状态         | 运行状态      | 非法操作        |
-| 运行(run)         | 运行状态        | 非法操作        | 非法操作       | 错误状态,运行等待状态 | 运行状态    | 暂停状态        | 运行状态        | 运行等待状态,终止状态  | 运行状态      | 运行等待状态,终止状态 |
-| 暂停(suspend)     | 暂停状态        | 非法操作        | 非法操作       | 错误状态,运行等待状态 | 非法操作    | 暂停状态        | 运行状态        | 运行等待状态,终止状态  | 非法操作      | 运行等待状态,终止状态 |
-| 终止(shutdown)    | 终止状态        | 错误状态,等待运行状态 | 空状态        | 错误状态,运行等待状态 | 运行等待状态  | 非法操作        | 非法操作        | 终止状态         | 非法操作      | 非法操作        |
+| | | | | | | | | | | |
+| --------------- | ----------- | ----------- | ---------- - | ----------- | ------- | ----------- | ----------- | ---- -------- | --------- | ----------- |
+| Status transfer relationship table | | | | | | | | | | |
+| Current status | Current operation request | | | | | | | | Task automatically triggered | |
+| | inquiry | save | delete | debug | run | suspend | recover | shutdown | start | stop ) |
+| Empty (null) | Empty status | Error status, waiting for running status | Empty status | Error status, running waiting status | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation |
+| Error (error) | Error status | Error status, waiting for running status | Empty status | Error status, running waiting status | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation |
+| Waiting to run (wait\_run) | Waiting for running status | Error status, waiting for running status | Empty status | Error status, running waiting status | Running waiting status | Illegal operation | Illegal operation | Termination status | Illegal operation | Illegal operation |
+| Run wait (run\_wait) | Run wait status | Illegal operation | Illegal operation | Error status, run wait status | Illegal operation | Illegal operation | Illegal operation | Termination status | Running status | Illegal operation |
+| Run (run) | Running status | Illegal operation | Illegal operation | Error status, running waiting status | Running status | Pause status | Running status | Running waiting status, termination status | Running status | Running waiting status, termination status |
+| Suspend (suspend) | Suspension status | Illegal operation | Illegal operation | Error status, running waiting status | Illegal operation | Suspended status | Running status | Running waiting status, termination status | Illegal operation | Running waiting status, termination status |
+| Termination (shutdown) | Termination status | Error status, waiting for running status | Empty status | Error status, running waiting status | Running waiting status | Illegal operation | Illegal operation | Termination status | Illegal operation | Illegal operation |
 
-如上表所示，七种任务状态分别在八种任务操作下的流转关系尽收眼底，现对八种任务操作及七种任务状态进行说明如下：
+As shown in the table above, the flow relationship between the seven task states under the eight task operations is clearly visible. The eight task operations and seven task states are explained as follows:
 
-**八种任务操作**
+**Eight types of task operations**
 
-保存任务：构建当前id的任务，若任务id已存在则覆盖，并审核任务语法是否合规，反馈操作结果。
+Save task: Construct a task with the current ID. If the task ID already exists, overwrite it, check whether the task syntax is compliant, and feedback the operation results.
 
-运行任务：运行当前id对应的任务，若任务id对应的任务不存在或语法状态错误则不执行，反馈操作结果。
+Run task: Run the task corresponding to the current ID. If the task corresponding to the task ID does not exist or the syntax status is wrong, it will not be executed and the operation result will be fed back.
 
-查询任务：查询当前id对应的任务，反馈操作结果。
+Query task: Query the task corresponding to the current ID and feedback the operation results.
 
-删除任务：删除当前id对应的任务，反馈操作结果。
+Delete task: Delete the task corresponding to the current ID and feedback the operation results.
 
-暂停任务：暂停当前id对应的任务，反馈操作结果。
+Pause task: Pause the task corresponding to the current ID and feedback the operation results.
 
-继续任务：继续当前id对应的任务，反馈操作结果。
+Continue task: Continue the task corresponding to the current ID and feedback the operation results.
 
-终止任务：终止当前id对应的任务，反馈操作结果。
+Terminate task: Terminate the task corresponding to the current ID and feedback the operation results.
 
-调试任务：以当前调试id为基础，保存、审核及运行当前帧携带的逻辑，反馈操作结果。
+Debugging task: Based on the current debugging ID, save, review and run the logic carried by the current frame, and feedback the operation results.
 
-**七种任务状态**
+**Seven mission statuses**
 
-空状态：该状态是指没有当前任务的任何状态，本质为当前任务不存在，也就是说任何未记录的任务的状态均为空状态。
+Empty state: This state refers to any state without a current task. The essence is that the current task does not exist. That is to say, the state of any unrecorded task is an empty state.
 
-错误状态：该状态是指当前任务不符合语法规则，本质为当前任务不合规，也就是说当前任务无法运行只能再次编辑。
+Error status: This status means that the current task does not comply with the grammatical rules. The essence is that the current task is not compliant, which means that the current task cannot be run and can only be edited again.
 
-等待运行状态：该状态是指当前任务可以运行但尚未加入任务注册表中，本质为当前任务语法规则，也就是说当前任务处于等待用户确认运行状态。
+Waiting to run state: This state means that the current task can be run but has not yet been added to the task registry. It is essentially the syntax rule of the current task, which means that the current task is waiting for the user to confirm the running state.
 
-运行等待状态：该状态是指当前任务已加入任务注册表中，但尚未满足运行条件，本质为当前任务语法规则，且正在等待运行条件满足后即刻运行的状态。
+Running waiting state: This state refers to the state in which the current task has been added to the task registry, but has not yet met the running conditions. It is essentially the syntax rules of the current task, and is waiting to be run immediately after the running conditions are met.
 
-运行状态：该状态是指当前任务已满足执行条件，正在执行内部逻辑的状态。
+Running state: This state refers to the state in which the current task has met the execution conditions and is executing internal logic.
 
-暂停状态：该状态是指当前任务处于暂停执行的状态，此时任务进程任在，可以是断点暂停或用户手动暂停正在执行的任务。
+Paused state: This state means that the current task is in a state of suspended execution. At this time, the task process is still there. It can be paused at a breakpoint or the user manually pauses the executing task.
 
-终止状态：该状态是指当前任务被终止执行，此时不存在任务进程，可以是正常执行结束或被迫终止任务。
+Termination status: This status means that the current task is terminated and there is no task process at this time. It can be the end of normal execution or the task is forced to terminate.
 
-**注意**：当前的任务状态是基于任务内编程逻辑考虑，不做任务执行约束条件考虑（由调用方考虑）：
+**Note**: The current task status is based on the programming logic within the task and does not consider the task execution constraints (considered by the caller):
 
-当某条任务内编程逻辑审核通过，该任务状态即为等待运行（wait\_run）状态，若该任务执行约束条件为定时单次执行时，需要调用方根据定时约束判断当前任务的约束时间是否已过期，当未过期时再开启任务。当然，也可以不用管，直接下发开启请求，但是会被视为非法请求，操作会失败，对用户操作体验不友好。
+When the programming logic within a task passes the review, the task status is the wait\_run status. If the task execution constraint is a timed single execution, the caller needs to determine whether the current task's constraint time is based on the timing constraint. It has expired. Start the task again when it has not expired. Of course, you can ignore it and issue the open request directly, but it will be regarded as an illegal request and the operation will fail, which is not friendly to the user's operating experience.
 
-**0.2.2.2 机器人端模块状态流转关系**
+**0.2.2.2 Robot module status transfer relationship**
 
-|            |             |           |            |
-| ---------- | ----------- | --------- | ---------- |
-| 状态流转关系表    |             |           |            |
-| 当前状态       | 当前操作请求      |           |            |
-|            | 查询(inquiry) | 保存(save)  | 删除(delete) |
-| 空（null）    | 空状态         | 错误状态,正常状态 | 非法操作       |
-| 错误(error)  | 错误状态        | 错误状态,正常状态 | 空状态        |
-| 正常(normal) | 正常状态        | 错误状态,正常状态 | 空状态,正常状态   |
+| | | | |
+| ---------- | ---------- | ---------- | ---------- |
+| Status transfer relationship table | | | |
+| Current status | Current operation request | | |
+| | query | save | delete |
+| Empty (null) | Empty status | Error status, normal status | Illegal operation |
+| Error (error) | Error status | Error status, normal status | Empty status |
+| Normal (normal) | Normal state | Error state, normal state | Empty state, normal state |
 
-如上表所示，三种模块状态分别在三种模块操作下的流转关系尽收眼底，现对三种模块操作及三种模块状态进行说明如下：
+As shown in the table above, the flow relationship between the three module states under the three module operations is clear at a glance. The three module operations and three module states are explained as follows:
 
-**三种模块操作**
+**Three types of module operations**
 
-保存任务：构建当前id的模块，若模块id已存在则覆盖，并审核任务语法是否合规，反馈操作结果。
+Save task: Build the module with the current ID. If the module ID already exists, overwrite it, check whether the task syntax is compliant, and feedback the operation results.
 
-查询任务：查询当前id对应的模块，反馈操作结果。
+Query task: Query the module corresponding to the current ID and feedback the operation results.
 
-删除任务：审核当前id对应的模块是否可以删除，若可以则删除当前id对应的模块，反馈操作结果。
+Delete task: Review whether the module corresponding to the current ID can be deleted. If so, delete the module corresponding to the current ID and feedback the operation results.
 
-**三种模块状态**
+**Three module states**
 
-空状态：该状态是指没有当前模块的任何状态，本质为当前模块不存在，也就是说任何未记录的模块的状态均为空状态。
+Empty state: This state refers to any state without the current module. The essence is that the current module does not exist, which means that the state of any unrecorded module is empty.
 
-错误状态：该状态是指当前模块不符合语法规则，也就是说当前模块无法运行只能再次编辑。
+Error status: This status means that the current module does not comply with the grammatical rules, which means that the current module cannot be run and can only be edited again.
 
-正常状态：该状态是指当前模块符合语法规则，也就是说当前模块可以调用。
+Normal state: This state means that the current module complies with the grammar rules, which means that the current module can be called.
 
-**0.2.2.3 机器人端各模式下操作约束**
+**0.2.2.3 Operation constraints on the robot side in each mode**
 
-> 非法操作会被拒绝，合法操作会被采纳，不管是非法还是合法都会向请求方反馈状态。
+> Illegal operations will be rejected, legal operations will be adopted, and the status will be fed back to the requesting party regardless of whether it is illegal or legal.
 
-|              |               |                           |             |            |           |         |             |             |              |           |          |
-| ------------ | ------------- | ------------------------- | ----------- | ---------- | --------- | ------- | ----------- | ----------- | ------------ | --------- | -------- |
-| 机器人各模式下操作约束表 |               |                           |             |            |           |         |             |             |              |           |          |
-| 当前模式         |               | 用户对任务、模块、AI能力及SLAM能力的查询操作 | 用户对任务或模块的操作 |            | 用户对任务的操作  |         |             |             |              | 任务自动触发    |          |
-| 模式名称         | 模式标识          | 查询(inquiry)               | 保存(save)    | 删除(delete) | 调试(debug) | 运行(run) | 暂停(suspend) | 继续(recover) | 终止(shutdown) | 启动(start) | 停止(stop) |
-| 未初始化         | Uninitialized | 非法操作                      | 非法操作        | 非法操作       | 非法操作      | 非法操作    | 非法操作        | 非法操作        | 非法操作         | 非法操作      | 非法操作     |
-| 资源加载模式       | SetUp         | 非法操作                      | 非法操作        | 非法操作       | 非法操作      | 非法操作    | 非法操作        | 非法操作        | 非法操作         | 非法操作      | 非法操作     |
-| 资源释放模式       | TearDown      | 非法操作                      | 非法操作        | 非法操作       | 非法操作      | 非法操作    | 非法操作        | 非法操作        | 非法操作         | 非法操作      | 非法操作     |
-| 自检模式         | SekfCheck     | 合法操作                      | 非法操作        | 非法操作       | 非法操作      | 非法操作    | 合法操作        | 非法操作        | 合法操作         | 非法操作      | 合法操作     |
-| 活跃模式         | Active        | 合法操作                      | 合法操作        | 合法操作       | 合法操作      | 合法操作    | 合法操作        | 合法操作        | 合法操作         | 合法操作      | 合法操作     |
-| 静默模式         | DeActive      | 合法操作                      | 合法操作        | 合法操作       | 非法操作      | 非法操作    | 合法操作        | 非法操作        | 合法操作         | 非法操作      | 合法操作     |
-| 低电量模式        | Protected     | 合法操作                      | 合法操作        | 合法操作       | 合法操作      | 合法操作    | 合法操作        | 合法操作        | 合法操作         | 合法操作      | 合法操作     |
-| 低功耗模式        | LowPower      | 合法操作                      | 合法操作        | 合法操作       | 非法操作      | 非法操作    | 合法操作        | 非法操作        | 合法操作         | 非法操作      | 合法操作     |
-| 远程升级模式       | OTA           | 合法操作                      | 非法操作        | 非法操作       | 非法操作      | 非法操作    | 合法操作        | 非法操作        | 合法操作         | 非法操作      | 合法操作     |
-| 错误模式         | Error         | 合法操作                      | 非法操作        | 非法操作       | 非法操作      | 非法操作    | 合法操作        | 非法操作        | 合法操作         | 非法操作      | 合法操作     |
+| | | | | | | | | | | |
+| ------------ | ------------- | ----------------------- --- | ----------- | ---------- | --------- | ------- | ----- ------ | ----------- | ------------ | --------- | -------- |
+| Operation constraint table in each mode of the robot | | | | | | | | | | | |
+| Current mode | | User query operations on tasks, modules, AI capabilities, and SLAM capabilities | User operations on tasks or modules | | User operations on tasks | | | | | Automatic triggering of tasks | |
+| Schema name | Schema identifier | query | save | delete | debug | run | suspend | continue (recover) | terminate (shutdown) | start ) | stop |
+| Uninitialized | Uninitialized | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation |
+| Resource loading mode | SetUp | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation |
+| Resource release mode | TearDown | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation |
+| Self-check mode | SekfCheck | Legal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Legal operation | Illegal operation | Legal operation | Illegal operation | Legal operation |
+| Active mode | Active | Legal operation | Legal operation | Legal operation | Legal operation | Legal operation | Legal operation | Legal operation | Legal operation | Legal operation | Legal operation |
+| Silent Mode | DeActive | Legal Operation | Legal Operation | Legal Operation | Illegal Operation | Illegal Operation | Legal Operation | Illegal Operation | Legal Operation | Illegal Operation | Legal Operation |
+| Low Power Mode | Protected | Legal Operation | Legal Operation | Legal Operation | Legal Operation | Legal Operation | Legal Operation | Legal Operation | Legal Operation | Legal Operation | Legal Operation |
+| Low Power Consumption Mode | LowPower | Legal Operation | Legal Operation | Legal Operation | Illegal Operation | Illegal Operation | Legal Operation | Illegal Operation | Legal Operation | Illegal Operation | Legal Operation |
+| Remote upgrade mode | OTA | Legal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Legal operation | Illegal operation | Legal operation | Illegal operation | Legal operation |
+| Error mode | Error | Legal operation | Illegal operation | Illegal operation | Illegal operation | Illegal operation | Legal operation | Illegal operation | Legal operation | Illegal operation | Legal operation |
 
-如上表所示，十种机器人模式下用户对任务或模块的八种操作，用户对AI能力的一种操作以及任务自行触发的两种操作约束条件尽收眼底，各模式下的约束指标主要考虑如下：
+As shown in the table above, there are eight user operations on tasks or modules in ten robot modes, one user operation on AI capabilities, and two operation constraints triggered by tasks themselves. The constraint indicators in each mode are mainly considered. as follows:
 
-Uninitialized、SetUp、TearDown三种模式下，机器人各功能模块均处于无法正常工作的状态，故而限制所有操作；
+In the three modes of Uninitialized, SetUp, and TearDown, each functional module of the robot is in a state where it cannot work normally, so all operations are restricted;
 
-SekfCheck、OTA以及Error模式下，机器人各功能模块均处于封闭状态，故而限制所有可能导致图形化编程新增进程的操作，只允许现有进程自动停止（stop）或用户手动暂停（suspend）或终止（shutdown）现有进程，允许查询（inquiry）是想为用户提供展示任务、模块及AI信息，为用户的暂停（suspend）或终止提供基础，同时也支持二次编辑任务或模块的功能，提升用户和机器人互动过程中的异步体验（不会因自检阻塞用户编程），该思想同样适用于Active、DeActive、Protected、LowPower、OTA以及Error模式；
+In SelfCheck, OTA and Error modes, each functional module of the robot is in a closed state, so all operations that may cause new processes in graphical programming are restricted, and only existing processes are allowed to automatically stop (stop) or the user manually suspend (suspend) or terminate. (shutdown) Existing processes, allowing inquiry (inquiry) are intended to provide users with display tasks, modules and AI information, provide a basis for users to suspend (suspend) or terminate, and also support the function of secondary editing tasks or modules, improving Asynchronous experience during the interaction between user and robot (will not block user programming due to self-test), this idea is also applicable to Active, DeActive, Protected, LowPower, OTA and Error modes;
 
-Active模式下，机器人各功能模块均处于能够正常工作的阶段，故而开放所有操作；
+In Active mode, all functional modules of the robot are in a stage where they can work normally, so all operations are open;
 
-Protected模式下，机器人大部分功能模块均处于能够正常工作的阶段，故而开放所有操作，该模式下受限功能如下：
+In Protected mode, most of the robot's functional modules are in a stage where they can work normally, so all operations are open. The restricted functions in this mode are as follows:
 
-运动模块：除站立、趴下外的所有结果指令；
+Movement module: all result commands except standing and lying down;
 
-LED模块：BMS会抢占LED设备。
+LED module: BMS will seize the LED device.
 
-DeActive以及LowPower模式下，机器人各功能模块均处于休眠状态，查询（inquiry）、停止（stop）及暂停（suspend）或终止（shutdown）约束考虑和SekfCheck模式一样，对于保存（save）和删除（delete）操作的考虑和查询一样，也是想为用户提供展示任务、模块及AI信息，为用户的暂停（suspend）或终止提供基础，同时也支持二次编辑任务或模块的功能，提升用户和机器人互动过程中的异步体验（不会因自检阻塞用户编程）；
+In DeActive and LowPower modes, each functional module of the robot is in a dormant state. The constraints of inquiry, stop, suspend or shutdown are the same as those in SekfCheck mode. For save and delete ) operation is considered the same as query. It also wants to provide users with display tasks, modules and AI information, provide a basis for users to suspend or terminate, and also support the function of secondary editing tasks or modules to improve the interaction between users and robots. Asynchronous experience during the process (no self-test blocking user programming);
 
 <table>
 <tbody>
 <tr class="odd">
-<td><p>低电量模式</p>
-<p>进入：</p>
-<p>电量低于20%，自动进入；</p>
-<p>退出：</p>
-<p>电量大于等于20%，自动退出；</p>
-<p>低功耗模式</p>
-<p>进入：</p>
-<p>电量小于5%时自动进入低功耗；</p>
-<p>趴下超过30s，进入低功耗；</p>
-<p>唤醒退出低功耗模式后，若30s内未进行运动控制，则再次进入低功耗模式；</p>
-<p>退出：</p>
-<p>语音唤醒：“铁蛋、铁蛋”；</p>
-<p>app端点击退出低功耗；</p>
-<p>双击狗头退出低功耗；</p></td>
+<td><p>Low battery mode</p>
+<p>Enter:</p>
+<p>When the battery is lower than 20%, it will enter automatically;</p>
+<p>Exit:</p>
+<p>When the battery level is greater than or equal to 20%, it will automatically exit;</p>
+<p>Low power mode</p>
+<p>Enter:</p>
+<p>Automatically enter low power consumption when the battery level is less than 5%;</p>
+<p>Lie down for more than 30 seconds and enter low power consumption;</p>
+<p>After waking up and exiting the low-power mode, if no motion control is performed within 30 seconds, the low-power mode will be entered again;</p>
+<p>Exit:</p>
+<p>Voice wake-up: "Iron egg, iron egg";</p>
+<p>Click on the app side to exit low power consumption;</p>
+<p>Double-click the dog head to exit low power consumption;</p></td>
 </tr>
 </tbody>
 </table>
 
-**一、基础约束**
+**1. Basic constraints**
 
-**1.1 保留字**
+**1.1 Reserved words**
 
-|        |         |      |          |        |        |      |        |       |        |
-| ------ | ------- | ---- | -------- | ------ | ------ | ---- | ------ | ----- | ------ |
-| and    | exec    | not  | class    | from   | print  | del  | import | try   | except |
-| assert | finally | or   | continue | global | raise  | elif | in     | while | lambda |
-| break  | for     | pass | def      | if     | return | else | is     | with  | yield  |
+| | | | | | | | | | |
+| ------ | ------- | ---- | -------- | ------ | ------ | ---- | - ----- | ----- | ------ |
+| and | exec | not | class | from | print | del | import | try | except |
+| assert | finally | or | continue | global | raise | elif | in | while | lambda |
+| break | for | pass | def | if | return | else | is | with | yield |
 
-**1.2 运算符**
+**1.2 Operators**
 
-**1.2.1 算术运算符**
+**1.2.1 Arithmetic operators**
 
 <table>
 <tbody>
 <tr class="odd">
-<td><strong>运算符</strong></td>
-<td><strong>描述</strong></td>
-<td><strong>实例（a=10，b=20）</strong></td>
+<td><strong>Operator</strong></td>
+<td><strong>Description</strong></td>
+<td><strong>Example (a=10, b=20)</strong></td>
 </tr>
 <tr class="even">
 <td><strong>+</strong></td>
-<td>加：两个对象相加</td>
-<td>a + b 输出结果 30</td>
+<td>Add: Add two objects</td>
+<td>a + b outputs 30</td>
 </tr>
 <tr class="odd">
 <td><strong>-</strong></td>
-<td>减：得到负数或是一个数减去另一个数</td>
-<td>a - b 输出结果 -10</td>
+<td>Subtraction: Get a negative number or subtract one number from another number</td>
+<td>a - b output result -10</td>
 </tr>
 <tr class="even">
 <td><strong>*</strong></td>
-<td>乘：两个数相乘或是返回一个被重复若干次的字符串</td>
-<td>a * b 输出结果 200</td>
+<td>Multiplication: Multiply two numbers or return a string repeated several times</td>
+<td>a * b output result 200</td>
 </tr>
 <tr class="odd">
 <td><strong>/</strong></td>
-<td>除：x除以y</td>
-<td>b / a 输出结果 2</td>
+<td>Division: x divided by y</td>
+<td>b / a output result 2</td>
 </tr>
 <tr class="even">
 <td><strong>%</strong></td>
-<td>取模：返回除法的余数</td>
-<td>b % a 输出结果 0</td>
+<td>Modulo: Return the remainder of division</td>
+<td>b % a output result 0</td>
 </tr>
 <tr class="odd">
 <td><strong>**</strong></td>
-<td>幂：返回x的y次幂</td>
-<td>a**b 为10的20次方， 输出结果 100000000000000000000</td>
+<td>Power: Returns the y power of x</td>
+<td>a**b is 10 raised to the 20th power, and the output result is 100000000000000000000</td>
 </tr>
 <tr class="even">
 <td><strong>//</strong></td>
-<td>取整除：返回商的整数部分（向下取整）</td>
-<td><p>9//2 输出结果 4</p>
-<p>-9//2 输出结果 -5</p></td>
+<td>Round and divide: Return the integer part of the quotient (rounded down)</td>
+<td><p>9//2 output result 4</p>
+<p>-9//2 output result -5</p></td>
 </tr>
 </tbody>
 </table>
 
-**1.2.2 比较运算符**
+**1.2.2 Comparison operators**
 
-所有比较运算符返回1表示真，返回0表示假。这分别与特殊的变量True和False等价。
+All comparison operators return 1 for true and 0 for false. These are equivalent to the special variables True and False respectively.
 
-|         |                  |                     |
+| | | |
 | ------- | ---------------- | ------------------- |
-| **运算符** | **描述**           | **实例（a=10，b=20）**   |
-| **==**  | 等于： 比较对象是否相等     | (a == b) 返回 false。  |
-| **\!=** | 不等于：比较两个对象是否不相等  | (a \!= b) 返回 true.  |
-| **\>**  | 大于：返回x是否大于y      | (a \> b) 返回 false。  |
-| **\<**  | 小于：返回x是否小于y。     | (a \< b) 返回 true。   |
-| **\>=** | 大于等于：返回x是否大于等于y。 | (a \>= b) 返回 false。 |
-| **\<=** | 小于等于：返回x是否小于等于y。 | (a \<= b) 返回 true。  |
+| **Operator** | **Description** | **Example (a=10, b=20)** |
+| **==** | Equals: Compares whether objects are equal | (a == b) Returns false. |
+| **\!=** | Not equal to: Compares whether two objects are equal | (a \!= b) returns true. |
+| **\>** | Greater than: returns whether x is greater than y | (a \> b) returns false. |
+| **\<** | Less than: Returns whether x is less than y. | (a \< b) returns true. |
+| **\>=** | Greater than or equal to: Returns whether x is greater than or equal to y. | (a \>= b) returns false. |
+| **\<=** | Less than or equal to: Returns whether x is less than or equal to y. | (a \<= b) returns true. |
 
-**1.2.3 赋值运算符**
+**1.2.3 Assignment operator**
 
-|           |          |                              |
+| | | |
 | --------- | -------- | ---------------------------- |
-| **运算符**   | **描述**   | **实例（a=10，b=20）**            |
-| **=**     | 简单的赋值运算符 | c = a + b 将 a + b 的运算结果赋值为 c |
-| **+=**    | 加法赋值运算符  | c += a 等效于 c = c + a         |
-| **-=**    | 减法赋值运算符  | c -= a 等效于 c = c - a         |
-| **\*=**   | 乘法赋值运算符  | c \*= a 等效于 c = c \* a       |
-| **/=**    | 除法赋值运算符  | c /= a 等效于 c = c / a         |
-| **%=**    | 取模赋值运算符  | c %= a 等效于 c = c % a         |
-| **\*\*=** | 幂赋值运算符   | c \*\*= a 等效于 c = c \*\* a   |
-| **//=**   | 取整除赋值运算符 | c //= a 等效于 c = c // a       |
+| **Operator** | **Description** | **Example (a=10, b=20)** |
+| **=** | Simple assignment operator | c = a + b assigns the result of a + b to c |
+| **+=** | Addition assignment operator | c += a is equivalent to c = c + a |
+| **-=** | Subtractive assignment operator | c -= a is equivalent to c = c - a |
+| **\*=** | Multiplicative assignment operator | c \*= a is equivalent to c = c \* a |
+| **/=** | Division assignment operator | c /= a is equivalent to c = c / a |
+| **%=** | Modulo assignment operator | c %= a is equivalent to c = c % a |
+| **\*\*=** | Power assignment operator | c \*\*= a is equivalent to c = c \*\* a |
+| **//=** | Integer division assignment operator | c //= a is equivalent to c = c // a |
 
-**1.2.4 逻辑运算符**
+**1.2.4 Logical operators**
 
-|         |           |                                                      |                       |
-| ------- | --------- | ---------------------------------------------------- | --------------------- |
-| **运算符** | **逻辑表达式** | **描述**                                               | **实例（a=10，b=20）**     |
-| **and** | x and y   | 布尔"与" - 如果 x 为 False，x and y 返回 False，否则它返回 y 的计算值。  | (a and b) 返回 20。      |
-| **or**  | x or y    | 布尔"或" - 如果 x 是非 0，它返回 x 的计算值，否则它返回 y 的计算值。           | (a or b) 返回 10。       |
-| **not** | not x     | 布尔"非" - 如果 x 为 True，返回 False 。如果 x 为 False，它返回 True。 | not(a and b) 返回 False |
+| | | | |
+| ------- | --------- | ------------------------------- --------------------- | --------------------- |
+| **Operator** | **Logical expression** | **Description** | **Example (a=10, b=20)** |
+| **and** | x and y | Boolean AND - x and y returns False if x is False, otherwise it returns the computed value of y. | (a and b) returns 20. |
+| **or** | x or y | Boolean OR - if x is non-zero, it returns the computed value of x, otherwise it returns the computed value of y. | (a or b) returns 10. |
+| **not** | not x | Boolean "not" - Returns False if x is True. If x is False, it returns True. | not(a and b) returns False |
 
-**1.2.5 成员运算符**
+**1.2.5 Member Operator**
 
-|         |                                   |                                    |
-| ------- | --------------------------------- | ---------------------------------- |
-| **运算符** | **描述**                            | **实例**                             |
-| in      | 如果在指定的序列中找到值返回 True，否则返回 False。   | x 在 y 序列中 , 如果 x 在 y 序列中返回 True。   |
-| not in  | 如果在指定的序列中没有找到值返回 True，否则返回 False。 | x 不在 y 序列中 , 如果 x 不在 y 序列中返回 True。 |
+| | | |
+| ------- | ---------------------------------- | ------- -------------------------- |
+| **Operator** | **Description** | **Example** |
+| in | Returns True if a value is found in the specified sequence, False otherwise. | x is in the y sequence, Returns True if x is in the y sequence. |
+| not in | Returns True if the value is not found in the specified sequence, False otherwise. | x is not in the y sequence, returns True if x is not in the y sequence. |
 
-**1.2.6 身份运算符**
+**1.2.6 Identity Operator**
 
-|         |                           |                                                                            |
-| ------- | ------------------------- | -------------------------------------------------------------------------- |
-| **运算符** | **描述**                    | **实例**                                                                     |
-| is      | is 是判断两个标识符是不是引用自一个对象     | **x is y**, 类似 **id(x) == id(y)** , 如果引用的是同一个对象则返回 True，否则返回 False         |
-| is not  | is not 是判断两个标识符是不是引用自不同对象 | **x is not y** ， 类似 **id(a) \!= id(b)**。如果引用的不是同一个对象则返回结果 True，否则返回 False。 |
+| | | |
+| ------- | ----------------------- | --------------- -------------------------------------------------- ---------- |
+| **Operator** | **Description** | **Example** |
+| is | is is used to determine whether two identifiers refer to the same object | **x is y**, similar to **id(x) == id(y)**, if they refer to the same object, it will be returned True, otherwise returns False |
+| is not | is not is to determine whether two identifiers refer to different objects | **x is not y**, similar to **id(a) \!= id(b)**. Returns True if the referenced object is not the same, False otherwise. |
 
-**1.2.7 位运算符**
+**1.2.7 Bit Operators**
 
-|          |                                                            |                                                    |
-| -------- | ---------------------------------------------------------- | -------------------------------------------------- |
-| **运算符**  | **描述**                                                     | **实例（a=60，b=13）**                                  |
-| **&**    | 按位与运算符：参与运算的两个值,如果两个相应位都为1,则该位的结果为1,否则为0                   | (a & b) 输出结果 12 ，二进制解释： 0000 1100                  |
-| **|**    | 按位或运算符：只要对应的二个二进位有一个为1时，结果位就为1。                            | (a | b) 输出结果 61 ，二进制解释： 0011 1101                  |
-| **^**    | 按位异或运算符：当两对应的二进位相异时，结果为1                                   | (a ^ b) 输出结果 49 ，二进制解释： 0011 0001                  |
-| **\~**   | 按位取反运算符：对数据的每个二进制位取反,即把1变为0,把0变为1 。**\~x** 类似于 **-x-1**    | (\~a ) 输出结果 -61 ，二进制解释： 1100 0011，在一个有符号二进制数的补码形式。 |
-| **\<\<** | 左移动运算符：运算数的各二进位全部左移若干位，由 **\<\<** 右边的数字指定了移动的位数，高位丢弃，低位补0。 | a \<\< 2 输出结果 240 ，二进制解释： 1111 0000                |
-| **\>\>** | 右移动运算符：把"\>\>"左边的运算数的各二进位全部右移若干位，**\>\>** 右边的数字指定了移动的位数    | a \>\> 2 输出结果 15 ，二进制解释： 0000 1111                 |
+| | | |
+| -------- | ---------------------------------------- ------------------ | ---------------------------------- ------------------ |
+| **Operator** | **Description** | **Example (a=60, b=13)** |
+| **&** | Bitwise AND operator: Two values participating in the operation, if the two corresponding bits are 1, the result of the bit is 1, otherwise it is 0 | (a & b) The output result is 12, Binary interpretation: 0000 1100 |
+| **|** | Bitwise OR operator: As long as one of the two corresponding binary bits is 1, the result bit will be 1. | (a | b) Output result 61, binary interpretation: 0011 1101 |
+| **^** | Bitwise XOR operator: When the two corresponding binary bits are different, the result is 1 | (a ^ b) The output result is 49, binary interpretation: 0011 0001 |
+| **\~** | Bitwise negation operator: negates each binary bit of the data, that is, changes 1 to 0 and 0 to 1. **\~x** Similar to **-x-1** | (\~a ) Output result -61 , binary interpretation: 1100 0011, in the two's complement form of a signed binary number. |
+| **\<\<** | Left shift operator: All binary bits of the operand are shifted to the left by a certain number of bits. The number on the right of **\<\<** specifies the number of bits to move. The high bits are discarded and the low bits are discarded. Fill with 0. | a \<\< 2 output result 240, binary interpretation: 1111 0000 |
+| **\>\>** | Right shift operator: Shift all the binary digits of the operand to the left of "\>\>" to the right by a certain number of bits, **\>\>** The number on the right specifies the move Number of digits | a \>\> 2 The output result is 15, binary interpretation: 0000 1111 |
 
-**1.2.8 运算符优先级**
+**1.2.8 Operator precedence**
 
-|                              |                                   |
-| ---------------------------- | --------------------------------- |
-| **运算符**                      | **描述**                            |
-| \*\*                         | 指数 (最高优先级)                        |
-| \~ + -                       | 按位翻转, 一元加号和减号 (最后两个的方法名为 +@ 和 -@) |
-| \* / % //                    | 乘，除，取模和取整除                        |
-| \+ -                         | 加法减法                              |
-| \>\> \<\<                    | 右移，左移运算符                          |
-| &                            | 位 'AND'                           |
-| ^ |                          | 位运算符                              |
-| \<= \< \> \>=                | 比较运算符                             |
-| \<\> == \!=                  | 等于运算符                             |
-| \= %= /= //= -= += \*= \*\*= | 赋值运算符                             |
-| is is not                    | 身份运算符                             |
-| in not in                    | 成员运算符                             |
-| not and or                   | 逻辑运算符                             |
+| | |
+| ---------------------------- | ---------------------------- ------------- |
+| **operator** | **description** |
+| \*\* | index (highest priority) |
+| \~ + - | Bitwise flip, unary plus and minus signs (the last two methods are named +@ and -@) |
+| \* / % // | Multiplication, division, modulo and integer division |
+| \+ - | Addition and subtraction |
+| \>\> \<\< | Right shift, left shift operator |
+| & | bit 'AND' |
+| ^ | | bitwise operator |
+| \<= \< \> \>= | Comparison operator |
+| \<\> == \!= | Equality operator |
+| \= %= /= //= -= += \*= \*\*= | Assignment operator |
+| is is not | identity operator |
+| in not in | member operator |
+| not and or | logical operator |
 
-**1.2 代码块约束**
+**1.2 Code block constraints**
 
-同python一样，代码块不使用大括号 **{}** 来控制类，函数以及其他逻辑判断。采用缩进来写模块。
+Like Python, code blocks do not use curly braces **{}** to control classes, functions and other logical judgments. Use indentation to write modules.
 
-缩进的空白数量是可变的，但是所有代码块语句必须包含相同的缩进空白数量，这个必须严格执行。
+The amount of indented whitespace is variable, but all code block statements must contain the same amount of indented whitespace, and this must be strictly enforced.
 
-**1.3 variable（变量）**
+**1.3 variable**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>举例1</td>
+<td>Agreement Constraints</td>
+<td>Example 1</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -2617,13 +2617,13 @@ size = 10</td>
 </tbody>
 </table>
 
-**1.4 function（函数）**
+**1.4 function**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>举例1</td>
+<td>Agreement Constraints</td>
+<td>Example 1</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -2652,26 +2652,26 @@ return</td>
 </tbody>
 </table>
 
-**1.5 内置函数**
+**1.5 Built-in functions**
 
-第4到第9节所涉及的函数皆为内置函数，可直接调用，除此之外还有下述内值函数。
+The functions involved in Sections 4 to 9 are all built-in functions and can be called directly. In addition, there are the following internal value functions.
 
-|    |    |    |
+| | | |
 | -- | -- | -- |
-| 函数 | 功能 | 举例 |
-|    |    |    |
+| Function | Function | Example |
+| | | |
 
-**二、类型约束**
+**2. Type constraints**
 
-**2.1 Numbers（数字）**
+**2.1 Numbers**
 
-**2.1.1 int（有符号整型）**
+**2.1.1 int (signed integer type)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>举例1</td>
+<td>Agreement Constraints</td>
+<td>Example 1</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -2698,13 +2698,13 @@ return</td>
 </tbody>
 </table>
 
-**2.1.2 float（浮点型）**
+**2.1.2 float (floating point type)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>举例1</td>
+<td>Agreement Constraints</td>
+<td>Example 1</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -2731,13 +2731,13 @@ return</td>
 </tbody>
 </table>
 
-**2.1.3 complex（复数）**
+**2.1.3 complex**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>举例1</td>
+<td>Agreement Constraints</td>
+<td>Example 1</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -2763,31 +2763,31 @@ size_d = -.6545+0J</td>
 </tbody>
 </table>
 
-**2.2 String（字符串）**
+**2.2 String**
 
-[参考链接](https://docs.python.org/zh-cn/3/tutorial/index.html)
+[Reference link](https://docs.python.org/zh-cn/3/tutorial/index.html)
 
-**2.3 List（列表）**
+**2.3 List**
 
-[参考链接](https://www.runoob.com/python/python-lists.html)
+[Reference link](https://www.runoob.com/python/python-lists.html)
 
-**2.4 Tuple（元组）**
+**2.4 Tuple**
 
-[参考链接](https://www.runoob.com/python/python-tuples.html)
+[Reference link](https://www.runoob.com/python/python-tuples.html)
 
-**2.5 Dictionary（字典）**
+**2.5 Dictionary**
 
-[参考链接](https://www.runoob.com/python/python-dictionary.html)
+[Reference link](https://www.runoob.com/python/python-dictionary.html)
 
-**三、逻辑控制**
+**3. Logic control**
 
 **3.1 if**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -2816,7 +2816,7 @@ print('1==2')</td>
 </tr>
 </tbody>
 </table>
-<p>将输出：</p>
+<p>Will output:</p>
 <table>
 <tbody>
 <tr class="odd">
@@ -2834,8 +2834,8 @@ print('1==2')</td>
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -2852,21 +2852,21 @@ function_code</td>
 <tr class="odd">
 <td>Perl<br />
 <strong>for</strong> now_char <strong>in</strong> 'hello!':<br />
-<strong>print(</strong>'当前字符：', <strong>now_char)</strong></td>
+<strong>print(</strong>'Current character:', <strong>now_char)</strong></td>
 </tr>
 </tbody>
 </table>
-<p>将输出：</p>
+<p>Will output:</p>
 <table>
 <tbody>
 <tr class="odd">
 <td><br />
-当前字符：h<br />
-当前字符：e<br />
-当前字符：l<br />
-当前字符：l<br />
-当前字符：o<br />
-当前字符：!</td>
+Current character: h<br />
+Current character: e<br />
+Current character: l<br />
+Current character: l<br />
+Current character: o<br />
+Current character: !</td>
 </tr>
 </tbody>
 </table></td>
@@ -2879,8 +2879,8 @@ function_code</td>
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -2898,18 +2898,18 @@ function_code</td>
 <td>Swift<br />
 now_num = 0<br />
 while now_num &lt; 2:<br />
-<strong>print(</strong>'当前数字：', now_num<strong>)</strong><br />
+<strong>print(</strong>'Current number:', now_num<strong>)</strong><br />
 now_num = now_num + 1</td>
 </tr>
 </tbody>
 </table>
-<p>将输出：</p>
+<p>Will output:</p>
 <table>
 <tbody>
 <tr class="odd">
 <td><br />
-当前数字：0<br />
-当前数字：1</td>
+Current number: 0<br />
+Current number: 1</td>
 </tr>
 </tbody>
 </table></td>
@@ -2922,8 +2922,8 @@ now_num = now_num + 1</td>
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>举例（借助while说明）</td>
+<td>Agreement Constraints</td>
+<td>Example (with the help of while explanation)</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -2940,21 +2940,21 @@ now_num = now_num + 1</td>
 <td>Swift<br />
 now_num = 0<br />
 while true:<br />
-<strong>print(</strong>'当前数字：', now_num<strong>)</strong><br />
+<strong>print(</strong>'Current number:', now_num<strong>)</strong><br />
 now_num = now_num + 1<br />
 break<br />
 <br />
-<strong>print(</strong>'最终数字：', now_num<strong>) </strong></td>
+<strong>print(</strong>'Final number:', now_num<strong>) </strong></td>
 </tr>
 </tbody>
 </table>
-<p>将输出：</p>
+<p>Will output:</p>
 <table>
 <tbody>
 <tr class="odd">
 <td><br />
-当前数字：0<br />
-最终数字：1</td>
+Current number: 0<br />
+Final number: 1</td>
 </tr>
 </tbody>
 </table></td>
@@ -2967,8 +2967,8 @@ break<br />
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>举例（借助while说明）</td>
+<td>Agreement Constraints</td>
+<td>Example (with the help of while explanation)</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -2987,18 +2987,18 @@ now_num = 0<br />
 while now_num &lt; 2:<br />
 now_num = now_num + 1<br />
 continue<br />
-<strong>print(</strong>'当前数字：', now_num<strong>)</strong><br />
+<strong>print(</strong>'Current number:', now_num<strong>)</strong><br />
 <br />
-<strong>print(</strong>'最终数字：', now_num<strong>) </strong></td>
+<strong>print(</strong>'Final number:', now_num<strong>) </strong></td>
 </tr>
 </tbody>
 </table>
-<p>将输出：</p>
+<p>Will output:</p>
 <table>
 <tbody>
 <tr class="odd">
 <td><br />
-最终数字：2</td>
+Final number: 2</td>
 </tr>
 </tbody>
 </table></td>
@@ -3006,70 +3006,70 @@ continue<br />
 </tbody>
 </table>
 
-**四、Cyberdog ability set（铁蛋能力集）**
+**4. Cyberdog ability set (Iron Egg ability set)**
 
-在此，为了铁蛋能更好的服务客户，我们对铁蛋具备的大部分能力抽象为浅显易懂的功能接口集合，以便用户直接调用，也就是本节的主要内容，在此之前我们对铁蛋通用参数的有效值进行如下约束：
+Here, in order for Tiedan to better serve customers, we have abstracted most of Tiedan's capabilities into a collection of easy-to-understand functional interfaces for users to call directly, which is the main content of this section. Before that, we have The effective values of iron egg general parameters are subject to the following constraints:
 
-**4.0 铁蛋坐标系**
+**4.0 Iron Egg Coordinate System**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>右手准则坐标系</td>
-<td>右手准则旋转方向</td>
+<td>Right-hand criterion coordinate system</td>
+<td>Right-hand criterion rotation direction</td>
 </tr>
 <tr class="even">
-<td><p>手指指向方向为轴向的正方向，即为：</p>
-<p>X轴速度方向：前正后负</p>
-<p>Y轴速度方向：左正右负</p>
-<p>Z轴速度方向：左正右负</p></td>
-<td><p>手指指向方向为轴向的正方向，即为：</p>
-<p>X轴旋转方向：左负右正</p>
-<p>Y轴旋转方向：上负下正</p>
-<p>Z轴旋转方向：左正右负</p></td>
+<td><p>The finger pointing direction is the positive direction of the axis, which is:</p>
+<p>X-axis speed direction: front positive and back negative</p>
+<p>Y-axis speed direction: left positive, right negative</p>
+<p>Z-axis speed direction: left positive, right negative</p></td>
+<td><p>The finger pointing direction is the positive direction of the axis, which is:</p>
+<p>X-axis rotation direction: left negative and right positive</p>
+<p>Y-axis rotation direction: up negative and down positive</p>
+<p>Z-axis rotation direction: left positive, right negative</p></td>
 </tr>
 <tr class="odd">
-<td>欧拉角</td>
+<td>Euler angles</td>
 <td></td>
 </tr>
 <tr class="even">
-<td><a href="https://quaternions.online/">欧拉角和四元数说明</a></td>
+<td><a href="https://quaternions.online/">Explanation of Euler angles and quaternions</a></td>
 <td></td>
 </tr>
 </tbody>
 </table>
 
-如上所示，铁蛋符合右手准侧坐标系，
+As shown above, the iron egg conforms to the right-hand lateral coordinate system,
 
-**4.1 铁蛋能力集参数约束表**
+**4.1 Tiedan ability set parameter constraint table**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>序号</td>
-<td>分类</td>
-<td>参数</td>
-<td>变量</td>
-<td>单位</td>
-<td><p>分辨率</p>
-<p>（控制粒度）</p></td>
-<td>数值类型</td>
-<td>语义类型</td>
-<td>最小值</td>
-<td>默认</td>
-<td>最大值</td>
-<td>方向</td>
-<td>备注</td>
+<td>Serial number</td>
+<td>Classification</td>
+<td>Parameters</td>
+<td>Variables</td>
+<td>Unit</td>
+<td><p>Resolution</p>
+<p>(Control granularity)</p></td>
+<td>Numeric type</td>
+<td>Semantic Type</td>
+<td>Minimum value</td>
+<td>Default</td>
+<td>Maximum value</td>
+<td>Direction</td>
+<td>Remarks</td>
 </tr>
 <tr class="even">
 <td>1</td>
-<td>运动</td>
-<td>质心X轴约束</td>
+<td>Sports</td>
+<td>Center of mass X-axis constraint</td>
 <td>centroid_x</td>
 <td>m</td>
 <td>0.001m</td>
-<td>浮点数</td>
-<td><del>绝对(未开放)</del></td>
+<td>Floating point numbers</td>
+<td><del>Absolute (not open)</del></td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
@@ -3083,8 +3083,8 @@ continue<br />
 <td></td>
 <td></td>
 <td></td>
-<td>浮点数</td>
-<td>相对</td>
+<td>Floating point numbers</td>
+<td>relative</td>
 <td>-0.4</td>
 <td>0</td>
 <td>0.4</td>
@@ -3094,12 +3094,12 @@ continue<br />
 <tr class="even">
 <td>2</td>
 <td></td>
-<td>质心Y轴约束</td>
+<td>Center of mass Y-axis constraint</td>
 <td>centroid_y</td>
 <td></td>
 <td></td>
-<td>浮点数</td>
-<td><del>绝对(未开放)</del></td>
+<td>Floating point numbers</td>
+<td><del>Absolute (not open)</del></td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
@@ -3113,8 +3113,8 @@ continue<br />
 <td></td>
 <td></td>
 <td></td>
-<td>浮点数</td>
-<td>相对</td>
+<td>Floating point numbers</td>
+<td>relative</td>
 <td>-0.3</td>
 <td>0</td>
 <td>0.3</td>
@@ -3124,12 +3124,12 @@ continue<br />
 <tr class="even">
 <td>3</td>
 <td></td>
-<td>质心Z轴约束</td>
+<td>Center of mass Z axis constraint</td>
 <td>zcentroid_z</td>
 <td></td>
 <td></td>
-<td>浮点数</td>
-<td>绝对</td>
+<td>Floating point numbers</td>
+<td>Absolutely</td>
 <td>0.1</td>
 <td>0</td>
 <td>0.3</td>
@@ -3143,8 +3143,8 @@ continue<br />
 <td></td>
 <td></td>
 <td></td>
-<td>浮点数</td>
-<td>相对</td>
+<td>Floating point numbers</td>
+<td>relative</td>
 <td>-0.2</td>
 <td>0</td>
 <td>0.2</td>
@@ -3154,11 +3154,11 @@ continue<br />
 <tr class="even">
 <td>4</td>
 <td></td>
-<td>支点X轴约束</td>
+<td>Pivot X-axis constraint</td>
 <td>fulcrum_x</td>
 <td>m</td>
 <td>0.005m</td>
-<td>浮点数</td>
+<td>Floating point numbers</td>
 <td></td>
 <td>-0.5</td>
 <td>0</td>
@@ -3169,11 +3169,11 @@ continue<br />
 <tr class="odd">
 <td>5</td>
 <td></td>
-<td>支点Y轴约束</td>
+<td>Fulcrum Y-axis constraint</td>
 <td>fulcrum_y</td>
 <td>m</td>
 <td>0.005m</td>
-<td>浮点数</td>
+<td>Floating point numbers</td>
 <td></td>
 <td>-0.5</td>
 <td>0</td>
@@ -3184,11 +3184,11 @@ continue<br />
 <tr class="even">
 <td>6</td>
 <td></td>
-<td>支点Z轴约束</td>
+<td>Pivot Z axis constraint</td>
 <td>fulcrum_z</td>
 <td>m</td>
 <td>0.005m</td>
-<td>浮点数</td>
+<td>Floating point numbers</td>
 <td></td>
 <td>-0.5</td>
 <td>0</td>
@@ -3199,16 +3199,16 @@ continue<br />
 <tr class="odd">
 <td>7</td>
 <td></td>
-<td>机身翻滚：X轴</td>
+<td>Body roll: X axis</td>
 <td>roll</td>
 <td>deg</td>
 <td>0.1</td>
-<td>浮点数</td>
-<td>绝对</td>
+<td>Floating point numbers</td>
+<td>Absolutely</td>
 <td>-0.45*57.3=-25.8</td>
 <td>0</td>
 <td>0.45*57.3=25.8</td>
-<td>方向：左负右正</td>
+<td>Direction: left negative, right positive</td>
 <td></td>
 </tr>
 <tr class="even">
@@ -3218,8 +3218,8 @@ continue<br />
 <td></td>
 <td></td>
 <td></td>
-<td>浮点数</td>
-<td>相对</td>
+<td>Floating point numbers</td>
+<td>relative</td>
 <td>-0.9*57.3=-51.6</td>
 <td>0</td>
 <td>0.9*57.3=51.6</td>
@@ -3229,16 +3229,16 @@ continue<br />
 <tr class="odd">
 <td>8</td>
 <td></td>
-<td>机身俯仰：Y轴</td>
+<td>Body pitch: Y axis</td>
 <td>pitch</td>
 <td>deg</td>
 <td>0.1</td>
-<td>浮点数</td>
-<td>绝对</td>
+<td>Floating point numbers</td>
+<td>Absolutely</td>
 <td>-0.45*57.3=-25.8</td>
 <td>0</td>
 <td>0.45*57.3=25.8</td>
-<td>方向：上负下正</td>
+<td>Direction: up negative and down positive</td>
 <td></td>
 </tr>
 <tr class="even">
@@ -3248,8 +3248,8 @@ continue<br />
 <td></td>
 <td></td>
 <td></td>
-<td>浮点数</td>
-<td>相对</td>
+<td>Floating point numbers</td>
+<td>relative</td>
 <td>-0.9*57.3=-51.6</td>
 <td>0</td>
 <td>0.9*57.3=51.6</td>
@@ -3259,16 +3259,16 @@ continue<br />
 <tr class="odd">
 <td>9</td>
 <td></td>
-<td>机身偏航：Z轴</td>
+<td>Body yaw: Z axis</td>
 <td>yaw</td>
 <td>deg</td>
 <td>0.1</td>
-<td>浮点数</td>
-<td>绝对</td>
+<td>Floating point numbers</td>
+<td>Absolutely</td>
 <td>-0.45*57.3=-25.8</td>
 <td>0</td>
 <td>0.45*57.3=25.8</td>
-<td>方向：左正右负</td>
+<td>Direction: left positive, right negative</td>
 <td></td>
 </tr>
 <tr class="even">
@@ -3278,8 +3278,8 @@ continue<br />
 <td></td>
 <td></td>
 <td></td>
-<td>浮点数</td>
-<td>相对</td>
+<td>Floating point numbers</td>
+<td>relative</td>
 <td>-0.9*57.3=-51.6</td>
 <td>0</td>
 <td>0.9*57.3=51.6</td>
@@ -3289,101 +3289,101 @@ continue<br />
 <tr class="odd">
 <td>10</td>
 <td></td>
-<td>x轴向行走速度</td>
+<td>x-axis walking speed</td>
 <td>x_velocity</td>
 <td>m/s</td>
 <td>0.01</td>
-<td>浮点数</td>
+<td>Floating point numbers</td>
 <td></td>
 <td>-1.6</td>
 <td>0</td>
 <td>1.6</td>
-<td>方向：前正后负</td>
+<td>Direction: forward positive and back negative</td>
 <td></td>
 </tr>
 <tr class="even">
 <td>11</td>
 <td></td>
-<td>y轴向行走速度</td>
+<td>y-axis walking speed</td>
 <td>y_velocity</td>
 <td>m/s</td>
 <td>0.01</td>
-<td>浮点数</td>
+<td>Floating point numbers</td>
 <td></td>
 <td>-1.2</td>
 <td>0</td>
 <td>1.2</td>
-<td>方向：左正右负</td>
+<td>Direction: left positive, right negative</td>
 <td></td>
 </tr>
 <tr class="odd">
 <td>12</td>
 <td></td>
-<td>z轴向行走速度</td>
+<td>z-axis walking speed</td>
 <td>z_velocity</td>
 <td>deg/s</td>
 <td>0.1</td>
-<td>浮点数</td>
+<td>Floating point numbers</td>
 <td></td>
 <td>-2.5*57.3=-114.6</td>
 <td>0</td>
 <td>2.5*57.3= 114.6</td>
-<td>方向：左正右负</td>
+<td>Direction: left positive, right negative</td>
 <td></td>
 </tr>
 <tr class="even">
 <td>13</td>
 <td></td>
-<td>x轴向跳跃速度</td>
+<td>x-axis jumping speed</td>
 <td>x_jump_velocity</td>
 <td>m/s</td>
 <td>0.01</td>
-<td>浮点数</td>
+<td>Floating point numbers</td>
 <td></td>
 <td>-0.25</td>
 <td>0</td>
 <td>0.15</td>
-<td>方向：前正后负</td>
+<td>Direction: forward positive and back negative</td>
 <td></td>
 </tr>
 <tr class="odd">
 <td>14</td>
 <td></td>
-<td>y轴向跳跃速度</td>
+<td>y-axis jumping speed</td>
 <td>y_jump_velocity</td>
 <td>m/s</td>
 <td>0.01</td>
-<td>浮点数</td>
+<td>Floating point numbers</td>
 <td></td>
 <td>-0.1</td>
 <td>0</td>
 <td>0.1</td>
-<td>方向：左正右负</td>
+<td>Direction: left positive, right negative</td>
 <td></td>
 </tr>
 <tr class="even">
 <td>15</td>
 <td></td>
-<td>z轴向跳跃速度</td>
+<td>z-axis jump speed</td>
 <td>z_jump_velocity</td>
 <td>deg/s</td>
 <td>0.1</td>
-<td>浮点数</td>
+<td>Floating point numbers</td>
 <td></td>
 <td>-0.5* 57.3=-28.65</td>
 <td>0</td>
 <td>0.5* 57.3=28.65</td>
-<td>方向：左正右负</td>
+<td>Direction: left positive, right negative</td>
 <td></td>
 </tr>
 <tr class="odd">
 <td>16</td>
 <td></td>
-<td>前腿抬腿高度</td>
+<td>Leg lift height of front legs</td>
 <td>front_leg_lift</td>
 <td>m</td>
 <td>0.001</td>
-<td>浮点数</td>
+<td>Floating point numbers</td>
 <td></td>
 <td>0.005</td>
 <td>0.03</td>
@@ -3394,11 +3394,11 @@ continue<br />
 <tr class="even">
 <td>17</td>
 <td></td>
-<td>前腿抬腿高度</td>
+<td>Leg lift height of front legs</td>
 <td>back_leg_lift</td>
 <td>m</td>
 <td>0.001</td>
-<td>浮点数</td>
+<td>Floating point numbers</td>
 <td></td>
 <td>0.005</td>
 <td>0.03</td>
@@ -3409,47 +3409,47 @@ continue<br />
 <tr class="odd">
 <td>18</td>
 <td></td>
-<td>期望距离</td>
+<td>Expected distance</td>
 <td>distance</td>
 <td>m</td>
 <td>0.01</td>
-<td>浮点数</td>
+<td>Floating point numbers</td>
 <td></td>
 <td>0</td>
 <td>0</td>
 <td>10</td>
 <td></td>
-<td>0:字段无效</td>
+<td>0: Invalid field</td>
 </tr>
 <tr class="even">
 <td>19</td>
 <td></td>
-<td>期望耗时</td>
+<td>Expected time consumption</td>
 <td>duration</td>
 <td>s</td>
 <td>2</td>
-<td>浮点数</td>
+<td>Floating point numbers</td>
 <td></td>
 <td>0</td>
 <td>1</td>
 <td>6</td>
 <td></td>
-<td>0:字段无效</td>
+<td>0: Invalid field</td>
 </tr>
 <tr class="odd">
 <td>20</td>
-<td>语音</td>
-<td>音量</td>
+<td>Voice</td>
+<td>Volume</td>
 <td>volume</td>
 <td>%</td>
 <td>1</td>
-<td>整型</td>
+<td>Integer type</td>
 <td></td>
 <td>0</td>
 <td>-1</td>
 <td>100</td>
-<td>值越大音量越大</td>
-<td>-1: 字段无效</td>
+<td>The larger the value, the louder the volume</td>
+<td>-1: Invalid field</td>
 </tr>
 <tr class="even">
 <td></td>
@@ -3469,1336 +3469,1336 @@ continue<br />
 </tbody>
 </table>
 
-**4.2 铁蛋能力集通用类型约束表**
+**4.2 Common type constraint table of Tiedan ability set**
 
-**[Time](https://docs.ros2.org/latest/api/builtin_interfaces/msg/Time.html)：时间戳**
+**[Time](https://docs.ros2.org/latest/api/builtin_interfaces/msg/Time.html): timestamp**
 
-**[Header](https://docs.ros2.org/latest/api/std_msgs/msg/Header.html)：帧头**
+**[Header](https://docs.ros2.org/latest/api/std_msgs/msg/Header.html)：Frame header**
 
-**[LaserScan](https://docs.ros2.org/latest/api/sensor_msgs/msg/LaserScan.html)：雷达消息**
+**[LaserScan](https://docs.ros2.org/latest/api/sensor_msgs/msg/LaserScan.html): Radar message**
 
-**[Range](https://docs.ros2.org/latest/api/sensor_msgs/msg/Range.html)：超声波消息**
+**[Range](https://docs.ros2.org/latest/api/sensor_msgs/msg/Range.html): Ultrasonic message**
 
-**[Odometry](https://docs.ros2.org/latest/api/nav_msgs/msg/Odometry.html)：里程计消息**
+**[Odometry](https://docs.ros2.org/latest/api/nav_msgs/msg/Odometry.html): Odometry message**
 
-**[Imu](https://docs.ros2.org/latest/api/sensor_msgs/msg/Imu.html)：惯导消息**
+**[Imu](https://docs.ros2.org/latest/api/sensor_msgs/msg/Imu.html): Inertial navigation message**
 
-**[Point](https://docs.ros2.org/latest/api/geometry_msgs/msg/Point.html)：点消息**
+**[Point](https://docs.ros2.org/latest/api/geometry_msgs/msg/Point.html)：Point message**
 
-**[Quaternion](https://docs.ros2.org/latest/api/geometry_msgs/msg/Quaternion.html)：四元数消息**
+**[Quaternion](https://docs.ros2.org/latest/api/geometry_msgs/msg/Quaternion.html): Quaternion messages**
 
-**[Pose](https://docs.ros2.org/latest/api/geometry_msgs/msg/Pose.html)：惯导消息**
+**[Pose](https://docs.ros2.org/latest/api/geometry_msgs/msg/Pose.html): Inertial navigation message**
 
-**[Vector3](https://docs.ros2.org/latest/api/geometry_msgs/msg/Vector3.html)：惯导消息**
+**[Vector3](https://docs.ros2.org/latest/api/geometry_msgs/msg/Vector3.html): Inertial navigation message**
 
-**[Twist](https://docs.ros2.org/latest/api/geometry_msgs/msg/Twist.html)：惯导消息**
+**[Twist](https://docs.ros2.org/latest/api/geometry_msgs/msg/Twist.html): Inertial navigation message**
 
-**[PoseWithCovariance](https://docs.ros2.org/latest/api/geometry_msgs/msg/PoseWithCovariance.html)：惯导消息**
+**[PoseWithCovariance](https://docs.ros2.org/latest/api/geometry_msgs/msg/PoseWithCovariance.html): Inertial navigation message**
 
-**[TwistWithCovariance](https://docs.ros2.org/latest/api/geometry_msgs/msg/TwistWithCovariance.html)：惯导消息**
+**[TwistWithCovariance](https://docs.ros2.org/latest/api/geometry_msgs/msg/TwistWithCovariance.html): Inertial navigation message**
 
-**BmsStatus：电池管理系统消息**
+**BmsStatus: Battery Management System Message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td><a href="https://docs.ros2.org/latest/api/std_msgs/msg/Header.html">BmsStatus</a></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>header</td>
 <td><a>Header</a></td>
-<td>消息头</td>
+<td>Message header</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>batt_volt</td>
 <td>int</td>
-<td>电压 - mV</td>
+<td>Voltage - mV</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>batt_curr</td>
 <td>int</td>
-<td>电流 - mA</td>
+<td>Current - mA</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>batt_soc</td>
 <td>int</td>
-<td>剩余电量</td>
+<td>Remaining battery</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>batt_temp</td>
 <td>int</td>
-<td>温度 - C</td>
+<td>Temperature - C</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>batt_st</td>
 <td>int</td>
-<td>电池模式:bit0 - 正常模式; bit1 - 正在充电; bit2 - 充电完成; bit3 - 电机掉电; bit4 - 软关机</td>
+<td>Battery mode: bit0 - normal mode; bit1 - charging; bit2 - charging completed; bit3 - motor power down; bit4 - soft shutdown</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>key_val</td>
 <td>int</td>
-<td>关机信号:1 - 关机; 0 - 正常/不关机</td>
+<td>Shutdown signal: 1 - shutdown; 0 - normal/no shutdown</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>disable_charge</td>
 <td>int</td>
-<td>禁用充电</td>
+<td>Disable charging</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>power_supply</td>
 <td>int</td>
-<td>电源</td>
+<td>Power supply</td>
 </tr>
 <tr class="odd">
 <td></td>
-<td>buzze</td>
+<td>buzz</td>
 <td>int</td>
-<td>蜂鸣</td>
+<td>Beep</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>status</td>
 <td>int</td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>batt_health</td>
 <td>int</td>
-<td>电池健康</td>
+<td>Battery Health</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>batt_loop_number</td>
 <td>int</td>
-<td>电池循环数</td>
+<td>Battery cycle count</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>powerboard_status</td>
 <td>int</td>
-<td>电源板状态: bit0 - 串口错误{1 - 有错误; 0 - 无错误}</td>
+<td>Power board status: bit0 - serial port error {1 - error; 0 - no error}</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>power_normal</td>
 <td>bool</td>
-<td>正常模式</td>
+<td>Normal mode</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>power_wired_charging</td>
 <td>bool</td>
-<td>有线充电中</td>
+<td>Wired charging</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>power_finished_charging</td>
 <td>bool</td>
-<td>充电完成</td>
+<td>Charging completed</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>power_motor_shutdown</td>
 <td>bool</td>
-<td>电机掉电</td>
+<td>Motor power out</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>power_soft_shutdown</td>
 <td>bool</td>
-<td>软关机</td>
+<td>Soft shutdown</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>power_wp_place</td>
 <td>bool</td>
-<td>无线充电在位</td>
+<td>Wireless charging in place</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>power_wp_charging</td>
 <td>bool</td>
-<td>无线充电中</td>
+<td>Wireless charging</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>power_expower_supply</td>
 <td>bool</td>
-<td>外部供电</td>
+<td>External power supply</td>
 </tr>
 </tbody>
 </table>
 
-**TouchStatus：触摸板消息**
+**TouchStatus: Touchpad message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
-<td><a href="https://git.n.xiaomi.com/MiRoboticsLab/rop/bridges/-/blob/dev/protocol/ros/msg/TouchStatus.msg">TouchStatus</a></td>
+<td>Type</td>
+<td><a href="https://git.n.xiaomi.com/MiRoboticsLab/rop/bridges/-/blob/dev/protocol/ros/msg/TouchStatus.msg">TouchStatus</a></ td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>header</td>
 <td><a>Header</a></td>
-<td>消息头</td>
+<td>Message header</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>touch_state</td>
 <td>int</td>
-<td>触摸板状态{1:单击,2：双击,3：长按}</td>
+<td>Touchpad status {1: single click, 2: double click, 3: long press}</td>
 </tr>
 </tbody>
 </table>
 
-**GpsPayload：全球定位系统消息**
+**GpsPayload: Global Positioning System Message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
-<td><a href="https://git.n.xiaomi.com/MiRoboticsLab/rop/bridges/-/blob/dev/protocol/ros/msg/GpsPayload.msg">GpsPayload</a></td>
+<td>Type</td>
+<td><a href="https://git.n.xiaomi.com/MiRoboticsLab/rop/bridges/-/blob/dev/protocol/ros/msg/GpsPayload.msg">GpsPayload</a></ td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>sec</td>
 <td>int</td>
-<td>秒</td>
+<td>Seconds</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>nanosec</td>
 <td>int</td>
-<td>纳秒</td>
+<td>Nanosecond</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>itow</td>
 <td>int</td>
-<td>GPS时间戳</td>
+<td>GPS timestamp</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>fix_type</td>
 <td>int</td>
-<td>GNSS类型</td>
+<td>GNSS type</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>num_sv</td>
 <td>int</td>
-<td>当前搜星卫星数量</td>
+<td>Current number of satellite search satellites</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>lon</td>
 <td>int</td>
-<td>经度</td>
+<td>Longitude</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>lat</td>
 <td>int</td>
-<td>纬度</td>
+<td>Latitude</td>
 </tr>
 </tbody>
 </table>
 
-**SingleTofPayload：单个Tof数据消息**
+**SingleTofPayload: Single Tof data message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
-<td><a href="https://git.n.xiaomi.com/MiRoboticsLab/rop/bridges/-/blob/dev/protocol/ros/msg/SingleTofPayload.msg">SingleTofPayload</a></td>
+<td>Type</td>
+<td><a href="https://git.n.xiaomi.com/MiRoboticsLab/rop/bridges/-/blob/dev/protocol/ros/msg/SingleTofPayload.msg">SingleTofPayload</a></ td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>header</td>
 <td><a>Header</a></td>
-<td>消息头</td>
+<td>Message header</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>data_available</td>
 <td>bool</td>
-<td>数据是否可用</td>
+<td>Is the data available</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>tof_position</td>
 <td>int</td>
-<td>传感器的位置(左前:0,右前:1,左后:2,右后:3)</td>
+<td>The position of the sensor (front left: 0, front right: 1, rear left: 2, rear right: 3)</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>data</td>
 <td>float</td>
-<td>传感器数据[m]</td>
+<td>Sensor data[m]</td>
 </tr>
 </tbody>
 </table>
 
-**HeadTofPayload：头部Tof数据消息**
+**HeadTofPayload: Head Tof data message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
-<td><a href="https://git.n.xiaomi.com/MiRoboticsLab/rop/bridges/-/blob/dev/protocol/ros/msg/HeadTofPayload.msg">HeadTofPayload</a></td>
+<td>Type</td>
+<td><a href="https://git.n.xiaomi.com/MiRoboticsLab/rop/bridges/-/blob/dev/protocol/ros/msg/HeadTofPayload.msg">HeadTofPayload</a></ td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>left_head</td>
 <td><a>SingleTofPayload</a></td>
-<td>头部左侧Tof</td>
+<td>Left side of head Tof</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>right_head</td>
 <td><a>SingleTofPayload</a></td>
-<td>头部右侧Tof</td>
+<td>Tof on the right side of the head</td>
 </tr>
 </tbody>
 </table>
 
-**RearTofPayload：尾部Tof数据消息**
+**RearTofPayload: Rear Tof data message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
-<td><a href="https://git.n.xiaomi.com/MiRoboticsLab/rop/bridges/-/blob/dev/protocol/ros/msg/RearTofPayload.msg">RearTofPayload</a></td>
+<td>Type</td>
+<td><a href="https://git.n.xiaomi.com/MiRoboticsLab/rop/bridges/-/blob/dev/protocol/ros/msg/RearTofPayload.msg">RearTofPayload</a></ td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>left_rear</td>
 <td><a>SingleTofPayload</a></td>
-<td>尾部左侧Tof</td>
+<td>Tail left Tof</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>right_rear</td>
 <td><a>SingleTofPayload</a></td>
-<td>尾部右侧Tof</td>
+<td>Tail right Tof</td>
 </tr>
 </tbody>
 </table>
 
-**TofPayload：激光测距消息**
+**TofPayload: Laser ranging message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>TofPayload</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>head</td>
 <td><a>HeadTofPayload</a></td>
-<td>头部tof</td>
+<td>Head tof</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>rear</td>
 <td><a>RearTofPayload</a></td>
-<td>尾部tof</td>
+<td>Tail tof</td>
 </tr>
 </tbody>
 </table>
 
-**StateCode：状态码**
+**StateCode: status code**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>枚举</td>
+<td>Category</td>
+<td>Enumeration</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>StateCode</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合</p>
+<td><p>Combined</p>
 <p>法</p>
-<p>值</p>
-<p>约</p>
-<p>束</p></td>
-<td>键</td>
-<td>值</td>
-<td>含义</td>
+<p>value</p>
+<p>About</p>
+<p>Bundle</p></td>
+<td>key</td>
+<td>value</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>invalid</td>
 <td>-1</td>
-<td>无效</td>
+<td>Invalid</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>success</td>
 <td>0x00</td>
-<td>成功</td>
+<td>Success</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>fail</td>
 <td>0x01</td>
-<td>失败</td>
+<td>Failed</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>no_data_update</td>
 <td>0x20</td>
-<td>无数据更新</td>
+<td>No data updated</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>command_waiting_execute</td>
 <td>0x30</td>
-<td>待执行时发生错误</td>
+<td>An error occurred while waiting to be executed</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>service_client_interrupted</td>
 <td>0x40</td>
-<td>客户端在请求服务出现时被打断</td>
+<td>The client was interrupted when the requested service occurred</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>service_appear_timeout</td>
 <td>0x41</td>
-<td>等待服务出现（启动）超时</td>
+<td>Timeout waiting for the service to appear (start)</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>service_request_interrupted</td>
 <td>0x42</td>
-<td>请求服务中断</td>
+<td>Request service interruption</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>service_request_timeout</td>
 <td>0x43</td>
-<td>请求服务超时/延迟</td>
+<td>Request service timeout/delay</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>spin_future_interrupted</td>
 <td>0x50</td>
-<td>请求服务中断</td>
+<td>Request service interruption</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>spin_future_timeout</td>
 <td>0x51</td>
-<td>请求服务超时/延迟</td>
+<td>Request service timeout/delay</td>
 </tr>
 </tbody>
 </table>
 
-**State：状态**
+**State: state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>State</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>code</td>
 <td><a>StateCode</a></td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>describe</td>
 <td>string</td>
-<td>状态描述</td>
+<td>Status description</td>
 </tr>
 </tbody>
 </table>
 
-**DefaultAndMaximum：运动参数默认类型**
+**DefaultAndMaximum: Default type of motion parameters**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>DefaultAndMaximum</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>minimum_value</td>
 <td>double</td>
-<td>最小值</td>
+<td>Minimum value</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>default_value</td>
 <td>double</td>
-<td>默认值</td>
+<td>Default value</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>maximum_value</td>
 <td>double</td>
-<td>最大值</td>
+<td>Maximum value</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>unit</td>
 <td>string</td>
-<td>单位</td>
+<td>Unit</td>
 </tr>
 </tbody>
 </table>
 
-**MotionParams：运动参数消息**
+**MotionParams: Motion parameter message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>MotionParams</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>centroid_x</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>质心X轴约束</td>
+<td>Center of mass X-axis constraint</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>centroid_y</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>质心Y轴约束</td>
+<td>Center of mass Y-axis constraint</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>centroid_z</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>质心Z轴约束</td>
+<td>Center of mass Z axis constraint</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>fulcrum_x</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>支点X轴约束</td>
+<td>Pivot X-axis constraint</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>fulcrum_y</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>支点Y轴约束</td>
+<td>Fulcrum Y-axis constraint</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>fulcrum_z</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>支点Z轴约束</td>
+<td>Pivot Z axis constraint</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>roll</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>机身翻滚</td>
+<td>Body roll</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>pitch</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>机身俯仰</td>
+<td>Fuselage pitch</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>yaw</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>机身偏航</td>
+<td>Fuselage yaw</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>x_velocity</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>X轴速度</td>
+<td>X-axis speed</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>y_velocity</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>Y轴速度</td>
+<td>Y-axis speed</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>z_velocity</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>Z轴角速度</td>
+<td>Z-axis angular velocity</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>front_leg_lift</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>前腿抬腿高度</td>
+<td>Leg lift height of front legs</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>back_leg_lift</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>后腿抬腿高度</td>
+<td>Rear leg lift height</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>distance</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>期望距离</td>
+<td>Expected distance</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>duration</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>期望时间</td>
+<td>Expected time</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>delta</td>
 <td><a>DefaultAndMaximum</a></td>
-<td>变化量</td>
+<td>Variation</td>
 </tr>
 </tbody>
 </table>
 
-**MotionResultServiceResponse：运动结果服务反馈**
+**MotionResultServiceResponse: motion result service feedback**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>MotionResultServiceResponse</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
 <td></td>
-<td>类型</td>
-<td>含义</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td></td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>response</td>
 <td>motion_id</td>
 <td>int32</td>
-<td>机器人运控姿态状态</td>
+<td>Robot movement control attitude status</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td>result</td>
 <td>bool</td>
-<td>执行结果</td>
+<td>Execution results</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td>code</td>
 <td>int32</td>
-<td>标准错误码</td>
+<td>Standard error codes</td>
 </tr>
 </tbody>
 </table>
 
-**MotionServoCmdResponse：运动伺服指令反馈**
+**MotionServoCmdResponse: motion servo command feedback**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>MotionServoCmdResponse</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
 <td></td>
-<td>类型</td>
-<td>含义</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td></td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>response</td>
 <td>motion_id</td>
 <td>int32</td>
-<td>机器人运控姿态状态</td>
+<td>Robot movement control attitude status</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td>result</td>
 <td>bool</td>
-<td>执行结果</td>
+<td>Execution results</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td>code</td>
 <td>int32</td>
-<td>标准错误码</td>
+<td>Standard error codes</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td>order_process_bar</td>
 <td>int8</td>
-<td>订单流程</td>
+<td>Order Process</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td>status</td>
 <td>int32</td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 </tbody>
 </table>
 
-**MotionSequenceServiceResponse：序列运动服务反馈**
+**MotionSequenceServiceResponse: Sequence motion service feedback**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>MotionSequenceServiceResponse</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
 <td></td>
-<td>类型</td>
-<td>含义</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td></td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>response</td>
 <td>result</td>
 <td>bool</td>
-<td>执行结果</td>
+<td>Execution results</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td>code</td>
 <td>int32</td>
-<td>状态码</td>
+<td>Status code</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td>describe</td>
 <td>string</td>
-<td>状态码描述</td>
+<td>Status code description</td>
 </tr>
 </tbody>
 </table>
 
-**LedConstraint ：LED约束**
+**LedConstraint: LED constraint**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
+<td>Category</td>
 <td></td>
 <td></td>
-<td>枚举</td>
+<td>Enumeration</td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td></td>
 <td></td>
 <td>LedConstraint</td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合</p>
+<td><p>Combined</p>
 <p>法</p>
-<p>值</p>
-<p>约</p>
-<p>束</p></td>
-<td>场景</td>
+<p>value</p>
+<p>About</p>
+<p>Bundle</p></td>
+<td>Scenario</td>
 <td></td>
-<td>键值</td>
-<td>含义</td>
+<td>Key value</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
-<td>控制目标</td>
+<td>Control target</td>
 <td></td>
 <td>target_head</td>
-<td>头灯</td>
+<td>Headlight</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>target_tail</td>
-<td>尾灯</td>
+<td>Tail lights</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>target_mini</td>
-<td>眼灯</td>
+<td>Eye lamp</td>
 </tr>
 <tr class="odd">
 <td></td>
-<td><p>头</p>
-<p>尾</p>
-<p>灯</p>
-<p>带</p></td>
-<td><p>灯效</p>
-<p>（支持RGB调色）</p></td>
+<td><p>Header</p>
+<p>Tail</p>
+<p>Light</p>
+<p>With</p></td>
+<td><p>Lighting effects</p>
+<p>(Support RGB color correction)</p></td>
 <td>effect_line_on</td>
-<td>常亮</td>
+<td>Always on</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>effect_line_blink</td>
-<td>闪烁</td>
+<td>Flash</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>effect_line_blink_fast</td>
-<td>快速闪烁</td>
+<td>Fast flashing</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>effect_line_breath</td>
-<td>呼吸</td>
+<td>Breathe</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>effect_line_breath_fast</td>
-<td>快速呼吸</td>
+<td>Breathe quickly</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>effect_line_one_by_one</td>
-<td>逐个点亮</td>
+<td>Light up one by one</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>effect_line_one_by_one_fast</td>
-<td>快速逐个点亮</td>
+<td>Light up quickly one by one</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
-<td><p>系统灯效</p>
-<p>（不支持RGB调色）</p></td>
+<td><p>System lighting effects</p>
+<p>(RGB color correction is not supported)</p></td>
 <td>system_effect_line_off</td>
-<td>常灭</td>
+<td>Always off</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_red_on</td>
-<td>红灯常亮</td>
+<td>The red light is always on</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_red_blink</td>
-<td>红灯闪烁</td>
+<td>Red light flashes</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_red_blink_fast</td>
-<td>红灯快速闪烁</td>
+<td>The red light flashes quickly</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_red_breath</td>
-<td>红灯呼吸</td>
+<td>Red light breathing</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_red_breath_fast</td>
-<td>红灯快速呼吸</td>
+<td>Breathe quickly at red light</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_red_one_by_one</td>
-<td>红灯逐个点亮</td>
+<td>The red lights light up one by one</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_red_one_by_one_fast</td>
-<td>红灯快速逐个点亮</td>
+<td>The red lights turn on quickly one by one</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_blue_on</td>
-<td>蓝灯常亮</td>
+<td>The blue light is always on</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_blue_blink</td>
-<td>蓝灯闪烁</td>
+<td>Blue light flashes</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_blue_blink_fast</td>
-<td>蓝灯快速闪烁</td>
+<td>The blue light flashes quickly</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_blue_breath</td>
-<td>蓝灯呼吸</td>
+<td>Blue light breathing</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_blue_breath_fast</td>
-<td>蓝灯快速呼吸</td>
+<td>Breathe quickly with blue light</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_blue_one_by_one</td>
-<td>蓝灯逐个点亮</td>
+<td>The blue lights light up one by one</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_blue_one_by_one_fast</td>
-<td>蓝灯快速逐个点亮</td>
+<td>The blue lights turn on quickly one by one</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_yellow_on</td>
-<td>黄灯常亮</td>
+<td>The yellow light is always on</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
-<td>system_effect_line_ yellow_blink</td>
-<td>黄灯闪烁</td>
+<td>system_effect_line_yellow_blink</td>
+<td>Yellow light flashes</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_yellow_blink_fast</td>
-<td>黄灯快速闪烁</td>
+<td>The yellow light flashes quickly</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_yellow_breath</td>
-<td>黄灯呼吸</td>
+<td>Yellow light breathing</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_yellow_breath_fast</td>
-<td>黄灯快速呼吸</td>
+<td>Breathe quickly with yellow light</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_yellow_one_by_one</td>
-<td>黄灯逐个点亮</td>
+<td>The yellow lights light up one by one</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_line_yellow_one_by_one_fast</td>
-<td>黄灯快速逐个点亮</td>
+<td>The yellow lights turn on quickly one by one</td>
 </tr>
 <tr class="even">
 <td></td>
-<td><p>眼</p>
-<p>灯</p></td>
-<td><p>灯效</p>
-<p>（支持RGB调色）</p></td>
+<td><p>Eye</p>
+<p>Light</p></td>
+<td><p>Lighting effects</p>
+<p>(Support RGB color correction)</p></td>
 <td>effect_mini_circular_breath</td>
-<td>圆形缩放</td>
+<td>Circular Zoom</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>effect_mini_circular_ring</td>
-<td>画圆环</td>
+<td>Draw a circle</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
-<td><p>系统灯效</p>
-<p>（不支持RGB调色）</p></td>
+<td><p>System lighting effects</p>
+<p>(RGB color correction is not supported)</p></td>
 <td>system_effect_mini_off</td>
-<td>常灭</td>
+<td>Always off</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_mini_rectangle_color</td>
-<td>方块变色</td>
+<td>The blocks change color</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_mini_centre_color</td>
-<td>中间彩带</td>
+<td>Middle ribbon</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_mini_three_circular</td>
-<td>三圆呼吸</td>
+<td>Three-circle breathing</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>system_effect_mini_one_by_one</td>
-<td>彩带逐个点亮</td>
+<td>The ribbons light up one by one</td>
 </tr>
 </tbody>
 </table>
 
-**LedSeviceResponse：LED服务反馈**
+**LedSeviceResponse: LED service feedback**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>LedSeviceResponse</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
 <td></td>
-<td>类型</td>
-<td>含义</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td></td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>response</td>
 <td>code</td>
 <td>int32</td>
-<td><p>标准错误码</p>
+<td><p>Standard error codes</p>
 <table>
 <tbody>
 <tr class="odd">
 <td>C++<br />
 <br />
-int32 SUCCEED =0 # 当前请求参数合理，优先级最高，请求灯效执行成功<br />
-int32 TIMEOUT =1107 # 当前请求led硬件响应超时<br />
-int32 TARGET_ERROR =1121 # 当前请求的target参数为空或者不在可选列表中<br />
-int32 PRIORITY_ERROR =1122 # 当前请求的client为空或者不在预设的优先级列表中<br />
-int32 MODE_ERROR = 1123 # 当前请求的mode参数为空或者不在可选列表中<br />
-int32 EFFECT_ERROR =1124 # 当前请求的effect参数为空或者不在可选列表中<br />
-int32 LOW_PRIORITY = 1125 # 当前请求优先级较低，无法立即执行请求灯效</td>
+int32 SUCCEED =0 # The current request parameters are reasonable, the priority is the highest, and the requested lighting effect is executed successfully<br />
+int32 TIMEOUT =1107 # Current request LED hardware response timeout<br />
+int32 TARGET_ERROR =1121 # The target parameter of the current request is empty or not in the optional list<br />
+int32 PRIORITY_ERROR =1122 # The currently requested client is empty or not in the preset priority list<br />
+int32 MODE_ERROR = 1123 # The currently requested mode parameter is empty or not in the optional list<br />
+int32 EFFECT_ERROR =1124 # The effect parameter of the current request is empty or not in the optional list<br />
+int32 LOW_PRIORITY = 1125 # The current request priority is low and the requested lighting effect cannot be executed immediately</td>
 </tr>
 </tbody>
 </table></td>
@@ -4806,100 +4806,100 @@ int32 LOW_PRIORITY = 1125 # 当前请求优先级较低，无法立即执行请�
 </tbody>
 </table>
 
-**ConnectorStatus：网络连接消息**
+**ConnectorStatus: Network connection message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
-<td><a href="https://git.n.xiaomi.com/MiRoboticsLab/rop/bridges/-/blob/dev/protocol/ros/msg/ConnectorStatus.msg">ConnectorStatus</a></td>
+<td>Type</td>
+<td><a href="https://git.n.xiaomi.com/MiRoboticsLab/rop/bridges/-/blob/dev/protocol/ros/msg/ConnectorStatus.msg">ConnectorStatus</a></ td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>is_connected</td>
 <td>bool</td>
-<td>是否连接wifi</td>
+<td>Whether to connect to wifi</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>is_internet</td>
 <td>bool</td>
-<td>是否可以访问外网</td>
+<td>Can you access the external network</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>ssid</td>
 <td>string</td>
-<td>wifi名称</td>
+<td>wifi name</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>robot_ip</td>
 <td>string</td>
-<td>机器人IP</td>
+<td>Robot IP</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>provider_ip</td>
 <td>string</td>
-<td>wifi提供方/移动端 IP</td>
+<td>wifi provider/mobile IP</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>strength</td>
 <td>int</td>
-<td>wifi信号强度</td>
+<td>wifi signal strength</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>code</td>
 <td>int</td>
-<td>标准错误码</td>
+<td>Standard error codes</td>
 </tr>
 </tbody>
 </table>
 
-**Vector\<xxx\>：列表**
+**Vector\<xxx\>: list**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>列表</td>
+<td>Category</td>
+<td>List</td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>vector&lt;xxx&gt;</td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>可用操作</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Available operations</td>
 <td></td>
 </tr>
 <tr class="even">
 <td></td>
-<td>接口</td>
-<td>说明</td>
+<td>Interface</td>
+<td>Description</td>
 </tr>
 <tr class="odd">
 <td></td>
@@ -4959,102 +4959,102 @@ int32 LOW_PRIORITY = 1125 # 当前请求优先级较低，无法立即执行请�
 </tbody>
 </table>
 
-**MotionSequenceGait：序列步态消息**
+**MotionSequenceGait: sequence gait message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>MotionSequenceGait</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>right_forefoot</td>
 <td>bool</td>
-<td>右前足: 是否接触地面? （默认值：True）</td>
+<td>Right forefoot: Is it touching the ground? (Default: True)</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>left_forefoot</td>
 <td>bool</td>
-<td>左前足: 是否接触地面? （默认值：True）</td>
+<td>Left forefoot: Is it touching the ground? (Default: True)</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>right_hindfoot</td>
 <td>bool</td>
-<td>右后足: 是否接触地面? （默认值：True）</td>
+<td>Right rear foot: Is it touching the ground? (Default: True)</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>left_hindfoot</td>
 <td>bool</td>
-<td>左后足: 是否接触地面? （默认值：True）</td>
+<td>Left rear foot: Is it touching the ground? (Default: True)</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>duration</td>
 <td>int</td>
-<td>当前步态持续时间(毫秒) （默认值：1000）</td>
+<td>Current gait duration (milliseconds) (default: 1000)</td>
 </tr>
 </tbody>
 </table>
 
-**MotionSequencePace：序列步伐消息**
+**MotionSequencePace: sequence pace message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>MotionSequencePace</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合</p>
+<td><p>Combined</p>
 <p>法</p>
-<p>字</p>
-<p>段</p>
-<p>约</p>
-<p>束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<p>Words</p>
+<p>paragraph</p>
+<p>About</p>
+<p>Bundle</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>twist</td>
 <td><a href="https://docs.ros2.org/latest/api/geometry_msgs/msg/Twist.html">geometry_msgs/msg/Twist.msg</a></td>
-<td><p>速度（默认值：全0.0）</p>
+<td><p>Speed (default: all 0.0)</p>
 <table>
 <tbody>
 <tr class="odd">
 <td>C++<br />
-linear.x // X轴线速度（m/s）<br />
-linear.y // Y轴线速度（m/s）<br />
-linear.z // z轴角速度（°/s）</td>
+linear.x // X-axis linear speed (m/s)<br />
+linear.y // Y-axis linear speed (m/s)<br />
+linear.z // z-axis angular velocity (°/s)</td>
 </tr>
 </tbody>
 </table></td>
@@ -5063,17 +5063,17 @@ linear.z // z轴角速度（°/s）</td>
 <td></td>
 <td>centroid</td>
 <td><a href="https://docs.ros2.org/latest/api/geometry_msgs/msg/Pose.html">geometry_msgs/msg/Pose.msg</a></td>
-<td><p>质心（默认值：全0.0）</p>
+<td><p>Center of mass (default: all 0.0)</p>
 <table>
 <tbody>
 <tr class="odd">
 <td>C++<br />
-position.x // X轴质心偏移（m）<br />
-position.y // Y轴质心偏移（m）<br />
-position.z // Z轴质心高度（m）<br />
-orientation.x // X轴姿态：R(°)<br />
-orientation.y // Y轴姿态：P（°）<br />
-orientation.z // Z轴姿态：Y（°）</td>
+position.x // X-axis center of mass offset (m)<br />
+position.y // Y-axis center of mass offset (m)<br />
+position.z //Z-axis center of mass height (m)<br />
+orientation.x // X-axis attitude: R(°)<br />
+orientation.y // Y-axis attitude: P (°)<br />
+orientation.z // Z-axis attitude: Y (°)</td>
 </tr>
 </tbody>
 </table></td>
@@ -5082,17 +5082,17 @@ orientation.z // Z轴姿态：Y（°）</td>
 <td></td>
 <td>weight</td>
 <td><a href="https://docs.ros2.org/latest/api/geometry_msgs/msg/Twist.html">geometry_msgs/msg/Twist.msg</a></td>
-<td><p>6自由度权重</p>
+<td><p>6 degrees of freedom weight</p>
 <table>
 <tbody>
 <tr class="odd">
 <td>C++<br />
-linear.x // X轴权重<br />
-linear.y // Y轴权重<br />
-linear.z // Z轴权重<br />
-angular.x // X-R轴权重<br />
-angular.y // Y-P轴权重<br />
-angular.z // Z-Y轴权重</td>
+linear.x // X-axis weight<br />
+linear.y // Y-axis weight<br />
+linear.z // Z-axis weight<br />
+angular.x // X-R axis weight<br />
+angular.y // Y-P axis weight<br />
+angular.z // Z-Y axis weight</td>
 </tr>
 </tbody>
 </table></td>
@@ -5101,15 +5101,15 @@ angular.z // Z-Y轴权重</td>
 <td></td>
 <td>right_forefoot</td>
 <td><a href="https://docs.ros2.org/latest/api/geometry_msgs/msg/Quaternion.html">geometry_msgs/msg/Quaternion.msg</a></td>
-<td><p>右前足信息（默认值：全0.0）</p>
+<td><p>Right forefoot information (default: all 0.0)</p>
 <table>
 <tbody>
 <tr class="odd">
 <td>C++<br />
-x // 落脚点位置：X轴偏移量(m)<br />
-y // 落脚点位置：Y轴偏移量(m)<br />
-z // 落脚点位置：Z轴偏移量(m)<br />
-w // 抬脚高度(m)</td>
+x // Foothold position: X-axis offset (m)<br />
+y // Foothold position: Y-axis offset (m)<br />
+z // Foothold position: Z-axis offset (m)<br />
+w // Foot lifting height (m)</td>
 </tr>
 </tbody>
 </table></td>
@@ -5118,15 +5118,15 @@ w // 抬脚高度(m)</td>
 <td></td>
 <td>left_forefoot</td>
 <td><a href="https://docs.ros2.org/latest/api/geometry_msgs/msg/Point.html">geometry_msgs/msg/Quaternion.msg</a></td>
-<td><p>左前足信息（默认值：全0.0）</p>
+<td><p>Left forefoot information (default: all 0.0)</p>
 <table>
 <tbody>
 <tr class="odd">
 <td>C++<br />
-x // 落脚点位置：X轴偏移量(m)<br />
-y // 落脚点位置：Y轴偏移量(m)<br />
-z // 落脚点位置：Z轴偏移量(m)<br />
-w // 抬脚高度(m)</td>
+x // Foothold position: X-axis offset (m)<br />
+y // Foothold position: Y-axis offset (m)<br />
+z // Foothold position: Z-axis offset (m)<br />
+w // Foot lifting height (m)</td>
 </tr>
 </tbody>
 </table></td>
@@ -5135,15 +5135,15 @@ w // 抬脚高度(m)</td>
 <td></td>
 <td>right_hindfoot</td>
 <td><a href="https://docs.ros2.org/latest/api/geometry_msgs/msg/Point.html">geometry_msgs/msg/Quaternion.msg</a></td>
-<td><p>右后足信息（默认值：全0.0）</p>
+<td><p>Right rear foot information (default value: all 0.0)</p>
 <table>
 <tbody>
 <tr class="odd">
 <td>C++<br />
-x // 落脚点位置：X轴偏移量(m)<br />
-y // 落脚点位置：Y轴偏移量(m)<br />
-z // 落脚点位置：Z轴偏移量(m)<br />
-w // 抬脚高度(m)</td>
+x // Foothold position: X-axis offset (m)<br />
+y // Foothold position: Y-axis offset (m)<br />
+z // Foothold position: Z-axis offset (m)<br />
+w // Foot lifting height (m)</td>
 </tr>
 </tbody>
 </table></td>
@@ -5152,15 +5152,15 @@ w // 抬脚高度(m)</td>
 <td></td>
 <td>left_hindfoot</td>
 <td><a href="https://docs.ros2.org/latest/api/geometry_msgs/msg/Point.html">geometry_msgs/msg/Quaternion.msg</a></td>
-<td><p>左后足信息（默认值：全0.0）</p>
+<td><p>Left rear foot information (default: all 0.0)</p>
 <table>
 <tbody>
 <tr class="odd">
 <td>C++<br />
-x // 落脚点位置：X轴偏移量(m)<br />
-y // 落脚点位置：Y轴偏移量(m)<br />
-z // 落脚点位置：Z轴偏移量(m)<br />
-w // 抬脚高度(m)</td>
+x // Foothold position: X-axis offset (m)<br />
+y // Foothold position: Y-axis offset (m)<br />
+z // Foothold position: Z-axis offset (m)<br />
+w // Foot lifting height (m)</td>
 </tr>
 </tbody>
 </table></td>
@@ -5169,331 +5169,331 @@ w // 抬脚高度(m)</td>
 <td></td>
 <td>use_mpc_track</td>
 <td>bool</td>
-<td>是否使用 MPC 轨迹</td>
+<td>Whether to use MPC trajectory</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>landing_gain</td>
 <td>float</td>
-<td>落地系数[0,1],默认值:1.0</td>
+<td>Floor coefficient [0,1], default value: 1.0</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>friction_coefficient</td>
 <td>float</td>
-<td>摩擦系数[0.1 1.0] （默认值：0.8）</td>
+<td>Friction coefficient [0.1 1.0] (default: 0.8)</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>duration</td>
 <td>int</td>
-<td>当前参数持续时间(毫秒)（默认值：1000）</td>
+<td>Current parameter duration (milliseconds) (default: 1000)</td>
 </tr>
 </tbody>
 </table>
 
-**MotionSequence：运动序列消息**
+**MotionSequence: Motion sequence message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>MotionSequence</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 <td></td>
 </tr>
 <tr class="even">
 <td></td>
 <td>name</td>
 <td>string</td>
-<td>[必须] 运动序列名称（符合变量命名规则）</td>
+<td>[Required] Motion sequence name (conforms to variable naming rules)</td>
 <td></td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>describe</td>
 <td>string</td>
-<td>运动序列描述</td>
+<td>Motion sequence description</td>
 <td></td>
 </tr>
 <tr class="even">
 <td></td>
 <td>gait_list</td>
 <td><a>MotionSequenceGait</a>&gt;</td>
-<td>步态列表</td>
+<td>Gait list</td>
 <td></td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>pace_list</td>
 <td><a>MotionSequencePace</a>&gt;</td>
-<td>步伐列表</td>
+<td>Step list</td>
 <td></td>
 </tr>
 </tbody>
 </table>
 
-**AudioPlaySeviceResponse：语音播放服务反馈消息**
+**AudioPlaySeviceResponse: Voice playback service feedback message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>AudioPlaySeviceResponse</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
 <td></td>
-<td>类型</td>
-<td>含义</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td></td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>response</td>
 <td>status</td>
 <td>int32</td>
-<td>0播放完毕，1播放失败</td>
+<td>0 played completed, 1 failed to play</td>
 </tr>
 </tbody>
 </table>
 
-**AudioGetVolumeSeviceResponse：语音获取音量服务反馈消息**
+**AudioGetVolumeSeviceResponse: Voice get volume service feedback message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>AudioGetVolumeSeviceResponse</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
 <td></td>
-<td>类型</td>
-<td>含义</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td></td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>response</td>
 <td>volume</td>
 <td>int32</td>
-<td>当前播放语音的音量</td>
+<td>The volume of the currently playing voice</td>
 </tr>
 </tbody>
 </table>
 
-**AudioSetVolumeSeviceResponse：语音设置音量服务反馈消息**
+**AudioSetVolumeSeviceResponse: Voice set volume service feedback message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>AudioSetVolumeSeviceResponse</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
 <td></td>
-<td>类型</td>
-<td>含义</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td></td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>response</td>
 <td>success</td>
 <td>bool</td>
-<td>设置音量是否成功</td>
+<td>Whether the volume setting was successful</td>
 </tr>
 </tbody>
 </table>
 
-**FaceRecognitionResult：人脸识别结果信息**
+**FaceRecognitionResult: Face recognition result information**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>FaceRecognitionResult</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>result</td>
 <td>int</td>
-<td>人员结果</td>
+<td>Personnel results</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>username</td>
 <td>string</td>
-<td>人员名称</td>
+<td>Personnel name</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>age</td>
 <td>float</td>
-<td>人员年龄</td>
+<td>Age of personnel</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>emotion</td>
 <td>float</td>
-<td>人员情绪</td>
+<td>Personnel sentiment</td>
 </tr>
 </tbody>
 </table>
 
-**FaceRecognizedSeviceResponse：人脸识别反馈消息**
+**FaceRecognizedSeviceResponse: Face recognition feedback message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>FaceRecognizedSeviceResponse</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 <td></td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 <td></td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>list</td>
 <td>list&lt;<a>FaceRecognitionResult</a>&gt;</td>
-<td>人脸识别列表</td>
+<td>Face recognition list</td>
 <td></td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
-<td>可用操作</td>
+<td>Available operations</td>
 <td></td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
-<td>接口</td>
-<td>说明</td>
+<td>Interface</td>
+<td>Description</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>empty();</td>
-<td>详情参见<a>列表</a></td>
+<td>See <a>list</a></td> for details
 </tr>
 <tr class="odd">
 <td></td>
@@ -5569,29 +5569,29 @@ w // 抬脚高度(m)</td>
 <td></td>
 <td>dictionary</td>
 <td>dictionary&lt;string, <a>FaceRecognitionResult</a>&gt;</td>
-<td>人脸识别字典</td>
+<td>Face recognition dictionary</td>
 <td></td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
-<td>可用操作</td>
+<td>Available operations</td>
 <td></td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
-<td>接口</td>
-<td>说明</td>
+<td>Interface</td>
+<td>Description</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>empty();</td>
-<td>详情参见<a>字典</a></td>
+<td>See <a>Dictionary</a></td> for details
 </tr>
 <tr class="odd">
 <td></td>
@@ -5617,171 +5617,171 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**VoiceprintRecognized：声纹识别消息**
+**VoiceprintRecognized: Voiceprint recognition message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>VoiceprintRecognized</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>list</td>
 <td>vector &lt;string&gt;</td>
-<td>识别到的人员列表</td>
+<td>List of recognized persons</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>data</td>
 <td>bool</td>
-<td>识别是否成功</td>
+<td>Identification successful</td>
 </tr>
 </tbody>
 </table>
 
-**MsgPreset：预置点信息**
+**MsgPreset: Preset point information**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>MsgPreset</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>label_name</td>
 <td>string</td>
-<td>预置点名称</td>
+<td>Preset point name</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>physic_x</td>
 <td>float</td>
-<td>X轴坐标</td>
+<td>X-axis coordinate</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>physic_y</td>
 <td>float</td>
-<td>Y轴坐标</td>
+<td>Y-axis coordinate</td>
 </tr>
 </tbody>
 </table>
 
-**MapPresetSeviceResponse：地图预置点服务反馈**
+**MapPresetSeviceResponse: Map preset point service feedback**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>MapPresetSeviceResponse</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 <td></td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 <td></td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>map_name</td>
 <td>string</td>
-<td>地图名</td>
+<td>Map name</td>
 <td></td>
 </tr>
 <tr class="even">
 <td></td>
 <td>is_outdoor</td>
 <td>bool</td>
-<td>是否为室外地图</td>
+<td>Whether it is an outdoor map</td>
 <td></td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>list</td>
 <td>list&lt;<a>MsgPreset</a>&gt;</td>
-<td>人脸识别列表</td>
+<td>Face recognition list</td>
 <td></td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
-<td>可用操作</td>
+<td>Available operations</td>
 <td></td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
-<td>接口</td>
-<td>说明</td>
+<td>Interface</td>
+<td>Description</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>empty();</td>
-<td>详情参见<a>列表</a></td>
+<td>See <a>list</a></td> for details
 </tr>
 <tr class="odd">
 <td></td>
@@ -5857,29 +5857,29 @@ w // 抬脚高度(m)</td>
 <td></td>
 <td>dictionary</td>
 <td>dictionary&lt;string, <a>MsgPreset</a>&gt;</td>
-<td>人脸识别字典</td>
+<td>Face recognition dictionary</td>
 <td></td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
-<td>可用操作</td>
+<td>Available operations</td>
 <td></td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td></td>
-<td>接口</td>
-<td>说明</td>
+<td>Interface</td>
+<td>Description</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td></td>
 <td>empty();</td>
-<td>详情参见<a>字典</a></td>
+<td>See <a>Dictionary</a></td> for details
 </tr>
 <tr class="odd">
 <td></td>
@@ -5905,569 +5905,569 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**NavigationActionResponse：导航动作反馈**
+**NavigationActionResponse: navigation action feedback**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>NavigationActionResponse</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
 <td></td>
-<td>类型</td>
-<td>含义</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td></td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>response</td>
 <td>result</td>
 <td>int</td>
-<td><p>服务动作反馈：</p>
-<p>0: 成功；</p>
-<p>1: 接受；</p>
-<p>2: 不可用；</p>
-<p>3: 失败；</p>
-<p>4: 拒绝；</p>
-<p>5: 取消。</p></td>
+<td><p>Service action feedback:</p>
+<p>0: Success;</p>
+<p>1: Accept;</p>
+<p>2: Not available;</p>
+<p>3: Failure;</p>
+<p>4: Reject;</p>
+<p>5: Cancel. </p></td>
 </tr>
 </tbody>
 </table>
 
-**GestureType：手势识别类型**
+**GestureType: Gesture recognition type**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>枚举</td>
+<td>Category</td>
+<td>Enumeration</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>GestureType</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合</p>
+<td><p>Combined</p>
 <p>法</p>
-<p>值</p>
-<p>约</p>
-<p>束</p></td>
-<td>键</td>
-<td>值</td>
-<td>含义</td>
+<p>value</p>
+<p>About</p>
+<p>Bundle</p></td>
+<td>key</td>
+<td>value</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>no_gesture</td>
 <td>0</td>
-<td>无手势</td>
+<td>No gestures</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>pulling_hand_or_two_fingers_in</td>
 <td>1</td>
-<td>手掌拉近</td>
+<td>Pull your palms closer</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>pushing_hand_or_two_fingers_away</td>
 <td>2</td>
-<td>手掌推开</td>
+<td>Push away with your palms</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>sliding_hand_or_two_fingers_up</td>
 <td>3</td>
-<td>手向上抬</td>
+<td>Raise your hand upward</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>sliding_hand_or_two_fingers_down</td>
 <td>4</td>
-<td>手向下压</td>
+<td>Press down with your hand</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>sliding_hand_or_two_fingers_left</td>
 <td>5</td>
-<td>手向左推</td>
+<td>Push your hand to the left</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>sliding_hand_or_two_fingers_right</td>
 <td>6</td>
-<td>手向右推</td>
+<td>Push your hand to the right</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>stop_sign</td>
 <td>7</td>
-<td>停止手势</td>
+<td>Stop gesture</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>thumb_down</td>
 <td>8</td>
-<td>大拇指朝下</td>
+<td>Thumbs down</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>thumb_up</td>
 <td>9</td>
-<td>大拇指朝上</td>
+<td>Thumbs up</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>zooming_in_with_hand_or_two_fingers</td>
 <td>10</td>
-<td>张开手掌或手指</td>
+<td>Open your palms or fingers</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>zooming_out_with_hand_or_two_fingers</td>
 <td>11</td>
-<td>闭合手掌或手指</td>
+<td>Close palms or fingers</td>
 </tr>
 </tbody>
 </table>
 
-**GestureData：手势数据**
+**GestureData: gesture data**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>GestureType</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>pulling_hand_or_two_fingers_in</td>
 <td>bool</td>
-<td>手掌拉近</td>
+<td>Pull your palms closer</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>pushing_hand_or_two_fingers_away</td>
 <td>bool</td>
-<td>手掌推开</td>
+<td>Push away with your palms</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>sliding_hand_or_two_fingers_up</td>
 <td>bool</td>
-<td>手向上抬</td>
+<td>Raise your hand upward</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>sliding_hand_or_two_fingers_down</td>
 <td>bool</td>
-<td>手向下压</td>
+<td>Press down with your hand</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>sliding_hand_or_two_fingers_left</td>
 <td>bool</td>
-<td>手向左推</td>
+<td>Push your hand to the left</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>sliding_hand_or_two_fingers_right</td>
 <td>bool</td>
-<td>手向右推</td>
+<td>Push your hand to the right</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>stop_sign</td>
 <td>bool</td>
-<td>停止手势</td>
+<td>Stop gesture</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>thumb_down</td>
 <td>bool</td>
-<td>大拇指朝下</td>
+<td>Thumbs down</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>thumb_up</td>
 <td>bool</td>
-<td>大拇指朝上</td>
+<td>Thumbs up</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>zooming_in_with_hand_or_two_fingers</td>
 <td>bool</td>
-<td>张开手掌或手指</td>
+<td>Open your palms or fingers</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>zooming_out_with_hand_or_two_fingers</td>
 <td>bool</td>
-<td>闭合手掌或手指</td>
+<td>Close palms or fingers</td>
 </tr>
 </tbody>
 </table>
 
-**GestureRecognizedSeviceResponse：手势识别服务反馈**
+**GestureRecognizedSeviceResponse: Gesture recognition service feedback**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>GestureRecognizedSeviceResponse</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
 <td></td>
-<td>类型</td>
-<td>含义</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td></td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>response</td>
 <td>code</td>
 <td>int</td>
-<td>服务请求状态，0:成功；1:失败。</td>
+<td>Service request status, 0: success; 1: failure. </td>
 </tr>
 </tbody>
 </table>
 
-**GestureRecognizedMessageResponse：手势识别消息**
+**GestureRecognizedMessageResponse: gesture recognition message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>GestureRecognizedMessageResponse</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>data</td>
 <td><a>GestureData</a></td>
-<td>手势识别状态数据</td>
+<td>Gesture recognition status data</td>
 </tr>
 </tbody>
 </table>
 
-**SkeletonType：骨骼点识别类型**
+**SkeletonType: Skeleton point recognition type**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>枚举</td>
+<td>Category</td>
+<td>Enumeration</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>SkeletonType</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合</p>
+<td><p>Combined</p>
 <p>法</p>
-<p>值</p>
-<p>约</p>
-<p>束</p></td>
-<td>键</td>
-<td>值</td>
-<td>含义</td>
+<p>value</p>
+<p>About</p>
+<p>Bundle</p></td>
+<td>key</td>
+<td>value</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>squat</td>
 <td>1</td>
-<td>深蹲</td>
+<td>Squat</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>highknees</td>
 <td>2</td>
-<td>高抬腿</td>
+<td>Raise your legs high</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>situp</td>
 <td>3</td>
-<td>仰卧起坐</td>
+<td>Sit-ups</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>pressup</td>
 <td>4</td>
-<td>俯卧撑</td>
+<td>Push-ups</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>plank</td>
 <td>5</td>
-<td>平板支撑</td>
+<td>Plank</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>jumpjack</td>
 <td>6</td>
-<td>开合跳</td>
+<td>Jumping jacks</td>
 </tr>
 </tbody>
 </table>
 
-**SkeletonRecognizedSeviceResponse：骨骼点识别服务反馈消息**
+**SkeletonRecognizedSeviceResponse: Skeleton point recognition service feedback message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>SkeletonRecognizedSeviceResponse</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
 <td></td>
-<td>类型</td>
-<td>含义</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td></td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>response</td>
 <td>result</td>
 <td>int</td>
-<td>服务反馈状态，0:成功，1:失败</td>
+<td>Service feedback status, 0: success, 1: failure</td>
 </tr>
 </tbody>
 </table>
 
-**SkeletonRecognizedMessageResponse：骨骼点识别消息**
+**SkeletonRecognizedMessageResponse: Skeleton point recognition message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>SkeletonRecognizedMessageResponse</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合</p>
+<td><p>Combined</p>
 <p>法</p>
-<p>字</p>
-<p>段</p>
-<p>约</p>
-<p>束</p></td>
-<td>字段</td>
+<p>Words</p>
+<p>paragraph</p>
+<p>About</p>
+<p>Bundle</p></td>
+<td>Field</td>
 <td></td>
-<td>类型</td>
-<td>含义</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td></td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>response</td>
 <td>algo_switch</td>
 <td>int</td>
-<td>算法开关，0:打开，1:关闭</td>
+<td>Algorithm switch, 0: on, 1: off</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td>sport_type</td>
 <td>int</td>
-<td>算法识别类型，参见SkeletonType</td>
+<td>Algorithm recognition type, see SkeletonType</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td>counts</td>
 <td>int</td>
-<td>运动计数，从1开始</td>
+<td>Motion counting, starting from 1</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td>duration</td>
 <td>int</td>
-<td>运动时长(平板支撑计时长度)</td>
+<td>Exercise duration (plank timing length)</td>
 </tr>
 </tbody>
 </table>
 
-**MsgTrainingWords：训练词信息**
+**MsgTrainingWords: training word information**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>MsgTrainingWords</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>trigger</td>
 <td>string</td>
-<td>关键词</td>
+<td>Keywords</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>type</td>
 <td>string</td>
-<td>类型</td>
+<td>Type</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>value</td>
 <td>string</td>
-<td>值</td>
+<td>value</td>
 </tr>
 </tbody>
 </table>
 
-**TrainingWordsRecognizedSeviceResponse：训练词服务反馈**
+**TrainingWordsRecognizedSeviceResponse: Training word service feedback**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>TrainingWordsRecognizedSeviceResponse</td>
 <td></td>
 <td></td>
@@ -6475,13 +6475,13 @@ w // 抬脚高度(m)</td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
 <td></td>
-<td>类型</td>
-<td>含义</td>
+<td>Type</td>
+<td>Meaning</td>
 <td></td>
 </tr>
 <tr class="even">
@@ -6489,7 +6489,7 @@ w // 抬脚高度(m)</td>
 <td>state</td>
 <td></td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 <td></td>
 </tr>
 <tr class="odd">
@@ -6497,7 +6497,7 @@ w // 抬脚高度(m)</td>
 <td>response</td>
 <td>training_set</td>
 <td>list&lt;<a>MsgTrainingWords</a>&gt;</td>
-<td>人脸识别列表</td>
+<td>Face recognition list</td>
 <td></td>
 </tr>
 <tr class="even">
@@ -6505,7 +6505,7 @@ w // 抬脚高度(m)</td>
 <td></td>
 <td></td>
 <td></td>
-<td>可用操作</td>
+<td>Available operations</td>
 <td></td>
 </tr>
 <tr class="odd">
@@ -6513,8 +6513,8 @@ w // 抬脚高度(m)</td>
 <td></td>
 <td></td>
 <td></td>
-<td>接口</td>
-<td>说明</td>
+<td>Interface</td>
+<td>Description</td>
 </tr>
 <tr class="even">
 <td></td>
@@ -6522,7 +6522,7 @@ w // 抬脚高度(m)</td>
 <td></td>
 <td></td>
 <td>empty();</td>
-<td>详情参见<a>列表</a></td>
+<td>See <a>list</a></td> for details
 </tr>
 <tr class="odd">
 <td></td>
@@ -6609,7 +6609,7 @@ w // 抬脚高度(m)</td>
 <td>dictionary</td>
 <td></td>
 <td>dictionary&lt;string, <a>MsgTrainingWords</a> &gt;</td>
-<td>人脸识别字典</td>
+<td>Face recognition dictionary</td>
 <td></td>
 </tr>
 <tr class="even">
@@ -6617,7 +6617,7 @@ w // 抬脚高度(m)</td>
 <td></td>
 <td></td>
 <td></td>
-<td>可用操作</td>
+<td>Available operations</td>
 <td></td>
 </tr>
 <tr class="odd">
@@ -6625,8 +6625,8 @@ w // 抬脚高度(m)</td>
 <td></td>
 <td></td>
 <td></td>
-<td>接口</td>
-<td>说明</td>
+<td>Interface</td>
+<td>Description</td>
 </tr>
 <tr class="even">
 <td></td>
@@ -6634,7 +6634,7 @@ w // 抬脚高度(m)</td>
 <td></td>
 <td></td>
 <td>empty();</td>
-<td>详情参见<a>字典</a></td>
+<td>See <a>Dictionary</a></td> for details
 </tr>
 <tr class="odd">
 <td></td>
@@ -6663,66 +6663,66 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**TrainingWordsRecognizedMessageResponse：训练词识别消息**
+**TrainingWordsRecognizedMessageResponse: training word recognition message**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>类别</td>
-<td>结构</td>
+<td>Category</td>
+<td>Structure</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>类型</td>
+<td>Type</td>
 <td>TrainingWordsRecognizedMessageResponse</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><p>合法</p>
-<p>字段</p>
-<p>约束</p></td>
-<td>字段</td>
-<td>类型</td>
-<td>含义</td>
+<td><p>Legal</p>
+<p>Field</p>
+<p>Constraints</p></td>
+<td>Field</td>
+<td>Type</td>
+<td>Meaning</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>state</td>
 <td><a>State</a></td>
-<td>状态</td>
+<td>Status</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>response</td>
 <td><a>MsgTrainingWords</a></td>
-<td>训练词</td>
+<td>Training words</td>
 </tr>
 </tbody>
 </table>
 
-**4.3 铁蛋能力集接口约束表**
+**4.3 Tiedan capability set interface constraint table**
 
-|                                                                           |    |                                     |
-| ------------------------------------------------------------------------- | -- | ----------------------------------- |
-| 图例                                                                        | 含义 | 说明                                  |
-| [🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) | 字段 | 标识该接口为变量，可以直接取值。                    |
-| [🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) | 函数 | 标识该接口为函数，主体功能在函数退出后即结束，根据返回值判断执行情况。 |
-| 🟡                                                                         | 句柄 | 标识该接口为对象，无法直接调用，只能调用其下的字段和函数。       |
+| | | |
+| -------------------------------------------------- -------------------------- | -- | -------------------------- ------------- |
+| Legend | Meaning | Description |
+| [🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) | Field | Identifies the interface as a variable and can directly take the value. |
+| [🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) | Function | Identifies the interface as a function. The main function ends after the function exits, and the execution status is judged based on the return value. |
+| 🟡 | Handle | Identifies the interface as an object and cannot be called directly. Only the fields and functions under it can be called. |
 
-**4.4 铁蛋能力集接口约束**
+**4.4 Tiedan capability set interface constraints**
 
-**4.4.01 🟡cyberdog（铁蛋）**
+**4.4.01 🟡cyberdog (iron egg)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -6733,9 +6733,9 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.state</strong>: cyberdog模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.state</strong>: cyberdog module status acquisition interface name. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -6749,14 +6749,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) set\_log（设置日志）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) set\_log (setting log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -6768,19 +6768,19 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.set_log</strong>: 设置cyberdog模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.set_log</strong>: Set cyberdog module log. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog模块日志')</strong></td>
+<strong>print('cyberdog module log has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -6788,14 +6788,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) shutdown（退出）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) shutdown**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -6806,10 +6806,10 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.shutdown</strong>: 退出cyberdog。</p>
-<p>参数：无</p>
-<p>返回值：无</p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.shutdown</strong>: Exit cyberdog. </p>
+<p>Parameters: none</p>
+<p>Return value: None</p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -6822,16 +6822,16 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**4.4.02 🟡network（网络模块）**
+**4.4.02 🟡network (network module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -6842,9 +6842,9 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.network.state</strong>: cyberdog下网络模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.network.state</strong>: Get the interface name of the network module status under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -6858,14 +6858,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data（数据）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -6876,15 +6876,15 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.network.data</strong>: cyberdog下网络模块状态获取接口名称。</p>
-<p>类型：<a>ConnectorStatus</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.network.data</strong>: Get the interface name of the network module status under cyberdog. </p>
+<p>Type: <a>ConnectorStatus</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.network.data.is_connected:</strong><br />
-<strong>print('当前机器人已连接到', cyberdog.network.data.ssid, 'WiFi网络')</strong></td>
+<strong>print('The current robot is connected to', cyberdog.network.data.ssid, 'WiFi network')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -6892,14 +6892,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) set\_log（设置日志）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) set\_log (setting log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -6911,19 +6911,19 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.network.set_log</strong>: 设置cyberdog下network模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.network.set_log</strong>: Set the network module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.network.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下network模块日志')</strong></td>
+<strong>print('The network module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -6931,16 +6931,16 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**4.4.03 🟡follow（跟随模块）**
+**4.4.03 🟡follow (follow module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -6951,9 +6951,9 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.follow.state</strong>: cyberdog下跟随模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.follow.state</strong>: Get the interface name by following the module status in cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -6967,14 +6967,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) set\_log（设置日志）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) set\_log (setting log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -6986,19 +6986,19 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.follow.set_log</strong>: 设置cyberdog下follow模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.follow.set_log</strong>: Set the follow module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.follow.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下follow模块日志')</strong></td>
+<strong>print('The follow module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7006,14 +7006,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) add\_personnel（添加人员）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) add\_personnel**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7025,17 +7025,17 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.follow.add_personnel</strong>: 添加跟随人员信息。</p>
-<p>参数：</p>
-<p><strong>preset_name</strong>: 人员名称，字符串类型；</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.follow.add_personnel</strong>: Add follower information. </p>
+<p>Parameters:</p>
+<p><strong>preset_name</strong>: Personnel name, string type;</p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>if cyberdog.follow.add_personnel('张三').code == StateCode.success:</strong><br />
-<strong>print('添加张三到跟随模块成功')</strong></td>
+<strong>if cyberdog.follow.add_personnel('Zhang San').code == StateCode.success:</strong><br />
+<strong>print('Add Zhang San to the follower module successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7043,14 +7043,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) delete\_personnel（删除人员）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) delete\_personnel (delete person)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7062,17 +7062,17 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.follow.add_personnel</strong>: 删除跟随人员信息。</p>
-<p>参数：</p>
-<p><strong>preset_name</strong>: 人员名称，字符串类型；</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.follow.add_personnel</strong>: Delete follower information. </p>
+<p>Parameters:</p>
+<p><strong>preset_name</strong>: Personnel name, string type;</p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>if cyberdog.follow.delete_personnel('张三').code == StateCode.success:</strong><br />
-<strong>print('从跟随模块删除张三成功')</strong></td>
+<strong>if cyberdog.follow.delete_personnel('Zhang San').code == StateCode.success:</strong><br />
+<strong>print('Delete Zhang San from the following module successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7080,14 +7080,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) follow\_personnel（跟随人员）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) follow\_personnel**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7100,18 +7100,18 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.follow.follow_personnel</strong>: 添加跟随人员信息。</p>
-<p>参数：</p>
-<p><strong>preset_name</strong>: 人员名称，字符串类型；</p>
-<p><strong>intimacy</strong>: 跟随间距，浮点数类型；</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.follow.follow_personnel</strong>: Add follower information. </p>
+<p>Parameters:</p>
+<p><strong>preset_name</strong>: Personnel name, string type;</p>
+<p><strong>intimacy</strong>: following spacing, floating point type;</p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.follow.follow_personnel('张三', 1.0).code == StateCode.success:</strong><br />
-<strong>print('开启跟随张三成功')</strong></td>
+<strong>print('Start following Zhang San successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7119,14 +7119,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) cancel\_follow（取消跟随）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) cancel\_follow (cancel follow)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7138,17 +7138,17 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.follow.cancel_follow</strong>: 删除跟随人员信息。</p>
-<p>参数：</p>
-<p><strong>preset_name</strong>: 人员名称，字符串类型；</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.follow.cancel_follow</strong>: Delete follower information. </p>
+<p>Parameters:</p>
+<p><strong>preset_name</strong>: Personnel name, string type;</p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>if cyberdog.follow.cancel_follow('张三').code == StateCode.success:</strong><br />
-<strong>print('取消跟随张三成功')</strong></td>
+<strong>if cyberdog.follow.cancel_follow('Zhang San').code == StateCode.success:</strong><br />
+<strong>print('Cancel following Zhang San successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7156,16 +7156,16 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**4.4.04 🟡motion（运动模块）**
+**4.4.04 🟡motion (motion module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7176,9 +7176,9 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.state</strong>: cyberdog下运动模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.state</strong>: The name of the interface for obtaining the status of the motion module under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -7192,14 +7192,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**🟣 params（参数）**
+**🟣 params**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7210,9 +7210,9 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.params</strong>: cyberdog下运动模块默认参数获取接口名称。</p>
-<p>类型：<a>MotionParams</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.params</strong>: The default parameter acquisition interface name of the motion module under cyberdog. </p>
+<p>Type: <a>MotionParams</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -7225,14 +7225,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) set\_log（设置日志）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) set\_log (setting log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7244,19 +7244,19 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.set_log</strong>: 设置cyberdog下motion模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.set_log</strong>: Set the motion module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下motion模块日志')</strong></td>
+<strong>print('The motion module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7264,14 +7264,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) emergency\_stop（急停）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) emergency\_stop**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7282,16 +7282,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.emergency_stop</strong>: 使得机器人急停。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.emergency_stop</strong>: Causes the robot to stop urgently. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.emergency_stop().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人急停成功')</strong></td>
+<strong>print('Make the robot emergency stop successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7299,14 +7299,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_down（趴下）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_down（Lie down）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7317,16 +7317,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.get_down</strong>: 使得机器人趴下。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.get_down</strong>: Makes the robot lie down. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.get_down().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人趴下成功')</strong></td>
+<strong>print('Making the robot lie down successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7334,14 +7334,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) resume\_standing（站立）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) resume\_standing（standing）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7352,16 +7352,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.resume_standing</strong>: 使得机器人恢复站立。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.resume_standing</strong>: Makes the robot stand again. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.resume_standing().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人站立成功')</strong></td>
+<strong>print('Make the robot stand successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7369,14 +7369,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) back\_flip（后空翻）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) back\_flip**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7387,16 +7387,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.back_flip</strong>: 使得机器人后空翻。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.back_flip</strong>: Makes the robot do a backflip. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.back_flip().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人后空翻成功')</strong></td>
+<strong>print('Make the robot backflip successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7404,14 +7404,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) front\_flip（前空翻）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) front\_flip（front flip）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7422,16 +7422,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.front_flip</strong>: 使得机器人前空翻。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.front_flip</strong>: Makes the robot do a front flip. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.front_flip().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人前空翻成功')</strong></td>
+<strong>print('Make the robot do a front flip successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7439,14 +7439,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) bow（作揖）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) bow**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7457,16 +7457,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.bow</strong>: 使得机器人作揖。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.bow</strong>: Makes the robot bow. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.bow().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人作揖成功')</strong></td>
+<strong>print('Make the robot bow successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7474,14 +7474,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) roll\_left（向左侧躺后恢复）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) roll\_left (recover after lying on the left side)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7492,16 +7492,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.roll_left</strong>: 使得机器人向左侧躺后恢复。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.roll_left</strong>: Makes the robot lie on the left side and recover. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.roll_left().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人向左侧躺后恢复成功')</strong></td>
+<strong>print('The robot recovered successfully after lying on the left side')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7509,14 +7509,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) walk\_the\_dog（遛狗）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) walk\_the\_dog**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7529,20 +7529,20 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.walk_the_dog</strong>: 使得机器人进入遛狗模式。</p>
-<p>参数：</p>
-<p><strong>front_leg_lift</strong>: 前脚抬腿高度，单位米（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>back_leg_lift</strong>: 前脚抬腿高度，单位秒（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.walk_the_dog</strong>: Makes the robot enter dog walking mode. </p>
+<p>Parameters:</p>
+<p><strong>front_leg_lift</strong>: Front leg lift height, unit meter (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>back_leg_lift</strong>: Front leg lift height, unit second (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>if cyberdog.motion.walk_the_dog(0.03，0.03).state.code == StateCode.success:</strong><br />
-<strong>print('使机器人进入遛狗模式成功')</strong></td>
+<strong>if cyberdog.motion.walk_the_dog(0.03, 0.03).state.code == StateCode.success:</strong><br />
+<strong>print('The robot entered dog walking mode successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7550,14 +7550,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump\_stair（跳上台阶）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump\_stair（jump up the steps）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7568,16 +7568,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.jump_stair</strong>: 使得机器人跳上台阶。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.jump_stair</strong>: Makes the robot jump up the stairs. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.jump_stair().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人跳上台阶成功')</strong></td>
+<strong>print('The robot jumped up the steps successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7585,14 +7585,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) right\_somersault（右侧空翻）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) right\_somersault (right somersault)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7603,16 +7603,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.right_somersault</strong>: 使得机器人右侧空翻。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.right_somersault</strong>: Makes the robot somersault right. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.right_somersault().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人右侧空翻成功')</strong></td>
+<strong>print('Made the robot somersault successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7620,14 +7620,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) left\_somersault（左侧空翻）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) left\_somersault (left somersault)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7638,16 +7638,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.left_somersault</strong>: 使得机器人左侧空翻。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.left_somersault</strong>: Makes the robot somersault left. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.left_somersault().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人左侧空翻成功')</strong></td>
+<strong>print('Made the robot somersault successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7655,14 +7655,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) run\_and\_jump\_front\_flip（跑跳前空翻）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) run\_and\_jump\_front\_flip (running jump front flip)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7673,16 +7673,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.run_and_jump_front_flip</strong>: 使得机器人跑跳前空翻。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.run_and_jump_front_flip</strong>: Makes the robot run, jump and do a front flip. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.run_and_jump_front_flip().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人跑跳前空翻成功')</strong></td>
+<strong>print('Make the robot run, jump and front flip successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7690,14 +7690,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_left90deg（3D跳:左转90度）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_left90deg（3D jump: turn left 90 degrees）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7708,16 +7708,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.jump3d_left90deg</strong>: 使得机器人3D跳:左转90度。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.jump3d_left90deg</strong>: Makes the robot 3D jump: turn left 90 degrees. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.jump3d_left90deg().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人3D跳:左转90度成功')</strong></td>
+<strong>print('Make the robot 3D jump: turn left 90 degrees successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7725,14 +7725,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_right90deg（3D跳:右转90度）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_right90deg（3D jump: turn right 90 degrees）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7743,16 +7743,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.jump3d_right90deg</strong>: 使得机器人3D跳:右转90度。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.jump3d_right90deg</strong>: Makes the robot 3D jump: turn right 90 degrees. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.jump3d_right90deg().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人3D跳:右转90度成功')</strong></td>
+<strong>print('Make the robot 3D jump: turn right 90 degrees successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7760,14 +7760,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_forward60cm（3D跳:前跳60cm）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_forward60cm (3D jump: jump 60cm forward)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7778,16 +7778,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.jump3d_forward60cm</strong>: 使得机器人3D跳:前跳60cm。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.jump3d_forward60cm</strong>: Makes the robot jump 3D: forward 60cm. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.jump3d_forward60cm().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人3D跳:前跳60cm成功')</strong></td>
+<strong>print('Make the robot jump in 3D: jump 60cm forward successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7795,14 +7795,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_forward30cm（3D跳:前跳30cm）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_forward30cm (3D jump: jump forward 30cm)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7813,16 +7813,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.jump3d_forward30cm</strong>: 使得机器人3D跳:前跳30cm。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.jump3d_forward30cm</strong>: Makes the robot jump 3D: forward 30cm. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.jump3d_forward30cm().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人3D跳:前跳30cm成功')</strong></td>
+<strong>print('Make the robot jump in 3D: jump 30cm forward successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7830,14 +7830,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_left20cm（3D跳:左跳20cm）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_left20cm（3D jump: left jump 20cm）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7848,16 +7848,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.jump3d_left20cm</strong>: 使得机器人3D跳:左跳20cm。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.jump3d_left20cm</strong>: Makes the robot 3D jump: jump 20cm to the left. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.jump3d_left20cm().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人3D跳:左跳20cm成功')</strong></td>
+<strong>print('Make the robot jump in 3D: jump 20cm to the left successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7865,14 +7865,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_right20cm（3D跳:右跳20cm）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_right20cm（3D jump: right jump 20cm）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7883,16 +7883,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.jump3d_right20cm</strong>: 使得机器人3D跳:右跳20cm。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.jump3d_right20cm</strong>: Makes the robot 3D jump: jump 20cm to the right. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.jump3d_right20cm().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人3D跳:右跳20cm成功')</strong></td>
+<strong>print('Make the robot jump in 3D: jump 20cm to the right successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7900,14 +7900,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_up30cm（3D跳:向上30cm）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_up30cm（3D jump: up 30cm）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7918,16 +7918,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.jump3d_up30cm</strong>: 使得机器人3D跳:向上30cm。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.jump3d_up30cm</strong>: Makes the robot jump 3D: up 30cm. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.jump3d_up30cm().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人3D跳:向上3D跳:30cm成功')</strong></td>
+<strong>print('Make the robot 3D jump: 3D jump upward: 30cm successful')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7935,14 +7935,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_down\_stair（3D跳:跳下台阶）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump3d\_down\_stair（3D jump: jump down the stairs）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7953,16 +7953,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.jump3d_down_stair</strong>: 使得机器人3D跳:跳下台阶。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.jump3d_down_stair</strong>: Makes the robot 3D jump: jump down the stairs. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.jump3d_down_stair().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人3D跳:跳下台阶成功')</strong></td>
+<strong>print('Make the robot jump in 3D: jump down the steps successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -7970,14 +7970,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) roll\_right（向右侧躺后恢复）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) roll\_right (recover after lying on the right side)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -7988,16 +7988,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.roll_right</strong>: 使得机器人向右侧躺后恢复。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.roll_right</strong>: Makes the robot lie down on the right side and recover. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.roll_right().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人向右侧躺后恢复成功')</strong></td>
+<strong>print('The robot recovered successfully after lying on the right side')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8005,14 +8005,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) dance\_collection（舞蹈集合）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) dance\_collection (dance collection)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8023,16 +8023,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.dance_collection</strong>: 使得机器人舞蹈集合。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.dance_collection</strong>: Makes a collection of robot dances. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.dance_collection().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人执行舞蹈集合成功')</strong></td>
+<strong>print('Make the robot perform the dance collection successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8040,14 +8040,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) hold\_right\_hand（握左手）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) hold\_right\_hand（hold left hand）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8058,16 +8058,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.hold_left_hand</strong>: 使得机器人握左手。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.hold_left_hand</strong>: Makes the robot hold its left hand. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.hold_left_hand().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人握左手成功')</strong></td>
+<strong>print('Making the robot hold its left hand successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8075,14 +8075,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) hold\_right\_hand（握右手）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) hold\_right\_hand（hold the right hand）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8093,16 +8093,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.hold_right_hand</strong>: 使得机器人握右手。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.hold_right_hand</strong>: Makes the robot hold its right hand. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.hold_right_hand().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人握右手成功')</strong></td>
+<strong>print('Making the robot hold its right hand successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8110,14 +8110,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) sit\_down（坐下）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) sit\_down (sit down)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8128,16 +8128,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.sit_down</strong>: 使得机器人坐下。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.sit_down</strong>: Makes the robot sit down. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.sit_down().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人坐下成功')</strong></td>
+<strong>print('Made the robot sit down successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8145,14 +8145,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) butt\_circle（屁股画圆）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) butt\_circle (butt circle)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8163,16 +8163,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.butt_circle</strong>: 使得机器人屁股画圆。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.butt_circle</strong>: Makes the robot's butt circle. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.butt_circle().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人屁股画圆成功')</strong></td>
+<strong>print('Make the robot's butt draw a circle successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8180,14 +8180,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) head\_circle（头画圆）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) head\_circle (head circle)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8198,16 +8198,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.head_circle</strong>: 使得机器人头画圆。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.head_circle</strong>: Makes the robot head draw a circle. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.head_circle().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人头画圆成功')</strong></td>
+<strong>print('The robot head draws a circle successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8215,14 +8215,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) stretch\_the\_body（伸展身体）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) stretch\_the\_body (stretch the body)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8233,16 +8233,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.stretch_the_body</strong>: 使得机器人伸展身体。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.stretch_the_body</strong>: Makes the robot stretch its body. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.stretch_the_body().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人伸展身体成功')</strong></td>
+<strong>print('Make the robot stretch its body successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8250,14 +8250,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) shake\_ass\_left（向左摇晃屁股）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) shake\_ass\_left（Shake your butt to the left）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8268,17 +8268,17 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.shake_ass_left</strong>: 使得机器人向左摇晃屁股。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p>
-<p>备注：必须在坐下之后进行。</p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.shake_ass_left</strong>: Makes the robot shake its butt to the left. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p>
+<p>Note: Must be done after sitting down. </p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.shake_ass_left().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人向左摇晃屁股成功')</strong></td>
+<strong>print('Make the robot shake its butt to the left successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8286,14 +8286,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) shake\_ass\_right（向右摇晃屁股）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) shake\_ass\_right（Shake your butt to the right）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8304,17 +8304,17 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.shake_ass_right</strong>: 使得机器人向右摇晃屁股。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p>
-<p>备注：必须在坐下之后进行。</p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.shake_ass_right</strong>: Makes the robot shake its butt to the right. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p>
+<p>Note: Must be done after sitting down. </p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.shake_ass_right().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人向右摇晃屁股成功')</strong></td>
+<strong>print('Make the robot shake its butt to the right successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8322,14 +8322,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) shake\_ass\_from\_side\_to\_side（左右摇晃屁股）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) shake\_ass\_from\_side\_to\_side (shake your butt left and right)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8340,17 +8340,17 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.shake_ass_from_side_to_side</strong>: 使得机器人左右摇晃屁股。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p>
-<p>备注：必须在坐下之后进行。</p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.shake_ass_from_side_to_side</strong>: Makes the robot shake its butt from side to side. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p>
+<p>Note: Must be done after sitting down. </p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.shake_ass_from_side_to_side().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人左右摇晃屁股成功')</strong></td>
+<strong>print('Successfully made the robot shake its butt left and right')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8358,14 +8358,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) ballet（芭蕾舞）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) ballet**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8376,16 +8376,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.ballet</strong>: 使得机器人芭蕾舞。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.ballet</strong>: Makes a robot ballet. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.ballet().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人芭蕾舞成功')</strong></td>
+<strong>print('Make the robot ballet successful')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8393,14 +8393,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) space\_walk（太空步）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) space\_walk**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8411,16 +8411,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.space_walk</strong>: 使得机器人太空步。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.space_walk</strong>: Makes the robot spacewalk. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.space_walk().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人太空步成功')</strong></td>
+<strong>print('Make the robot spacewalk successful')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8428,14 +8428,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) front\_leg\_jumping（前腿开合跳）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) front\_leg\_jumping（front leg jumping jacks）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8446,16 +8446,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.front_leg_jumping</strong>: 使得机器人前腿开合跳。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.front_leg_jumping</strong>: Makes the robot's front legs jumping jacks. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.front_leg_jumping().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人前腿开合跳成功')</strong></td>
+<strong>print('Make the robot's front legs jump successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8463,14 +8463,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) hind\_leg\_jumping（后腿开合跳）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) hind\_leg\_jumping（hind leg jumping jacks）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8481,16 +8481,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.hind_leg_jumping</strong>: 使得机器人后腿开合跳。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.hind_leg_jumping</strong>: Makes the robot do jumping jacks on its hind legs. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.hind_leg_jumping().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人后腿开合跳成功')</strong></td>
+<strong>print('Make the robot successfully jump on its hind legs')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8498,14 +8498,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) lift\_the\_left\_leg\_and\_nod（左腿抬起并点头）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) lift\_the\_left\_leg\_and\_nod (lift the left leg and nod)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8516,16 +8516,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.lift_the_left_leg_and_nod</strong>: 使得机器人左腿抬起并点头。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.lift_the_left_leg_and_nod</strong>: Makes the robot lift its left leg and nod. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.lift_the_left_leg_and_nod().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人左腿抬起并点头成功')</strong></td>
+<strong>print('The robot raised its left leg and nodded successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8533,14 +8533,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) lift\_the\_right\_leg\_and\_nod（右腿抬起并点头）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) lift\_the\_right\_leg\_and\_nod (lift the right leg and nod)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8551,16 +8551,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.lift_the_right_leg_and_nod</strong>: 使得机器人右腿抬起并点头。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.lift_the_right_leg_and_nod</strong>: Makes the robot lift its right leg and nod. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.lift_the_right_leg_and_nod().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人右腿抬起并点头成功')</strong></td>
+<strong>print('The robot raised its right leg and nodded successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8568,14 +8568,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) left\_front\_right\_back\_legs\_apart（左前右后岔开腿）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) left\_front\_right\_back\_legs\_apart（Left left front right back spread legs）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8586,16 +8586,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.left_front_right_back_legs_apart</strong>: 使得机器人左前右后岔开腿。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.left_front_right_back_legs_apart</strong>: Makes the robot spread its legs to the left, front, right and back. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.left_front_right_back_legs_apart().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人左前右后岔开腿成功')</strong></td>
+<strong>print('The robot spread its legs to the left, front, right and back successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8603,14 +8603,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) right\_front\_left\_back\_legs\_apart（右前左后岔开腿）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) right\_front\_left\_back\_legs\_apart (spread the legs on the right front, left and back)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8621,16 +8621,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.right_front_left_back_legs_apart</strong>: 使得机器人右前左后岔开腿。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.right_front_left_back_legs_apart</strong>: Makes the robot's legs spread apart from the right front to the left. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.right_front_left_back_legs_apart().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人右前左后岔开腿成功')</strong></td>
+<strong>print('The robot spread its legs to the right, front, left and back successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8638,14 +8638,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) walk\_nodding（走路点头）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) walk\_nodding**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8656,16 +8656,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.walk_nodding</strong>: 使得机器人走路点头。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.walk_nodding</strong>: Makes the robot walk and nod. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.walk_nodding().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人走路点头成功')</strong></td>
+<strong>print('Make the robot walk and nod successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8673,14 +8673,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) walking\_with\_divergence\_and\_adduction\_alternately（岔开内收交替走路）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) walking\_with\_divergence\_and\_adduction\_alternately (walking alternately with divergence and adduction)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8691,16 +8691,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.walking_with_divergence_and_adduction_alternately</strong>: 使得机器人岔开内收交替走路。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.walking_with_divergence_and_adduction_alternately</strong>: Makes the robot walk alternately with divergence and adduction. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.walking_with_divergence_and_adduction_alternately().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人岔开内收交替走路成功')</strong></td>
+<strong>print('The robot was able to walk alternately between adduction and divergence')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8708,14 +8708,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) nodding\_in\_place（原地踏步点头）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) nodding\_in\_place（nodding in place）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8726,16 +8726,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.nodding_in_place</strong>: 使得机器人原地踏步点头。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.nodding_in_place</strong>: Makes the robot stand still and nod. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.nodding_in_place().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人原地踏步点头成功')</strong></td>
+<strong>print('Make the robot stand still and nod successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8743,14 +8743,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) front\_legs\_jump\_back\_and\_forth（前腿前后跳）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) front\_legs\_jump\_back\_and\_forth (front legs jump back and forth)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8761,16 +8761,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.front_legs_jump_back_and_forth</strong>: 使得机器人前腿前后跳。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.front_legs_jump_back_and_forth</strong>: Makes the robot's front legs jump forward and backward. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.front_legs_jump_back_and_forth().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人前腿前后跳成功')</strong></td>
+<strong>print('Make the robot's front legs jump back and forth successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8778,14 +8778,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) hind\_legs\_jump\_back\_and\_forth（后腿前后跳）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) hind\_legs\_jump\_back\_and\_forth (hind legs jump back and forth)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8796,16 +8796,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.hind_legs_jump_back_and_forth</strong>: 使得机器人后腿前后跳。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.hind_legs_jump_back_and_forth</strong>: Makes the robot's hind legs jump forward and backward. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.hind_legs_jump_back_and_forth().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人后腿前后跳成功')</strong></td>
+<strong>print('Make the robot's hind legs jump back and forth successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8813,14 +8813,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) alternately\_front\_leg\_lift（前腿交替抬起）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) alternately\_front\_leg\_lift (front legs alternately lift)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8831,16 +8831,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.alternately_front_leg_lift</strong>: 使得机器人前腿交替抬起。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.alternately_front_leg_lift</strong>: Makes the robot's front legs alternately lift. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.alternately_front_leg_lift().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人前腿交替抬起成功')</strong></td>
+<strong>print('The robot's front legs were lifted alternately successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8848,14 +8848,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) alternately\_hind\_leg\_lift（后腿交替抬起）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) alternately\_hind\_leg\_lift (hind legs alternately lift)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8866,16 +8866,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.alternately_hind_leg_lift</strong>: 使得机器人后腿交替抬起。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.alternately_hind_leg_lift</strong>: Makes the robot's hind legs alternately lift. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.alternately_hind_leg_lift().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人后腿交替抬起成功')</strong></td>
+<strong>print('The robot's hind legs were lifted alternately successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8883,14 +8883,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump\_collection（跳跃合集）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump\_collection**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8901,16 +8901,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.jump_collection</strong>: 使得机器人跳跃合集。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.jump_collection</strong>: Makes the robot jump collection. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.jump_collection().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人跳跃合集成功')</strong></td>
+<strong>print('Make the robot jump successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8918,14 +8918,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) stretching\_left\_and\_right（左右伸腿踏步）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) stretching\_left\_and\_right (stretch your legs left and right)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8936,16 +8936,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.stretching_left_and_right</strong>: 使得机器人左右伸腿踏步。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.stretching_left_and_right</strong>: Makes the robot stretch its legs left and right. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.stretching_left_and_right().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人左右伸腿踏步成功')</strong></td>
+<strong>print('Make the robot extend its legs left and right and step successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8953,14 +8953,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump\_forward\_and\_backward（前后摆腿跳跃）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump\_forward\_and\_backward (swinging legs forward and backward)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -8971,16 +8971,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.jump_forward_and_backward</strong>: 使得机器人前后摆腿跳跃。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.jump_forward_and_backward</strong>: Makes the robot jump by swinging its legs forward and backward. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.jump_forward_and_backward().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人前后摆腿跳跃成功')</strong></td>
+<strong>print('Make the robot jump forward and backward successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -8988,14 +8988,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) step\_left\_and\_right（左右摆腿踏步）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) step\_left\_and\_right (swing your legs left and right)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9006,16 +9006,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.step_left_and_right</strong>: 使得机器人左右摆腿踏步。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.step_left_and_right</strong>: Makes the robot step by swinging its legs left and right. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.step_left_and_right().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人左右摆腿踏步成功')</strong></td>
+<strong>print('The robot swings its legs left and right and steps successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9023,14 +9023,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) right\_leg\_back\_and\_forth\_stepping（右腿前后踏步）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) right\_leg\_back\_and\_forth\_stepping (right leg stepping forward and backward)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9041,16 +9041,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.right_leg_back_and_forth_stepping</strong>: 使得机器人右腿前后踏步。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.right_leg_back_and_forth_stepping</strong>: Makes the robot's right leg step forward and backward. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.right_leg_back_and_forth_stepping().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人右腿前后踏步成功')</strong></td>
+<strong>print('Make the robot's right leg step forward and backward successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9058,14 +9058,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) left\_leg\_back\_and\_forth\_stepping（左腿前后踏步**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) left\_leg\_back\_and\_forth\_stepping（Left leg stepping forward and backward**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9076,16 +9076,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.left_leg_back_and_forth_stepping</strong>: 使得机器人左腿前后踏步。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.left_leg_back_and_forth_stepping</strong>: Makes the robot's left leg step forward and backward. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.left_leg_back_and_forth_stepping().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人左腿前后踏步成功')</strong></td>
+<strong>print('Make the robot's left leg step forward and backward successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9093,14 +9093,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) squat\_down\_on\_all\_fours（四足蹲起）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) squat\_down\_on\_all\_fours**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9111,16 +9111,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.squat_down_on_all_fours</strong>: 使得机器人四足蹲起。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.squat_down_on_all_fours</strong>: Makes the robot squat on all fours. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.squat_down_on_all_fours().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人四足蹲起成功')</strong></td>
+<strong>print('Make the robot squat on all fours successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9128,14 +9128,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) push\_ups（俯卧撑）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) push\_ups（Push-ups）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9146,16 +9146,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.push_ups</strong>: 使得做机器人俯卧撑。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.push_ups</strong>: Makes the robot do push-ups. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.push_ups().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人俯卧撑成功')</strong></td>
+<strong>print('Make the robot push-up successful')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9163,14 +9163,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) bow\_to\_each\_other（作揖比心）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) bow\_to\_each\_other（zuobixin）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9181,16 +9181,16 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.bow_to_each_other</strong>: 使得机器人作揖比心。</p>
-<p>参数：无</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.bow_to_each_other</strong>: Makes the robot bow to each other. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.bow_to_each_other().state.code == StateCode.success:</strong><br />
-<strong>print('使机器人作揖比心成功')</strong></td>
+<strong>print('Made the robot to do the bidding successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9198,14 +9198,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) absolute\_attitude（绝对姿态）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) absolute\_attitude (absolute attitude)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9214,35 +9214,35 @@ w // 抬脚高度(m)</td>
 <td><br />
 <strong>cyberdog.motion.absolute_attitude(</strong><br />
 <strong>double centroid_z,</strong><br />
-<strong>double roll，</strong><br />
+<strong>double roll,</strong><br />
 <strong>double pitch,</strong><br />
-<strong>double yaw，</strong><br />
+<strong>double yaw,</strong><br />
 <strong>double duration</strong><br />
 <strong>)</strong></td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.absolute_attitude</strong>: 使得机器人绝对力控姿态。</p>
-<p>参数：</p>
-<p><strong>centroid_z:</strong>质心高度，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>roll</strong>: 机身翻滚，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>pitch</strong>: 机身俯仰，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>yaw</strong>: 机身偏航，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>duration:</strong>转变姿态期望耗时，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>默认值0</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.absolute_attitude</strong>: Makes the robot absolutely force-control the attitude. </p>
+<p>Parameters:</p>
+<p><strong>centroid_z:</strong>Height of center of mass, type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>roll</strong>: The body rolls, the type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>pitch</strong>: fuselage pitch, type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>yaw</strong>: fuselage yaw, type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>duration:</strong>The expected time to change the posture is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Default value 0</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.absolute_attitude(0.2,5,5,5,1).state.code == StateCode.success:</strong><br />
-<strong>print('控制机器人绝对姿态成功')</strong></td>
+<strong>print('Controlling the absolute posture of the robot successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9250,14 +9250,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) relatively\_force\_control\_attitude（相对力控姿态）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) relatively\_force\_control\_attitude (relative force control attitude)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9268,39 +9268,39 @@ w // 抬脚高度(m)</td>
 <strong>double centroid_x,</strong><br />
 <strong>double centroid_y,</strong><br />
 <strong>double centroid_z,</strong><br />
-<strong>double roll，</strong><br />
+<strong>double roll,</strong><br />
 <strong>double pitch,</strong><br />
-<strong>double yaw，</strong><br />
+<strong>double yaw,</strong><br />
 <strong>double duration</strong><br />
 <strong>)</strong></td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.relatively_force_control_attitude</strong>: 使得机器人相对当前姿态进行力控姿态动作。</p>
-<p>参数：</p>
-<p><strong>centroid_x:</strong>质心x轴坐标，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>centroid_y:</strong>质心y轴坐标，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>centroid_z:</strong>质心z轴坐标，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>roll</strong>: 机身翻滚，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>pitch</strong>: 机身俯仰，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>yaw</strong>: 机身偏航，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>duration:</strong>转变姿态期望耗时，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>默认值1</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.relatively_force_control_attitude</strong>: Makes the robot perform force-controlled posture actions relative to the current posture. </p>
+<p>Parameters:</p>
+<p><strong>centroid_x:</strong>The x-axis coordinate of the center of mass, the type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>centroid_y:</strong>The y-axis coordinate of the center of mass, the type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>centroid_z:</strong>The z-axis coordinate of the center of mass, the type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>roll</strong>: The body rolls, the type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>pitch</strong>: fuselage pitch, type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>yaw</strong>: fuselage yaw, type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>duration:</strong>The expected time to change the posture is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Default value 1</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.relatively_force_control_attitude(0.2,0.2,0.2,5,5,5,1).state.code == StateCode.success:</strong><br />
-<strong>print('控制机器人相对力控姿态成功')</strong></td>
+<strong>print('The relative force control posture of the robot was successfully controlled')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9308,14 +9308,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) transition\_standing（过渡站立）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) transition\_standing (transition standing)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9329,21 +9329,21 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.transition_standing</strong>: 使得机器人过渡站立。</p>
-<p>参数：</p>
-<p><strong>centroid_z:</strong>质心高度，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>duration:</strong>转变姿态期望耗时，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>默认值1</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.transition_standing</strong>: Makes the robot transition to standing. </p>
+<p>Parameters:</p>
+<p><strong>centroid_z:</strong>Height of center of mass, type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>duration:</strong>The expected time to change the posture is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Default value 1</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.transition_standing(0.2,1).state.code == StateCode.success:</strong><br />
-<strong>print('控制机器人过渡站立成功')</strong></td>
+<strong>print('Control the robot to transition to stand successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9351,14 +9351,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) relatively\_position\_control\_attitude（相对位控姿态）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) relatively\_position\_control\_attitude (relative position control attitude)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9369,9 +9369,9 @@ w // 抬脚高度(m)</td>
 <strong>double centroid_x,</strong><br />
 <strong>double centroid_y,</strong><br />
 <strong>double centroid_z,</strong><br />
-<strong>double roll，</strong><br />
+<strong>double roll,</strong><br />
 <strong>double pitch,</strong><br />
-<strong>double yaw，</strong><br />
+<strong>double yaw,</strong><br />
 <strong>double fulcrum_x,</strong><br />
 <strong>double fulcrum_y,</strong><br />
 <strong>double fulcrum_z,</strong><br />
@@ -9380,37 +9380,37 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.relatively_position_control_attitude</strong>: 使得机器人相对力控姿态。</p>
-<p>参数：</p>
-<p><strong>centroid_x</strong>:质心x轴坐标，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>centroid_y</strong>:质心y轴坐标，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>centroid_z</strong>:质心z轴坐标，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>roll</strong>: 机身翻滚，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>pitch</strong>: 机身俯仰，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>yaw</strong>: 机身偏航，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>fulcrum_x</strong>:支点x轴坐标，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>fulcrum_y</strong>:支点y轴坐标，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>fulcrum_z</strong>:支点z轴坐标，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>duration:</strong>转变姿态期望耗时，类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>默认值1</p>
-<p>返回值：<a>MotionResultServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.relatively_position_control_attitude</strong>: Makes the robot relative force control attitude. </p>
+<p>Parameters:</p>
+<p><strong>centroid_x</strong>: center of mass x-axis coordinate, type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>centroid_y</strong>: center of mass y-axis coordinate, type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>centroid_z</strong>: center of mass z-axis coordinate, type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>roll</strong>: The body rolls, the type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>pitch</strong>: fuselage pitch, type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>yaw</strong>: fuselage yaw, type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>fulcrum_x</strong>: The x-axis coordinate of the fulcrum, the type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>fulcrum_y</strong>: y-axis coordinate of the fulcrum, type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>fulcrum_z</strong>: The z-axis coordinate of the fulcrum, the type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>duration:</strong>The expected time to change the posture is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Default value 1</p>
+<p>Return value: <a>MotionResultServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.relatively_position_control_attitude(0.2,0.2,0.2,5,5,5,0,0,0,1).state.code == StateCode.success:</strong><br />
-<strong>print('控制机器人相对位控姿态成功')</strong></td>
+<strong>print('Controlling the relative position control attitude of the robot successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9418,14 +9418,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump\_back\_and\_forth（前后跳）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) jump\_back\_and\_forth (jump forward and backward)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9437,39 +9437,39 @@ w // 抬脚高度(m)</td>
 <strong>double y_jump_velocity,</strong><br />
 <strong>double z_jump_velocity,</strong><br />
 <strong>double front_leg_lift,</strong><br />
-<strong>double back_leg_lift，</strong><br />
+<strong>double back_leg_lift,</strong><br />
 <strong>double distance,</strong><br />
 <strong>double duration</strong><br />
 <strong>)</strong></td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.jump_back_and_forth</strong>: 使得机器人前后跳。</p>
-<p>参数：</p>
-<p><strong>x_jump_velocity</strong>: 纵向线速度，单位米每秒（m/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>y_jump_velocity</strong>: 横向线速度，单位米每秒（m/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>z_jump_velocity</strong>: 角速度，单位度每秒（<a href="https://zh.wikipedia.org/wiki/°">°</a>/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>front_leg_lift</strong>: 前脚抬腿高度，单位米（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>back_leg_lift</strong>: 前脚抬腿高度，单位秒（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>distance</strong>: 期望距离，路程，单位米（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>duration</strong>: 期望时间，单位秒（s），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>备注：</p>
-<p>distance和duration互斥，同时出现时以第一个非零值进行约束。</p>
-<p>返回值：<a>MotionServoCmdResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.jump_back_and_forth</strong>: Makes the robot jump forward and backward. </p>
+<p>Parameters:</p>
+<p><strong>x_jump_velocity</strong>: Longitudinal linear velocity, unit is meters per second (m/s), type is floating point. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>y_jump_velocity</strong>: Transverse linear velocity, unit is meters per second (m/s), type is floating point. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>z_jump_velocity</strong>: Angular velocity in degrees per second (<a href="https://zh.wikipedia.org/wiki/°">°</a>/s), type Floating point type. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>front_leg_lift</strong>: Front leg lift height, unit meter (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>back_leg_lift</strong>: Front leg lift height, unit second (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>distance</strong>: desired distance, distance, unit meter (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>duration</strong>: expected time in seconds (s), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Remarks:</p>
+<p>Distance and duration are mutually exclusive. When they appear at the same time, they are constrained by the first non-zero value. </p>
+<p>Return value: <a>MotionServoCmdResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>if cyberdog.motion.jump_back_and_forth(0.03，0.03).state.code == StateCode.success:</strong><br />
-<strong>print('使机器人前后跳成功')</strong></td>
+<strong>if cyberdog.motion.jump_back_and_forth(0.03, 0.03).state.code == StateCode.success:</strong><br />
+<strong>print('Make the robot jump forward and backward successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9477,14 +9477,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) small\_jump\_walking（小跳行走）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) small\_jump\_walking**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9496,39 +9496,39 @@ w // 抬脚高度(m)</td>
 <strong>double y_jump_velocity</strong>,<br />
 <strong>double z_jump_velocity</strong>,<br />
 <strong>double front_leg_lift</strong>,<br />
-<strong>double back_leg_lift</strong>，<br />
+<strong>double back_leg_lift</strong>,<br />
 <strong>double distance</strong>,<br />
 <strong>double duration</strong><br />
 <strong>)</strong></td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.small_jump_walking</strong>: 使得机器人小跳行走。</p>
-<p>参数</p>
-<p><strong>x_jump_velocity</strong>: 纵向线速度，单位米每秒（m/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>y_jump_velocity</strong>: 横向线速度，单位米每秒（m/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>z_jump_velocity</strong>: 角速度，单位度每秒（<a href="https://zh.wikipedia.org/wiki/°">°</a>/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>front_leg_lift</strong>: 前脚抬腿高度，单位米（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>back_leg_lift</strong>: 前脚抬腿高度，单位秒（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>distance</strong>: 期望距离，路程，单位米（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>duration</strong>: 期望时间，单位秒（s），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>备注：</p>
-<p><strong>distance</strong>和<strong>duration</strong>互斥，同时出现时以第一个非零值进行约束。</p>
-<p>返回值：<a>MotionServoCmdResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.small_jump_walking</strong>: Makes the robot walk with a small jump. </p>
+<p>Parameters</p>
+<p><strong>x_jump_velocity</strong>: Longitudinal linear velocity, unit is meters per second (m/s), type is floating point. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>y_jump_velocity</strong>: Transverse linear velocity, unit is meters per second (m/s), type is floating point. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>z_jump_velocity</strong>: Angular velocity in degrees per second (<a href="https://zh.wikipedia.org/wiki/°">°</a>/s), type Floating point type. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>front_leg_lift</strong>: Front leg lift height, unit meter (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>back_leg_lift</strong>: Front leg lift height, unit second (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>distance</strong>: desired distance, distance, unit meter (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>duration</strong>: expected time in seconds (s), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Remarks:</p>
+<p><strong>distance</strong> and <strong>duration</strong> are mutually exclusive. When they appear together, they are constrained by the first non-zero value. </p>
+<p>Return value: <a>MotionServoCmdResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.jump_back_and_forth(0.2，0, 0.0, 0.02, 0.02，0，1).state.code == StateCode.success:</strong><br />
-<strong>print('使机器人小跳行走成功')</strong></td>
+<strong>print('Make the robot jump and walk successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9536,14 +9536,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) trot\_walking（慢速行走）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) trot\_walking (slow walking)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9555,39 +9555,39 @@ w // 抬脚高度(m)</td>
 <strong>double y_velocity</strong>,<br />
 <strong>double z_velocity</strong>,<br />
 <strong>double front_leg_lift</strong>,<br />
-<strong>double back_leg_lift</strong>，<br />
+<strong>double back_leg_lift</strong>,<br />
 <strong>double distance</strong>,<br />
 <strong>double duration</strong><br />
 <strong>)</strong></td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.trot_walking</strong>: 使得机器人慢速行走。</p>
-<p>参数</p>
-<p><strong>x_velocity</strong>: 纵向线速度，单位米每秒（m/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>y_velocity</strong>: 横向线速度，单位米每秒（m/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>z_velocity</strong>: 角速度，单位度每秒（<a href="https://zh.wikipedia.org/wiki/°">°</a>/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>front_leg_lift</strong>: 前脚抬腿高度，单位米（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>back_leg_lift</strong>: 前脚抬腿高度，单位秒（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>distance</strong>: 期望距离，路程，单位米（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>duration</strong>: 期望时间，单位秒（s），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>备注：</p>
-<p><strong>distance</strong>和<strong>duration</strong>互斥，同时出现时以第一个非零值进行约束。</p>
-<p>返回值：<a>MotionServoCmdResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.trot_walking</strong>: Makes the robot walk slowly. </p>
+<p>Parameters</p>
+<p><strong>x_velocity</strong>: Longitudinal linear velocity, unit is meters per second (m/s), type is floating point. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>y_velocity</strong>: Transverse linear velocity, unit is meters per second (m/s), type is floating point. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>z_velocity</strong>: Angular velocity in degrees per second (<a href="https://zh.wikipedia.org/wiki/°">°</a>/s), type Floating point type. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>front_leg_lift</strong>: Front leg lift height, unit meter (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>back_leg_lift</strong>: Front leg lift height, unit second (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>distance</strong>: desired distance, distance, unit meter (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>duration</strong>: expected time in seconds (s), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Remarks:</p>
+<p><strong>distance</strong> and <strong>duration</strong> are mutually exclusive. When they appear together, they are constrained by the first non-zero value. </p>
+<p>Return value: <a>MotionServoCmdResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>if cyberdog.motion.trot_walking(0.2，0.3, 0.0, 0.02, 0.02).state.code == StateCode.success:</strong><br />
-<strong>print('使机器人慢速行走成功')</strong></td>
+<strong>if cyberdog.motion.trot_walking(0.2, 0.3, 0.0, 0.02, 0.02).state.code == StateCode.success:</strong><br />
+<strong>print('Make the robot walk slowly')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9595,14 +9595,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) automatic\_frequency\_conversion\_walking（自动变频行走）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) automatic\_frequency\_conversion\_walking (automatic frequency walking)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9614,39 +9614,39 @@ w // 抬脚高度(m)</td>
 <strong>double y_velocity</strong>,<br />
 <strong>double z_velocity</strong>,<br />
 <strong>double front_leg_lift</strong>,<br />
-<strong>double back_leg_lift</strong>，<br />
+<strong>double back_leg_lift</strong>,<br />
 <strong>double distance</strong>,<br />
 <strong>double duration</strong><br />
 <strong>)</strong></td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.automatic_frequency_conversion_walking</strong>: 使得机器人自动变频行走。</p>
-<p>参数</p>
-<p><strong>x_velocity</strong>: 纵向线速度，单位米每秒（m/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>y_velocity</strong>: 横向线速度，单位米每秒（m/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>z_velocity</strong>: 角速度，单位度每秒（<a href="https://zh.wikipedia.org/wiki/°">°</a>/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>front_leg_lift</strong>: 前脚抬腿高度，单位米（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。0.03</p>
-<p><strong>back_leg_lift</strong>: 前脚抬腿高度，单位秒（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。0.03</p>
-<p><strong>distance</strong>: 期望距离，路程，单位米（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>duration</strong>: 期望时间，单位秒（s），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>备注：</p>
-<p><strong>distance</strong>和<strong>duration</strong>互斥，同时出现时以第一个非零值进行约束。</p>
-<p>返回值：<a>MotionServoCmdResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.automatic_frequency_conversion_walking</strong>: Makes the robot automatically walk with frequency conversion. </p>
+<p>Parameters</p>
+<p><strong>x_velocity</strong>: Longitudinal linear velocity, unit is meters per second (m/s), type is floating point. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>y_velocity</strong>: Transverse linear velocity, unit is meters per second (m/s), type is floating point. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>z_velocity</strong>: Angular velocity in degrees per second (<a href="https://zh.wikipedia.org/wiki/°">°</a>/s), type Floating point type. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>front_leg_lift</strong>: Front leg lift height, unit meter (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. 0.03</p>
+<p><strong>back_leg_lift</strong>: Front leg lift height, unit second (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. 0.03</p>
+<p><strong>distance</strong>: desired distance, distance, unit meter (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>duration</strong>: expected time in seconds (s), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Remarks:</p>
+<p><strong>distance</strong> and <strong>duration</strong> are mutually exclusive. When they appear together, they are constrained by the first non-zero value. </p>
+<p>Return value: <a>MotionServoCmdResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>if cyberdog.motion.automatic_frequency_conversion_walking(0.2，0.3, 0.0, 0.02, 0.02).state.code == StateCode.success:</strong><br />
-<strong>print('使机器人自动变频行走成功')</strong></td>
+<strong>if cyberdog.motion.automatic_frequency_conversion_walking(0.2, 0.3, 0.0, 0.02, 0.02).state.code == StateCode.success:</strong><br />
+<strong>print('The robot automatically walks with variable frequency successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9654,14 +9654,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) run\_fast\_walking（快跑行走）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) run\_fast\_walking**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9673,39 +9673,39 @@ w // 抬脚高度(m)</td>
 <strong>double y_velocity</strong>,<br />
 <strong>double z_velocity</strong>,<br />
 <strong>double front_leg_lift</strong>,<br />
-<strong>double back_leg_lift</strong>，<br />
+<strong>double back_leg_lift</strong>,<br />
 <strong>double distance</strong>,<br />
 <strong>double duration</strong><br />
 <strong>)</strong></td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.run_fast_walking</strong>: 使得机器人快跑。</p>
-<p>参数</p>
-<p><strong>x_velocity</strong>: 纵向线速度，单位米每秒（m/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>y_velocity</strong>: 横向线速度，单位米每秒（m/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>z_velocity</strong>: 角速度，单位度每秒（<a href="https://zh.wikipedia.org/wiki/°">°</a>/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>front_leg_lift</strong>: 前脚抬腿高度，单位米（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>back_leg_lift</strong>: 前脚抬腿高度，单位秒（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>distance</strong>: 期望距离，路程，单位米（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>duration</strong>: 期望时间，单位秒（s），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>备注：</p>
-<p><strong>distance</strong>和<strong>duration</strong>互斥，同时出现时以第一个非零值进行约束。</p>
-<p>返回值：<a>MotionServoCmdResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.run_fast_walking</strong>: Makes the robot run fast. </p>
+<p>Parameters</p>
+<p><strong>x_velocity</strong>: Longitudinal linear velocity, unit is meters per second (m/s), type is floating point. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>y_velocity</strong>: Transverse linear velocity, unit is meters per second (m/s), type is floating point. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>z_velocity</strong>: Angular velocity in degrees per second (<a href="https://zh.wikipedia.org/wiki/°">°</a>/s), type Floating point type. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>front_leg_lift</strong>: Front leg lift height, unit meter (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>back_leg_lift</strong>: Front leg lift height, unit second (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>distance</strong>: desired distance, distance, unit meter (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>duration</strong>: expected time in seconds (s), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Remarks:</p>
+<p><strong>distance</strong> and <strong>duration</strong> are mutually exclusive. When they appear together, they are constrained by the first non-zero value. </p>
+<p>Return value: <a>MotionServoCmdResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>if cyberdog.motion.run_fast_walking(0.2，0.3, 0.0, 0.02, 0.02).state.code == StateCode.success:</strong><br />
-<strong>print('使机器人快跑成功')</strong></td>
+<strong>if cyberdog.motion.run_fast_walking(0.2, 0.3, 0.0, 0.02, 0.02).state.code == StateCode.success:</strong><br />
+<strong>print('Make the robot run successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9713,14 +9713,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) turn（转向）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) turn**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9734,23 +9734,23 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.turn</strong>: 控制机器人转向。</p>
-<p>参数</p>
-<p><strong>angle</strong>: 角度，单位度（<a href="https://zh.wikipedia.org/wiki/°">°</a>），类型为浮点型；</p>
-<p>以当前姿态为0度，顺时针为负</p>
-<p>有效范围：[-360, 360)。</p>
-<p>默认：0</p>
-<p><strong>duration</strong>: 期望时间，单位秒（s），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>默认值：1</p>
-<p>返回值：<a>MotionServoCmdResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.turn</strong>: Control the robot's steering. </p>
+<p>Parameters</p>
+<p><strong>angle</strong>: angle, unit degree (<a href="https://zh.wikipedia.org/wiki/°">°</a>), type is floating point; </p>
+<p>With the current attitude as 0 degrees, clockwise is negative</p>
+<p>Valid range: [-360, 360). </p>
+<p>Default: 0</p>
+<p><strong>duration</strong>: expected time in seconds (s), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Default value: 1</p>
+<p>Return value: <a>MotionServoCmdResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.turn(10).state.code == StateCode.success:</strong><br />
-<strong>print('使机器人向左转向10度成功')</strong></td>
+<strong>print('Successfully turned the robot 10 degrees to the left')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9758,14 +9758,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) go\_straight（直行）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) go\_straight (go straight)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9773,34 +9773,34 @@ w // 抬脚高度(m)</td>
 <tr class="odd">
 <td><br />
 <strong>cyberdog.motion.go_straight(</strong><br />
-<strong>double x_velocity</strong>，<br />
+<strong>double x_velocity</strong>,<br />
 <strong>double</strong> <strong>distance</strong>,<br />
 <strong>double</strong> <strong>duration</strong><br />
 <strong>)</strong></td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog. motion.go_straight</strong>: 控制机器人直行。</p>
-<p>参数</p>
-<p><strong>x_velocity</strong>: 纵向线速度，单位米每秒（m/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>distance</strong>: 期望距离，路程，单位米（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>duration</strong>: 期望时间，单位秒（s），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>默认值：1</p>
-<p>备注：</p>
-<p><strong>distance</strong>和<strong>duration</strong>互斥，同时出现时以第一个非零值进行约束。</p>
-<p>返回值：<a>MotionServoCmdResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog. motion.go_straight</strong>: Control the robot to go straight. </p>
+<p>Parameters</p>
+<p><strong>x_velocity</strong>: Longitudinal linear velocity, unit is meters per second (m/s), type is floating point. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>distance</strong>: desired distance, distance, unit meter (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>duration</strong>: expected time in seconds (s), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Default value: 1</p>
+<p>Remarks:</p>
+<p><strong>distance</strong> and <strong>duration</strong> are mutually exclusive. When they appear together, they are constrained by the first non-zero value. </p>
+<p>Return value: <a>MotionServoCmdResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.go_straight(0.3, 0, 10).state.code == StateCode.success:</strong><br />
-<strong>print('使机器人以0.3m/s的速度向前10s成功')</strong><br />
+<strong>print('Successfully made the robot move forward at a speed of 0.3m/s for 10 seconds')</strong><br />
 <strong>if cyberdog.motion.go_straight(-0.3, 0, 10).state.code == StateCode.success:</strong><br />
-<strong>print('使机器人以0.3m/s的速度向后10s成功')</strong></td>
+<strong>print('Successfully made the robot move backward for 10 seconds at a speed of 0.3m/s')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9808,14 +9808,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) lateral\_movement（横移）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) lateral\_movement**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9823,34 +9823,34 @@ w // 抬脚高度(m)</td>
 <tr class="odd">
 <td><br />
 <strong>cyberdog.motion.lateral_movement(</strong><br />
-<strong>double y_velocity</strong>，<br />
+<strong>double y_velocity</strong>,<br />
 <strong>double</strong> <strong>distance</strong>,<br />
 <strong>double</strong> <strong>duration</strong><br />
 <strong>)</strong></td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.lateral_movement</strong>: 横移接口名称，控制机器人横移。</p>
-<p>参数</p>
-<p><strong>y_velocity</strong>: 横向线速度，单位米每秒（m/s），类型为浮点型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>distance</strong>: 期望距离，路程，单位米（m），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p><strong>duration</strong>: 期望时间，单位秒（s），类型为浮点型；</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>默认值：1</p>
-<p>备注：</p>
-<p><strong>distance</strong>和<strong>duration</strong>互斥，同时出现时以第一个非零值进行约束。</p>
-<p>返回值：<a>MotionServoCmdResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.lateral_movement</strong>: The name of the lateral movement interface, which controls the lateral movement of the robot. </p>
+<p>Parameters</p>
+<p><strong>y_velocity</strong>: Transverse linear velocity, unit is meters per second (m/s), type is floating point. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>distance</strong>: desired distance, distance, unit meter (m), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p><strong>duration</strong>: expected time in seconds (s), type is floating point;</p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Default value: 1</p>
+<p>Remarks:</p>
+<p><strong>distance</strong> and <strong>duration</strong> are mutually exclusive. When they appear together, they are constrained by the first non-zero value. </p>
+<p>Return value: <a>MotionServoCmdResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.motion.lateral_movement(0.3, 0, 10).state.code == StateCode.success:</strong><br />
-<strong>print('使机器人以0.3m/s的速度向左10s成功')</strong><br />
+<strong>print('Successfully made the robot move left at a speed of 0.3m/s for 10 seconds')</strong><br />
 <strong>if cyberdog.motion.lateral_movement(-0.3, 0, 10).state.code == StateCode.success:</strong><br />
-<strong>print('使机器人以0.3m/s的速度向右10s成功')</strong></td>
+<strong>print('Successfully made the robot move to the right at a speed of 0.3m/s for 10 seconds')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -9858,14 +9858,14 @@ w // 抬脚高度(m)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) run\_sequence（运行序列）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) run\_sequence (run sequence)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -9878,11 +9878,11 @@ w // 抬脚高度(m)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.motion.run_sequence</strong>: 运行序列接口名称，使机器人运行当前序列。</p>
-<p>参数</p>
-<p><strong>sequence</strong>: 序列，类型为<a>MotionSequence</a>。</p>
-<p>返回值：<a>MotionSequenceServiceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.motion.run_sequence</strong>: Run sequence interface name to make the robot run the current sequence. </p>
+<p>Parameters</p>
+<p><strong>sequence</strong>: Sequence of type <a>MotionSequence</a>. </p>
+<p>Return value: <a>MotionSequenceServiceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -9890,7 +9890,7 @@ w // 抬脚高度(m)</td>
 <br />
 sequ = MotionSequence()<br />
 sequ.name = 'test_sequ'<br />
-sequ.describe = '测试序列'<br />
+sequ.describe = 'Test sequence'<br />
 <br />
 gait_meta = MotionSequenceGait()<br />
 <br />
@@ -9991,16 +9991,16 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**4.4.05 🟡navigation（导航模块）**
+**4.4.05 🟡navigation (navigation module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10011,9 +10011,9 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.navigation.state</strong>: cyberdog下导航模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.navigation.state</strong>: The interface name for obtaining the status of the navigation module under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -10027,14 +10027,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**🟢 set\_log（设置日志）**
+**🟢 set\_log (set log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10046,19 +10046,19 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.navigation.set_log</strong>: 设置cyberdog下navigation模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.navigation.set_log</strong>: Set the navigation module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.navigation.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下navigation模块日志')</strong></td>
+<strong>print('The navigation module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10066,14 +10066,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_preset（获取预置点）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_preset (get preset point)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10085,16 +10085,16 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.navigation.get_preset</strong>: 获取预置点。</p>
-<p>参数</p>
-<p>返回值：<a>MapPresetSeviceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.navigation.get_preset</strong>: Get the preset point. </p>
+<p>Parameters</p>
+<p>Return value: <a>MapPresetSeviceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>if cyberdog.navigation. get_preset().state.code == StateCode.success:</strong><br />
-<strong>print('添加厨房预置点成功')</strong></td>
+<strong>if cyberdog.navigation.get_preset().state.code == StateCode.success:</strong><br />
+<strong>print('Add kitchen preset point successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10102,14 +10102,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) to\_preset（导航到预置点）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) to\_preset（Navigate to the preset point）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10125,24 +10125,24 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.navigation.to_preset</strong>: 导航到预置点。</p>
-<p>参数</p>
-<p><strong>preset_name</strong>: 预置点名称，类型为字符串。</p>
-<p><strong>assisted_relocation</strong>: 是否开启辅助重定位功能，类型为布尔值。</p>
-<p>False：关闭（默认值）</p>
-<p>True：开启</p>
-<p><strong>interact</strong>: 是否开启辅助重定位交互功能，类型为布尔值。</p>
-<p>False：关闭（默认值）</p>
-<p>True：开启</p>
-<p><strong>volume</strong>: 辅助重定位交互音量，类型为整型，默认为50。</p>
-<p>返回值：<a>NavigationActionResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.navigation.to_preset</strong>: Navigate to the preset point. </p>
+<p>Parameters</p>
+<p><strong>preset_name</strong>: Preset point name, type is string. </p>
+<p><strong>assisted_relocation</strong>: Whether to enable the assisted relocation function, the type is Boolean. </p>
+<p>False: off (default value)</p>
+<p>True: On</p>
+<p><strong>interact</strong>: Whether to enable the auxiliary relocation interaction function, the type is Boolean. </p>
+<p>False: off (default value)</p>
+<p>True: On</p>
+<p><strong>volume</strong>: Auxiliary relocation interaction volume, type is integer, default is 50. </p>
+<p>Return value: <a>NavigationActionResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>if cyberdog.navigation.to_preset('厨房', True , True , 50).response.result == 0:</strong><br />
-<strong>print('导航到厨房预置点成功')</strong></td>
+<strong>if cyberdog.navigation.to_preset('kitchen', True , True , 50).response.result == 0:</strong><br />
+<strong>print('Navigate to kitchen preset point successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10150,14 +10150,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) turn\_on\_navigation（开启（进入）导航模式）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) turn\_on\_navigation (turn on (enter) navigation mode)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10173,26 +10173,26 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.navigation.turn_on_navigation</strong>: 开启导航模式。</p>
-<p>参数</p>
-<p><strong>outdoor</strong>: 是否为室外环境，类型为布尔值。</p>
-<p>False：室内（默认值）</p>
-<p>True：室外</p>
-<p><strong>assisted_relocation</strong>: 是否开启辅助重定位功能，类型为布尔值。</p>
-<p>False：关闭（默认值）</p>
-<p>True：开启</p>
-<p><strong>interact</strong>: 是否开启辅助重定位交互功能，类型为布尔值。</p>
-<p>False：关闭（默认值）</p>
-<p>True：开启</p>
-<p><strong>volume</strong>: 辅助重定位交互音量，类型为整型，默认为50。</p>
-<p>返回值：<a>NavigationActionResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.navigation.turn_on_navigation</strong>: Turn on navigation mode. </p>
+<p>Parameters</p>
+<p><strong>outdoor</strong>: Whether it is an outdoor environment, the type is Boolean. </p>
+<p>False: Indoor (default)</p>
+<p>True: Outdoor</p>
+<p><strong>assisted_relocation</strong>: Whether to enable the assisted relocation function, the type is Boolean. </p>
+<p>False: off (default value)</p>
+<p>True: On</p>
+<p><strong>interact</strong>: Whether to enable the auxiliary relocation interaction function, the type is Boolean. </p>
+<p>False: off (default value)</p>
+<p>True: On</p>
+<p><strong>volume</strong>: Auxiliary relocation interaction volume, type is integer, default is 50. </p>
+<p>Return value: <a>NavigationActionResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.navigation.turn_on_navigation(False, True , True , 50).response.result == 0:</strong><br />
-<strong>print('开启导航模式')</strong></td>
+<strong>print('Turn on navigation mode')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10200,14 +10200,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) turn\_off\_relocation（关闭（退出）导航模式）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) turn\_off\_relocation (turn off (exit) navigation mode)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10219,16 +10219,16 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.navigation.turn_off_navigation</strong>: 关闭导航模式。</p>
-<p>参数：无</p>
-<p>返回值：<a>NavigationActionResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.navigation.turn_off_navigation</strong>: Turn off navigation mode. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>NavigationActionResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.navigation.turn_off_navigation().response.result == 0:</strong><br />
-<strong>print('关闭导航模式')</strong></td>
+<strong>print('Close navigation mode')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10236,14 +10236,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) navigation\_to\_preset（导航到预置点）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) navigation\_to\_preset（Navigate to the preset point）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10256,17 +10256,17 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.navigation.navigation_to_preset</strong>: 导航到预置点。</p>
-<p>参数</p>
-<p><strong>preset_name</strong>: 预置点名称，类型为字符串。</p>
-<p>返回值：<a>NavigationActionResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.navigation.navigation_to_preset</strong>: Navigate to the preset point. </p>
+<p>Parameters</p>
+<p><strong>preset_name</strong>: Preset point name, type is string. </p>
+<p>Return value: <a>NavigationActionResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>if cyberdog.navigation.navigation_to_preset('厨房').response.result == 0:</strong><br />
-<strong>print('导航到厨房预置点成功')</strong></td>
+<strong>if cyberdog.navigation.navigation_to_preset('kitchen').response.result == 0:</strong><br />
+<strong>print('Navigate to kitchen preset point successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10274,14 +10274,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) navigation\_to\_coordinates（导航到坐标点）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) navigation\_to\_coordinates**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10299,22 +10299,22 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.navigation.navigation_to_coordinates</strong>: 导航到坐标点。</p>
-<p>参数</p>
-<p><strong>x</strong>: 目标点x坐标，类型为浮点型。</p>
-<p><strong>y</strong>: 目标点y坐标，类型为浮点型。</p>
-<p><strong>z</strong>: 目标点z坐标，类型为浮点型。</p>
-<p><strong>roll</strong>: 目标点姿态<strong>roll</strong>，类型为浮点型。</p>
-<p><strong>pitch</strong>: 目标点姿态<strong>pitch</strong>，类型为浮点型。</p>
-<p><strong>yaw</strong>: 目标点姿态<strong>yaw</strong>，类型为浮点型。</p>
-<p>返回值：<a>NavigationActionResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.navigation.navigation_to_coordinates</strong>: Navigate to coordinates. </p>
+<p>Parameters</p>
+<p><strong>x</strong>: The x coordinate of the target point, the type is floating point. </p>
+<p><strong>y</strong>: The y coordinate of the target point, the type is floating point. </p>
+<p><strong>z</strong>: The z coordinate of the target point, the type is floating point. </p>
+<p><strong>roll</strong>: Target point posture <strong>roll</strong>, type is floating point. </p>
+<p><strong>pitch</strong>: Target point pose <strong>pitch</strong>, type is floating point. </p>
+<p><strong>yaw</strong>: Target point attitude <strong>yaw</strong>, type is floating point. </p>
+<p>Return value: <a>NavigationActionResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.navigation.navigation_to_coordinates(0,0,0,0,0,0).response.result == 0:</strong><br />
-<strong>print('导航到目标点成功')</strong></td>
+<strong>print('Navigate to target point successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10322,14 +10322,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) cancel\_navigation（取消导航）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) cancel\_navigation**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10340,16 +10340,16 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.navigation.cancel_navigation</strong>:取消导航。</p>
-<p>参数：无</p>
-<p>返回值：<a>NavigationActionResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.navigation.cancel_navigation</strong>: Cancel navigation. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>NavigationActionResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.navigation.cancel_navigation().response.result == 0:</strong><br />
-<strong>print('取消导航成功')</strong></td>
+<strong>print('Cancel navigation successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10357,16 +10357,16 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**4.4.06 🟡task（任务模块）**
+**4.4.06 🟡task (task module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10377,9 +10377,9 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.task.state</strong>: cyberdog下任务模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.task.state</strong>: The interface name for obtaining the status of the task module under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -10393,14 +10393,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**🟢 set\_log（设置日志）**
+**🟢 set\_log (set log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10412,19 +10412,19 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.task.set_log</strong>: 设置cyberdog下task模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.task.set_log</strong>: Set the task module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.task.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下task模块日志')</strong></td>
+<strong>print('The task module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10432,14 +10432,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) start（开始任务）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) start（Start task）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10450,16 +10450,16 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.task.start</strong>:开始任务。</p>
-<p>参数：无</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.task.start</strong>: Start the task. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.task.start().state.code == StateCode.fail:</strong><br />
-<strong>print('开始任务成功')</strong></td>
+<strong>print('Start task successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10467,14 +10467,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) stop（结束任务）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) stop（End task）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10485,16 +10485,16 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.task.stop</strong>:取消导航。</p>
-<p>参数：无</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.task.stop</strong>: Cancel navigation. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.task.stop().state.code == StateCode.fail:</strong><br />
-<strong>print('结束任务成功')</strong></td>
+<strong>print('End task successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10502,14 +10502,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) block（普通块）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) block (ordinary block)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10522,17 +10522,17 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.task.block</strong>:设置代码块。</p>
-<p>参数：</p>
-<p><strong>id</strong>: 当前块id，字符串类型。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.task.block</strong>: Set the code block. </p>
+<p>Parameters:</p>
+<p><strong>id</strong>: Current block id, string type. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.task.block('abc').state.code == StateCode.fail:</strong><br />
-<strong>print('触发abc块成功')</strong></td>
+<strong>print('Trigger abc block successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10540,14 +10540,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) breakpoint\_block（断点块）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) breakpoint\_block (breakpoint block)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10560,29 +10560,29 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.task.breakpoint_block</strong>:设置断点代码块。</p>
-<p>说明：当程序执行到该块时，将阻塞如下逻辑功能：</p>
-<p>普通块：block</p>
-<p>伺服指令相关块：</p>
-<p>转向：turn</p>
-<p>直行：go_straight</p>
-<p>横移：lateral_movevment</p>
-<p>前后跳：jump_back_and_forth</p>
-<p>小跳行走：small_jump_walking</p>
-<p>自变频行走：automatic_frequency_conversion_walking</p>
-<p>慢速行走：trot_walking</p>
-<p>快跑行走：run_fast_walking</p>
-<p>在这里，直到用户点击APP继续按钮后程序才会继续执行，或者调用继续任务接口才会继续。</p>
-<p>参数：</p>
-<p><strong>id</strong>: 当前块id，字符串类型。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.task.breakpoint_block</strong>: Set breakpoint code block. </p>
+<p>Note: When the program executes this block, the following logical functions will be blocked:</p>
+<p>Normal block: block</p>
+<p>Servo command related blocks:</p>
+<p>Turn: turn</p>
+<p>Go straight: go_straight</p>
+<p>Lateral movement: lateral_movevment</p>
+<p>Jump forward and backward: jump_back_and_forth</p>
+<p>small jump walking: small_jump_walking</p>
+<p>Automatic frequency walking: automatic_frequency_conversion_walking</p>
+<p>Slow walking: trot_walking</p>
+<p>Run and walk quickly: run_fast_walking</p>
+<p>Here, the program will not continue execution until the user clicks the APP continue button, or calls the continue task interface. </p>
+<p>Parameters:</p>
+<p><strong>id</strong>: Current block id, string type. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.task.breakpoint_block('abc').state.code == StateCode.fail:</strong><br />
-<strong>print('触发abc块成功')</strong></td>
+<strong>print('Trigger abc block successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10590,14 +10590,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) recover（继续任务）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) recover（continue task）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10608,17 +10608,17 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.task.recover</strong>:当任务暂停时，继续直行任务。</p>
-<p>说明：该函数将跳出断点的阻塞，使得程序继续运行。</p>
-<p>参数：无</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.task.recover</strong>: When the task is paused, continue the task directly. </p>
+<p>Explanation: This function will break out of the breakpoint blocking, allowing the program to continue running. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.task.recover().state.code == StateCode.fail:</strong><br />
-<strong>print('继续任务成功')</strong></td>
+<strong>print('Continue task successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10626,16 +10626,16 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**4.4.07 🟡personnel（人员模块）**
+**4.4.07 🟡personnel (personnel module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10646,9 +10646,9 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.personnel.state</strong>: cyberdog下人员模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.personnel.state</strong>: The interface name for obtaining the status of the personnel module under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -10662,14 +10662,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**🟢 set\_log（设置日志）**
+**🟢 set\_log (set log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10681,19 +10681,19 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.personnel.set_log</strong>: 设置cyberdog下personnel模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.personnel.set_log</strong>: Set the personnel module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.personnel.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下personnel模块日志')</strong></td>
+<strong>print('personnel module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10701,14 +10701,14 @@ cyberdog.motion.run_sequence(sequ)</td>
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) face\_recognized（识别到目标人员人脸）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) face\_recognized (recognized target person’s face)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 <td></td>
 <td></td>
 <td></td>
@@ -10719,45 +10719,45 @@ cyberdog.motion.run_sequence(sequ)</td>
 <tr class="odd">
 <td><br />
 <strong>cyberdog.personnel.face_recognized(</strong><br />
-<strong>list personnel_ids，</strong><br />
-<strong>bool and_operation，</strong><br />
+<strong>list personnel_ids,</strong><br />
+<strong>bool and_operation,</strong><br />
 <strong>double duration</strong><br />
 <strong>)</strong></td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.personnel.face_recognized</strong>:识别到目标人员人脸。</p>
-<p>参数：</p>
-<p><strong>names</strong>: 当前识别的目标人员昵称，列表类型。</p>
-<p>当列表为空时，识别底库中人员之一即为成功。</p>
-<p><strong>and_operation</strong>: 与运算，当<strong>names</strong>字段非空时有效；</p>
-<p>默认为False，即为或运算；</p>
-<p>True:当前识别到所有目标人员才返回成功。</p>
-<p>False:当前识别到目标人员之一就返回成功。</p>
-<p><strong>duration</strong>: 期望时间，单位秒（s），类型为浮点型；</p>
-<p>合法值约束：[30,300]。</p>
-<p>返回值：<a>FaceRecognizedSeviceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.personnel.face_recognized</strong>: The face of the target person is recognized. </p>
+<p>Parameters:</p>
+<p><strong>names</strong>: Nickname of the currently identified target person, list type. </p>
+<p>When the list is empty, identifying one of the people in the bottom library is successful. </p>
+<p><strong>and_operation</strong>: AND operation, valid when the <strong>names</strong> field is not empty;</p>
+<p>The default is False, which is an OR operation;</p>
+<p>True: Success will be returned only after all target persons are currently identified. </p>
+<p>False: Return success if one of the target persons is currently identified. </p>
+<p><strong>duration</strong>: expected time in seconds (s), type is floating point;</p>
+<p>Legal value constraints: [30,300]. </p>
+<p>Return value: <a>FaceRecognizedSeviceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>if cyberdog.personnel.face_recognized(['张三']).state.code == StateCode.success:</strong><br />
-<strong>print('识别到张三')</strong><br />
+<strong>if cyberdog.personnel.face_recognized(['Zhang San']).state.code == StateCode.success:</strong><br />
+<strong>print('Zhang San recognized')</strong><br />
 <br />
-<strong>if cyberdog.personnel.face_recognized(['张三','李四']).state.code == StateCode.success:</strong><br />
-<strong>print('识别到张三或李四')</strong><br />
+<strong>if cyberdog.personnel.face_recognized(['Zhang San','李思']).state.code == StateCode.success:</strong><br />
+<strong>print('Zhang San or Li Si recognized')</strong><br />
 <br />
-<strong>if cyberdog.personnel.face_recognized(['张三','李四'], True).state.code == StateCode.success:</strong><br />
-<strong>print('识别到张三和李四')</strong><br />
+<strong>if cyberdog.personnel.face_recognized(['Zhang San','李思'], True).state.code == StateCode.success:</strong><br />
+<strong>print('Zhang San and Li Si were recognized')</strong><br />
 <br />
-<strong>ret</strong> = <strong>cyberdog.personnel.face_recognized(['张三','李四'], True)</strong><br />
+<strong>ret</strong> = <strong>cyberdog.personnel.face_recognized(['Zhang San','Li Si'], True)</strong><br />
 <strong>if ret.state.code == StateCode.success:</strong><br />
-<strong>print('识别到张三和李四')</strong><br />
-<strong>if</strong> <strong>ret.dictionary.has_key('张三') and ret.dictionary['张三'].age &lt; 12:</strong><br />
-<strong>cyberdog.audio.play('请', ret.response['张三'].username, '同学回家写作业')</strong><br />
-if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &gt; 1:</strong><br />
-<strong>cyberdog.audio.play(ret.response['张三'].username, '你看起来很开心')</strong></td>
+<strong>print('Zhang San and Li Si were recognized')</strong><br />
+<strong>if</strong> <strong>ret.dictionary.has_key('Zhang San') and ret.dictionary['Zhang San'].age &lt; 12:</strong><br />
+<strong>cyberdog.audio.play('Please', ret.response['Zhang San'].username, 'Classmate goes home to do homework')</strong><br />
+if <strong>ret.dictionary.has_key('Zhang San') and ret.response['Zhang San'].emotion &gt; 1:</strong><br />
+<strong>cyberdog.audio.play(ret.response['Zhang San'].username, 'You look very happy')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10768,14 +10768,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) voiceprint\_recognized（识别到目标人员声纹）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) voiceprint\_recognized (the target person’s voiceprint is recognized)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10783,40 +10783,40 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 <tr class="odd">
 <td><br />
 <strong>cyberdog.personnel.voiceprint_recognized(</strong><br />
-<strong>list names，</strong><br />
-<strong>bool and_operation，</strong><br />
+<strong>list names,</strong><br />
+<strong>bool and_operation,</strong><br />
 <strong>double duration,</strong><br />
 <strong>int sensitivity</strong><br />
 <strong>)</strong></td>
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.personnel.voiceprint_recognized</strong>:识别到目标人员声纹。</p>
-<p>参数：</p>
-<p><strong>names</strong>: 当前识别的目标人员昵称，列表类型。</p>
-<p>当列表为空时，识别底库中人员之一即为成功。</p>
-<p><strong>and_operation</strong>: 与运算，当<strong>names</strong>字段非空时有效；</p>
-<p>默认为False，即为或运算；</p>
-<p>True:当前识别到所有目标人员才返回成功。</p>
-<p>False:当前识别到目标人员之一就返回成功。</p>
-<p><strong>duration</strong>: 期望时间，单位秒（s），类型为浮点型；</p>
-<p>合法值约束：[1, 30]。</p>
-<p><strong>sensitivity</strong>: 灵敏度，单位秒（s），类型为整型；</p>
-<p>最近一段时间内识别到的均有效。</p>
-<p>返回值：<a>VoiceprintRecognized</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.personnel.voiceprint_recognized</strong>: The target person’s voiceprint is recognized. </p>
+<p>Parameters:</p>
+<p><strong>names</strong>: Nickname of the currently identified target person, list type. </p>
+<p>When the list is empty, identifying one of the people in the bottom library is successful. </p>
+<p><strong>and_operation</strong>: AND operation, valid when the <strong>names</strong> field is not empty;</p>
+<p>The default is False, which is an OR operation;</p>
+<p>True: Success will be returned only after all target persons are currently identified. </p>
+<p>False: Return success if one of the target persons is currently identified. </p>
+<p><strong>duration</strong>: expected time in seconds (s), type is floating point;</p>
+<p>Legal value constraints: [1, 30]. </p>
+<p><strong>sensitivity</strong>: sensitivity, unit second (s), type is integer; </p>
+<p>Those identified in the recent period are all valid. </p>
+<p>Return value: <a>VoiceprintRecognized</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>if cyberdog.personnel.voiceprint_recognized(['张三']).data:</strong><br />
-<strong>print('识别到张三')</strong><br />
+<strong>if cyberdog.personnel.voiceprint_recognized(['Zhang San']).data:</strong><br />
+<strong>print('Zhang San recognized')</strong><br />
 <br />
-<strong>if cyberdog.personnel.voiceprint_recognized(['张三','李四']).data:</strong><br />
-<strong>print('识别到张三或李四')</strong><br />
+<strong>if cyberdog.personnel.voiceprint_recognized(['Zhang San','Li Si']).data:</strong><br />
+<strong>print('Zhang San or Li Si recognized')</strong><br />
 <br />
-<strong>if cyberdog.personnel.voiceprint_recognized(['张三','李四'], True).data:</strong><br />
-<strong>print('识别到张三和李四')</strong></td>
+<strong>if cyberdog.personnel.voiceprint_recognized(['Zhang San','Li Si'], True).data:</strong><br />
+<strong>print('Zhang San and Li Si were recognized')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10824,16 +10824,16 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**4.4.08 🟡audio（语音模块）**
+**4.4.08 🟡audio (voice module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10844,9 +10844,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.audio.state</strong>: cyberdog下语音模块模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.audio.state</strong>: The interface name for obtaining the module status of the voice module under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -10860,14 +10860,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**🟢 set\_log（设置日志）**
+**🟢 set\_log (set log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10879,19 +10879,19 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.audio.set_log</strong>: 设置cyberdog下audio模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.audio.set_log</strong>: Set the audio module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.audio.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下audio模块日志')</strong></td>
+<strong>print('Audio module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10899,14 +10899,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) play（播放语音）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) play (play voice)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10920,23 +10920,23 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.audio.play</strong>:播放语音，该模式为阻塞模式，即播放完语音后才会继续执行下一条。</p>
-<p>参数：</p>
-<p><strong>message</strong>: 当前播报消息，单行字符串类型（不能包含换行符，或者用\进行转义）。</p>
-<p><strong>volume</strong>: 当前及以后播报音量，整型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>默认值：-1</p>
-<p>返回值：<a>AudioPlaySeviceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.audio.play</strong>: Play voice. This mode is blocking mode, that is, the next step will not be continued until the voice is played. </p>
+<p>Parameters:</p>
+<p><strong>message</strong>: Current broadcast message, single-line string type (cannot contain newline characters, or escape with \). </p>
+<p><strong>volume</strong>: current and future broadcast volume, integer. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Default value: -1</p>
+<p>Return value: <a>AudioPlaySeviceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>if cyberdog.audio.play('爱我中国').state.code == StateCode.success:</strong><br />
-<strong>print('播报语音成功')</strong><br />
-<strong>if cyberdog.audio.play('爱我中国\</strong><br />
+<strong>if cyberdog.audio.play('Love me China').state.code == StateCode.success:</strong><br />
+<strong>print('Report voice successfully')</strong><br />
+<strong>if cyberdog.audio.play('Love me China\</strong><br />
 <strong>').state.code == StateCode.success:</strong><br />
-<strong>print('播报语音成功')</strong></td>
+<strong>print('Report voice successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10944,14 +10944,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) instantly\_play（立即播放语音）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) instantly\_play (play voice immediately)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -10965,23 +10965,23 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.audio. instantly_play</strong>: 立即播放语音，该模式为非阻塞且抢占模式，即播放语音的同时继续向下执行，如果当前正在播放语音则打断当前语音并播放新的语音。</p>
-<p>参数：</p>
-<p><strong>message</strong>: 当前播报消息，单行字符串类型（不能包含换行符，或者用\进行转义）。</p>
-<p><strong>volume</strong>: 当前及以后播报音量，整型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>默认值：-1</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.audio. instantly_play</strong>: Play the voice immediately. This mode is non-blocking and preemptive mode, that is, while playing the voice, continue to execute downwards. If the voice is currently playing, the current voice will be interrupted and Play new voice. </p>
+<p>Parameters:</p>
+<p><strong>message</strong>: Current broadcast message, single-line string type (cannot contain newline characters, or escape with \). </p>
+<p><strong>volume</strong>: current and future broadcast volume, integer. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Default value: -1</p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>if cyberdog.audio.instantly_play('爱我中国').state.code == StateCode.success:</strong><br />
-<strong>print('播报语音成功')</strong><br />
-<strong>if cyberdog.audio.instantly_play('爱我中国\</strong><br />
+<strong>if cyberdog.audio.instantly_play('Love me China').state.code == StateCode.success:</strong><br />
+<strong>print('Report voice successfully')</strong><br />
+<strong>if cyberdog.audio.instantly_play('Love me China\</strong><br />
 <strong>').state.code == StateCode.success:</strong><br />
-<strong>print('播报语音成功')</strong></td>
+<strong>print('Report voice successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -10989,14 +10989,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) offline\_play（播放离线语音）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) offline\_play（Play offline voice）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11010,24 +11010,24 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.audio.offline_play</strong>:播放离线语音，该模式为阻塞模式，即播放完语音后才会继续执行下一条。</p>
-<p>参数：</p>
-<p><strong>audio_id</strong>: 当前播报消息，整数类型，只支持以下值：</p>
-<p>4000：汪汪（细声）</p>
-<p>4001：汪汪（粗声）</p>
-<p>6000：音乐1</p>
-<p>6001：音乐1</p>
-<p><strong>volume</strong>: 当前及以后播报音量，整型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>默认值：-1</p>
-<p>返回值：<a>AudioPlaySeviceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.audio.offline_play</strong>: Play offline voice. This mode is blocking mode, that is, the next step will not be continued until the voice is played. </p>
+<p>Parameters:</p>
+<p><strong>audio_id</strong>: Current broadcast message, integer type, only supports the following values:</p>
+<p>4000: Woof woof (soft voice)</p>
+<p>4001: Woof woof (rough voice)</p>
+<p>6000: Music 1</p>
+<p>6001: Music 1</p>
+<p><strong>volume</strong>: current and future broadcast volume, integer. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Default value: -1</p>
+<p>Return value: <a>AudioPlaySeviceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.audio.offline_play(4000).state.code == StateCode.success:</strong><br />
-<strong>print('播报语音成功')</strong></td>
+<strong>print('Report voice successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11035,14 +11035,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) offline\_instantly\_play（立即播放离线语音）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) offline\_instantly\_play (play offline voice immediately)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11056,24 +11056,24 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.audio.offline_instantly_play</strong>: 立即播放离线语音，该模式为非阻塞且抢占模式，即播放语音的同时继续向下执行，如果当前正在播放语音则打断当前语音并播放新的语音。</p>
-<p>参数：</p>
-<p><strong>audio_id</strong>: 当前播报消息，整数类型，只支持以下值：</p>
-<p>4000：汪汪（细声）</p>
-<p>4001：汪汪（粗声）</p>
-<p>6000：音乐1</p>
-<p>6001：音乐1</p>
-<p><strong>volume</strong>: 当前及以后播报音量，整型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>默认值：-1</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.audio.offline_instantly_play</strong>: Play offline voice immediately. This mode is non-blocking and preemptive mode, that is, while playing the voice, continue to execute downwards. If the voice is currently playing, the current voice will be interrupted. and play new voices. </p>
+<p>Parameters:</p>
+<p><strong>audio_id</strong>: Current broadcast message, integer type, only supports the following values:</p>
+<p>4000: Woof woof (soft voice)</p>
+<p>4001: Woof woof (rough voice)</p>
+<p>6000: Music 1</p>
+<p>6001: Music 1</p>
+<p><strong>volume</strong>: current and future broadcast volume, integer. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Default value: -1</p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.audio.offline_instantly_play(4000).state.code == StateCode.success:</strong><br />
-<strong>print('播报语音成功')</strong></td>
+<strong>print('Report voice successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11081,14 +11081,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_volume（获取播放音量）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_volume (get playback volume)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11099,17 +11099,17 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.audio.get_volume</strong>: 获取播放音量。</p>
-<p>参数：无</p>
-<p>返回值：<a>AudioGetVolumeSeviceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.audio.get_volume</strong>: Get the playback volume. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>AudioGetVolumeSeviceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>audio_volume = cyberdog.audio.get_volume()</strong><br />
 <strong>if audio_volume.state.code == StateCode.success:</strong><br />
-<strong>print('获取音量成功，当前音量为：', audio_volume.response.volume)</strong></td>
+<strong>print('Getting the volume successfully, the current volume is:', audio_volume.response.volume)</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11117,14 +11117,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) set\_volume（设置播放音量）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) set\_volume (set playback volume)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11137,19 +11137,19 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.audio.set_volume</strong>: 设置播放音量。</p>
-<p>参数：</p>
-<p><strong>volume</strong>: 当前及以后播报音量，整型。</p>
-<p>合法值约束：<a>铁蛋能力集参数约束表</a>。</p>
-<p>默认值：-1</p>
-<p>返回值：<a>AudioSetVolumeSeviceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.audio.set_volume</strong>: Set playback volume. </p>
+<p>Parameters:</p>
+<p><strong>volume</strong>: current and future broadcast volume, integer. </p>
+<p>Legal value constraints: <a>Iron Egg ability set parameter constraint table</a>. </p>
+<p>Default value: -1</p>
+<p>Return value: <a>AudioSetVolumeSeviceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.audio.set_volume(10).response.success:</strong><br />
-<strong>print('设置播报音量成功')</strong></td>
+<strong>print('Set broadcast volume successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11157,16 +11157,16 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**4.4.09 🟡led（led模块）**
+**4.4.09 🟡led (led module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11177,9 +11177,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.led.state</strong>: cyberdog下led模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.led.state</strong>: Get the interface name of the LED module status under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -11193,14 +11193,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**🟢 set\_log（设置日志）**
+**🟢 set\_log (set log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11212,19 +11212,19 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.led.set_log</strong>: 设置cyberdog下led模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.led.set_log</strong>: Set the LED module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.led.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下led模块日志')</strong></td>
+<strong>print('The led module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11232,14 +11232,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) play（播放系统灯效）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) play (play system lighting effect)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11253,28 +11253,28 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.led.play</strong>:播放播放系统灯效，一旦触发就会一直保持该灯效，直到下一个灯效请求来临。</p>
+<td><p>Interface name</p>
+<p><strong>cyberdog.led.play</strong>: Plays the system lighting effect. Once triggered, the lighting effect will be maintained until the next lighting effect request comes. </p>
 <blockquote>
-<p><strong>注意：</strong></p>
+<p><strong>Note:</strong></p>
 </blockquote>
-<p>当LED被高级别模块（cyberdog_manager、低功耗、低电量等）调用时，可视化编程请求灯效会失败。</p>
-<p>当任务结束时会释放LED控制权限，交由系统其他模块控制。</p>
-<p>参数：</p>
-<p><strong>target</strong>: 当前控制的目标灯，整型。</p>
-<p>LedConstraint.target_*。</p>
-<p>约束详情参见<a>LED参数约束</a>。</p>
-<p><strong>effect</strong>: 当前灯效，整型，合法值如下（16进制给出）：</p>
-<p>LedConstraint.system_effect_line_* 或</p>
-<p>LedConstraint.system_effect_mini_*。</p>
-<p>约束详情参见<a>LED参数约束</a>。</p>
-<p>返回值：<a>LedSeviceResponse</a></p></td>
+<p>When LED is called by a high-level module (cyberdog_manager, low power consumption, low battery, etc.), the visual programming request for light effects will fail. </p>
+<p>When the task ends, the LED control authority will be released and handed over to other modules of the system for control. </p>
+<p>Parameters:</p>
+<p><strong>target</strong>: The target light currently controlled, integer. </p>
+<p>LedConstraint.target_*. </p>
+<p>For details of constraints, see <a>LED Parameter Constraints</a>. </p>
+<p><strong>effect</strong>: Current lighting effect, integer, legal value is as follows (given in hexadecimal):</p>
+<p>LedConstraint.system_effect_line_* or</p>
+<p>LedConstraint.system_effect_mini_*. </p>
+<p>For details of constraints, see <a>LED Parameter Constraints</a>. </p>
+<p>Return value: <a>LedSeviceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.led.play(LedConstraint.target_head, LedConstraint.system_effect_line_red_on).state.code == StateCode.success:</strong><br />
-<strong>print('控制头灯常亮成功')</strong></td>
+<strong>print('Controlling headlights to stay on successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11282,14 +11282,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) play\_rgb（播放RGB灯效）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) play\_rgb (play RGB lighting effects)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11306,32 +11306,32 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.led.play</strong>:播放RGB灯效，一旦触发就会一直保持该灯效，直到下一个灯效请求来临。</p>
+<td><p>Interface name</p>
+<p><strong>cyberdog.led.play</strong>: Plays the RGB lighting effect. Once triggered, the lighting effect will be maintained until the next lighting effect request comes. </p>
 <blockquote>
-<p><strong>注意：</strong></p>
+<p><strong>Note:</strong></p>
 </blockquote>
-<p>当LED被高级别模块（cyberdog_manager、低功耗、低电量等）调用时，可视化编程请求灯效会失败。</p>
-<p>当任务结束时会释放LED控制权限，交由系统其他模块控制。</p>
-<p>参数：详情参见<a>LED参数约束</a>。</p>
-<p><strong>target</strong>: 当前控制的目标灯，整型。</p>
-<p>LedConstraint.target_*。</p>
-<p>约束详情参见<a>LED参数约束</a>。</p>
-<p><strong>effect</strong>: 当前灯效，整型，合法值如下（16进制给出）：</p>
-<p>LedConstraint.effect_line_* 或</p>
-<p>LedConstraint.effect_mini_*。</p>
-<p>约束详情参见<a>LED参数约束</a>。</p>
-<p><strong>r</strong>:当前红色通道的灰度值，整型，取值范围[0,255]</p>
-<p><strong>g</strong>:当前绿色通道的灰度值，整型，取值范围[0,255]</p>
-<p><strong>b</strong>:当前蓝色通道的灰度值，整型，取值范围[0,255]</p>
-<p>返回值：<a>LedSeviceResponse</a></p>
-<p>备注：色板参见<a href="https://www.rapidtables.com/web/color/RGB_Color.html">RGB</a></p></td>
+<p>When LED is called by a high-level module (cyberdog_manager, low power consumption, low battery, etc.), the visual programming request for light effects will fail. </p>
+<p>When the task ends, the LED control authority will be released and handed over to other modules of the system for control. </p>
+<p>Parameters: For details, see <a>LED Parameter Constraints</a>. </p>
+<p><strong>target</strong>: The target light currently controlled, integer. </p>
+<p>LedConstraint.target_*. </p>
+<p>For details of constraints, see <a>LED Parameter Constraints</a>. </p>
+<p><strong>effect</strong>: Current lighting effect, integer, legal value is as follows (given in hexadecimal):</p>
+<p>LedConstraint.effect_line_* or</p>
+<p>LedConstraint.effect_mini_*. </p>
+<p>For details of constraints, see <a>LED Parameter Constraints</a>. </p>
+<p><strong>r</strong>: The gray value of the current red channel, integer, value range [0,255]</p>
+<p><strong>g</strong>: The gray value of the current green channel, integer, value range [0,255]</p>
+<p><strong>b</strong>: The gray value of the current blue channel, integer, value range [0,255]</p>
+<p>Return value: <a>LedSeviceResponse</a></p>
+<p>Remarks: For color swatches, see <a href="https://www.rapidtables.com/web/color/RGB_Color.html">RGB</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.led.play_rgb(LedConstraint.target_head, LedConstraint.effect_line_breath_fast, 255, 255, 255).state.code == StateCode.success:</strong><br />
-<strong>print('控制头灯以白色展示快速呼吸成功')</strong></td>
+<strong>print('Control the headlight to display rapid breathing success in white')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11339,14 +11339,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) freed（释放指定设备控制权）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) freed (release control of the specified device)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11359,19 +11359,19 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.led.freed</strong>:释放指定设备控制权。</p>
-<p>参数：</p>
-<p><strong>target</strong>: 当前控制的目标灯，整型。</p>
-<p>LedConstraint.target_*。</p>
-<p>约束详情参见<a>LED参数约束</a>。</p>
-<p>返回值：<a>LedSeviceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.led.freed</strong>: Release control of the specified device. </p>
+<p>Parameters:</p>
+<p><strong>target</strong>: The target light currently controlled, integer. </p>
+<p>LedConstraint.target_*. </p>
+<p>For details of constraints, see <a>LED Parameter Constraints</a>. </p>
+<p>Return value: <a>LedSeviceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.led.freed(LedConstraint.target_head).state.code == StateCode.success:</strong><br />
-<strong>print('释放头部灯带控制权成功')</strong></td>
+<strong>print('Release control of headlight strip successfully')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11379,16 +11379,16 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**4.4.10 🟡bms（电池管理系统模块）**
+**4.4.10 🟡bms (Battery Management System Module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11399,9 +11399,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.bms.state</strong>: cyberdog下电池管理系统模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.bms.state</strong>: The name of the interface for obtaining the status of the battery management system module under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -11415,14 +11415,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data（数据）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11433,15 +11433,15 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.bms.data</strong>: cyberdog下电池管理系统模块状态获取接口名称。</p>
-<p>类型：<a>BmsStatus</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.bms.data</strong>: The name of the interface for obtaining the status of the battery management system module under cyberdog. </p>
+<p>Type: <a>BmsStatus</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.bms.data.batt_soc &lt; 20:</strong><br />
-<strong>print('当前机器人电量低于20%')</strong></td>
+<strong>print('The current battery power of the robot is less than 20%')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11449,14 +11449,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**🟢 set\_log（设置日志）**
+**🟢 set\_log (set log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11468,19 +11468,19 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.bms.set_log</strong>: 设置cyberdog下bms模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.bms.set_log</strong>: Set the bms module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.bms.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下bms模块日志')</strong></td>
+<strong>print('BMS module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11488,14 +11488,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data（获取最新数据）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data (get the latest data)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11508,18 +11508,18 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.bms.get_data</strong>:获取最新电池数据。</p>
-<p>参数：</p>
-<p><strong>timeout：</strong>当前获取动作超时限制（单位：秒），整型。</p>
-<p>默认值：5。</p>
-<p>返回值：<a>BmsStatus</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.bms.get_data</strong>: Get the latest battery data. </p>
+<p>Parameters:</p>
+<p><strong>timeout:</strong>The current acquisition action timeout limit (unit: seconds), integer. </p>
+<p>Default value: 5. </p>
+<p>Return value: <a>BmsStatus</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.bms.get_data().batt_soc &lt; 20:</strong><br />
-<strong>print('当前机器人电量低于20%')</strong></td>
+<strong>print('The current battery power of the robot is less than 20%')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11527,16 +11527,16 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**4.4.11 🟡touch（触摸板模块）**
+**4.4.11 🟡touch (touchpad module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11547,9 +11547,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.touch.state</strong>: cyberdog下触摸板模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.touch.state</strong>: The name of the interface for obtaining the status of the touchpad module under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -11563,14 +11563,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data（数据）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11581,15 +11581,15 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.touch.data</strong>: cyberdog下触摸板模块状态获取接口名称。</p>
-<p>类型：<a>TouchStatus</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.touch.data</strong>: The name of the interface for obtaining the status of the touchpad module under cyberdog. </p>
+<p>Type: <a>TouchStatus</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.touch.data.touch_state:</strong><br />
-<strong>print('当前机器人触摸板已被触发')</strong></td>
+<strong>print('The current robot touchpad has been triggered')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11597,14 +11597,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**🟢 set\_log（设置日志）**
+**🟢 set\_log (set log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11616,19 +11616,19 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.touch.set_log</strong>: 设置cyberdog下touch模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.touch.set_log</strong>: Set the touch module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.touch.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下touch模块日志')</strong></td>
+<strong>print('touch module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11636,14 +11636,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data（获取最新数据）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data (get the latest data)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11656,18 +11656,18 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.touch.get_data</strong>:获取最新touch数据。</p>
-<p>参数：</p>
-<p><strong>timeout：</strong>当前获取动作超时限制（单位：秒），整型。</p>
-<p>默认值：5。</p>
-<p>返回值：<a>TouchStatus</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.touch.get_data</strong>: Get the latest touch data. </p>
+<p>Parameters:</p>
+<p><strong>timeout:</strong>The current acquisition action timeout limit (unit: seconds), integer. </p>
+<p>Default value: 5. </p>
+<p>Return value: <a>TouchStatus</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.touch.get_data().touch_state:</strong><br />
-<strong>print('当前机器人触摸板已被触发')</strong></td>
+<strong>print('The current robot touchpad has been triggered')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11675,16 +11675,16 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**4.4.12 🟡gps（全球定位系统模块）**
+**4.4.12 🟡gps (global positioning system module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11695,9 +11695,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.gps.state</strong>: cyberdog模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.gps.state</strong>: cyberdog module status acquisition interface name. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -11711,14 +11711,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data（数据）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11729,15 +11729,15 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.gps.data</strong>: cyberdog下全球定位系统模块状态获取接口名称。</p>
-<p>类型：<a>GpsPayload</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.gps.data</strong>: The name of the interface for obtaining the global positioning system module status under cyberdog. </p>
+<p>Type: <a>GpsPayload</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.gps.data.num_sv &gt; 3:</strong><br />
-<strong>print('当前机器人经纬度为:', cyberdog.network.data.lon, ',', cyberdog.network.data.lat)</strong></td>
+<strong>print('The current latitude and longitude of the robot is:', cyberdog.network.data.lon, ',', cyberdog.network.data.lat)</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11745,14 +11745,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**🟢 set\_log（设置日志）**
+**🟢 set\_log (set log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11764,19 +11764,19 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.gps.set_log</strong>: 设置cyberdog下touch模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.gps.set_log</strong>: Set the touch module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.gps.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下gps模块日志')</strong></td>
+<strong>print('The gps module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11784,14 +11784,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data（获取最新数据）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data (get the latest data)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11804,18 +11804,18 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.gps.get_data</strong>:获取最新<strong>gps</strong>数据。</p>
-<p>参数：</p>
-<p><strong>timeout：</strong>当前获取动作超时限制（单位：秒），整型。</p>
-<p>默认值：5。</p>
-<p>返回值：<a>GpsPayload</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.gps.get_data</strong>: Get the latest <strong>gps</strong> data. </p>
+<p>Parameters:</p>
+<p><strong>timeout:</strong>The current acquisition action timeout limit (unit: seconds), integer. </p>
+<p>Default value: 5. </p>
+<p>Return value: <a>GpsPayload</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.gps.get_data().num_sv &gt; 3:</strong><br />
-<strong>print('当前机器人经纬度为:', cyberdog.network.data.lon, ',', cyberdog.network.data.lat)</strong></td>
+<strong>print('The current latitude and longitude of the robot is:', cyberdog.network.data.lon, ',', cyberdog.network.data.lat)</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11823,16 +11823,16 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**4.4.13 🟡tof（激光测距模块）**
+**4.4.13 🟡tof (laser ranging module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11843,9 +11843,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.tof.state</strong>: cyberdog下激光测距模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.tof.state</strong>: The name of the interface for obtaining the status of the laser ranging module under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -11859,14 +11859,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data（数据）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11877,9 +11877,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.tof.data</strong>: cyberdog下激光测距模块状态获取接口名称。</p>
-<p>类型：<a>TofPayload</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.tof.data</strong>: The name of the laser ranging module status acquisition interface under cyberdog. </p>
+<p>Type: <a>TofPayload</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -11892,14 +11892,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**🟢 set\_log（设置日志）**
+**🟢 set\_log (set log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11911,19 +11911,19 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.tof.set_log</strong>: 设置cyberdog下tof模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.tof.set_log</strong>: Set the tof module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.tof.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下tof模块日志')</strong></td>
+<strong>print('The tof module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -11931,14 +11931,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data（获取最新数据）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data (get the latest data)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11951,12 +11951,12 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.tof.get_data</strong>:获取最新<strong>tof</strong>数据。</p>
-<p>参数：</p>
-<p><strong>timeout：</strong>当前获取动作超时限制（单位：秒），整型。</p>
-<p>默认值：5。</p>
-<p>返回值：<a>TofPayload</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.tof.get_data</strong>: Get the latest <strong>tof</strong> data. </p>
+<p>Parameters:</p>
+<p><strong>timeout:</strong>The current acquisition action timeout limit (unit: seconds), integer. </p>
+<p>Default value: 5. </p>
+<p>Return value: <a>TofPayload</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -11969,16 +11969,16 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**4.4.14 🟡lidar（雷达模块）**
+**4.4.14 🟡lidar (radar module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -11989,9 +11989,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.lidar.state</strong>: cyberdog下雷达模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.lidar.state</strong>: The name of the interface for obtaining the status of the radar module under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -12005,14 +12005,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data（数据）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12023,9 +12023,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.lidar.data</strong>: cyberdog下雷达模块状态获取接口名称。</p>
-<p>类型：<a>LaserScan</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.lidar.data</strong>: The name of the radar module status acquisition interface under cyberdog. </p>
+<p>Type: <a>LaserScan</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -12038,14 +12038,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**🟢 set\_log（设置日志）**
+**🟢 set\_log (set log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12057,19 +12057,19 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.lidar.set_log</strong>: 设置cyberdog下lidar模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.lidar.set_log</strong>: Set the lidar module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.lidar.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下lidar模块日志')</strong></td>
+<strong>print('The lidar module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -12077,14 +12077,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data（获取最新数据）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data (get the latest data)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12097,12 +12097,12 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.lidar.get_data</strong>:获取最新<strong>lidar</strong>数据。</p>
-<p>参数：</p>
-<p><strong>timeout：</strong>当前获取动作超时限制（单位：秒），整型。</p>
-<p>默认值：5。</p>
-<p>返回值：<a>LaserScan</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.lidar.get_data</strong>: Get the latest <strong>lidar</strong> data. </p>
+<p>Parameters:</p>
+<p><strong>timeout:</strong>The current acquisition action timeout limit (unit: seconds), integer. </p>
+<p>Default value: 5. </p>
+<p>Return value: <a>LaserScan</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -12115,16 +12115,16 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**4.4.15 🟡ultrasonic（超声波模块）**
+**4.4.15 🟡ultrasonic (ultrasonic module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12135,9 +12135,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.ultrasonic.state</strong>: cyberdog下超声波模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.ultrasonic.state</strong>: The name of the ultrasonic module status acquisition interface under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -12151,14 +12151,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data（数据）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12169,9 +12169,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.ultrasonic.data</strong>: cyberdog下超声波模块状态获取接口名称。</p>
-<p>类型：<a>Range</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.ultrasonic.data</strong>: The name of the ultrasonic module status acquisition interface under cyberdog. </p>
+<p>Type: <a>Range</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -12184,14 +12184,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**🟢 set\_log（设置日志）**
+**🟢 set\_log (set log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12203,19 +12203,19 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.ultrasonic.set_log</strong>: 设置cyberdog下ultrasonic模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.ultrasonic.set_log</strong>: Set the ultrasonic module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.ultrasonic.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下ultrasonic模块日志')</strong></td>
+<strong>print('The ultrasonic module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -12223,14 +12223,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data（获取最新数据）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data (get the latest data)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12243,12 +12243,12 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.ultrasonic.get_data</strong>:获取最新<strong>ultrasonic</strong>数据。</p>
-<p>参数：</p>
-<p><strong>timeout：</strong>当前获取动作超时限制（单位：秒），整型。</p>
-<p>默认值：5。</p>
-<p>返回值：<a>Range</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.ultrasonic.get_data</strong>: Get the latest <strong>ultrasonic</strong> data. </p>
+<p>Parameters:</p>
+<p><strong>timeout:</strong>The current acquisition action timeout limit (unit: seconds), integer. </p>
+<p>Default value: 5. </p>
+<p>Return value: <a>Range</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -12261,16 +12261,16 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**4.4.16 🟡odometer（里程计模块）**
+**4.4.16 🟡odometer (odometer module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12281,9 +12281,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.odometer.state</strong>: cyberdog下里程计模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.odometer.state</strong>: The name of the interface to obtain the status of the odometer module under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -12297,14 +12297,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data（数据）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12315,9 +12315,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.odometer.data</strong>: cyberdog下里程计模块状态获取接口名称。</p>
-<p>类型：<a>Odometry</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.odometer.data</strong>: The name of the interface for obtaining the odometer module status under cyberdog. </p>
+<p>Type: <a>Odometry</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -12330,14 +12330,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-🟢 set\_log（设置日志）
+🟢 set\_log (set log)
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12349,19 +12349,19 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.odometer.set_log</strong>: 设置cyberdog下odometer模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.odometer.set_log</strong>: Set the odometer module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.odometer.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下odometer模块日志')</strong></td>
+<strong>print('Odometer module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -12369,14 +12369,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data（获取最新数据）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data (get the latest data)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12389,12 +12389,12 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.odometer.get_data</strong>:获取最新<strong>odometer</strong>数据。</p>
-<p>参数：</p>
-<p><strong>timeout：</strong>当前获取动作超时限制（单位：秒），整型。</p>
-<p>默认值：5。</p>
-<p>返回值：<a>Range</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.odometer.get_data</strong>: Get the latest <strong>odometer</strong> data. </p>
+<p>Parameters:</p>
+<p><strong>timeout:</strong>The current acquisition action timeout limit (unit: seconds), integer. </p>
+<p>Default value: 5. </p>
+<p>Return value: <a>Range</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -12407,16 +12407,16 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**4.4.17 🟡imu（惯导模块）**
+**4.4.17 🟡imu (inertial navigation module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12427,9 +12427,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.imu.state</strong>: cyberdog下惯导模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.imu.state</strong>: The name of the interface for obtaining the status of the inertial navigation module under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -12443,14 +12443,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data（数据）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) data**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12461,9 +12461,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.imu.data</strong>: cyberdog下惯导模块状态获取接口名称。</p>
-<p>类型：<a>Imu</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.imu.data</strong>: The name of the interface for obtaining the status of the inertial navigation module under cyberdog. </p>
+<p>Type: <a>Imu</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -12476,14 +12476,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**🟢 set\_log（设置日志）**
+**🟢 set\_log (set log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12495,19 +12495,19 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.imu.set_log</strong>: 设置cyberdog下imu模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.imu.set_log</strong>: Set the imu module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.imu.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下imu模块日志')</strong></td>
+<strong>print('The imu module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -12515,14 +12515,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data（获取最新数据）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_data (get the latest data)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12535,12 +12535,12 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.imu.get_data</strong>:获取最新<strong>imu</strong>数据。</p>
-<p>参数：</p>
-<p><strong>timeout：</strong>当前获取动作超时限制（单位：秒），整型。</p>
-<p>默认值：5。</p>
-<p>返回值：<a>Imu</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.imu.get_data</strong>: Get the latest <strong>imu</strong> data. </p>
+<p>Parameters:</p>
+<p><strong>timeout:</strong>The current acquisition action timeout limit (unit: seconds), integer. </p>
+<p>Default value: 5. </p>
+<p>Return value: <a>Imu</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -12553,18 +12553,18 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**4.4.18 🟡gesture（手势识别模块）**
+**4.4.18 🟡gesture (gesture recognition module)**
 
-手势识别功能性能参考[连续手势识别测试方法](https://xiaomi.f.mioffice.cn/docx/doxk4yqqAvVDsdaNnRmbTXKmqxb) 文档。
+Gesture recognition function performance reference [Continuous Gesture Recognition Test Method](https://xiaomi.f.mioffice.cn/docx/doxk4yqqAvVDsdaNnRmbTXKmqxb) document.
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12575,9 +12575,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.gesture.state</strong>: cyberdog下手势识别模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.gesture.state</strong>: The name of the interface to obtain the status of the gesture recognition module under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -12591,14 +12591,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**🟢 set\_log（设置日志）**
+**🟢 set\_log (set log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12610,19 +12610,19 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.gesture.set_log</strong>: 设置cyberdog下gesture模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.gesture.set_log</strong>: Set the gesture module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.gesture.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下gesture模块日志')</strong></td>
+<strong>print('The gesture module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -12630,14 +12630,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) recognized（开始识别并识别到任意手势）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) recognized (starts to recognize and recognizes any gesture)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12651,23 +12651,23 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.gesture.recognized</strong>:识别到手势。</p>
-<p>参数：</p>
-<p><strong>duration</strong>: 期望时间，单位秒（s），类型为整型；</p>
-<p>合法值约束：[30,300]。</p>
-<p><strong>sensitivity</strong>: 灵敏度，单位秒（s），类型为整型；</p>
-<p>最近一段时间内识别到的均有效。</p>
-<p>返回值：<a>GestureRecognizedMessageResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.gesture.recognized</strong>: Gesture recognized. </p>
+<p>Parameters:</p>
+<p><strong>duration</strong>: expected time in seconds (s), type is integer;</p>
+<p>Legal value constraints: [30,300]. </p>
+<p><strong>sensitivity</strong>: sensitivity, unit second (s), type is integer; </p>
+<p>Those identified in the recent period are all valid. </p>
+<p>Return value: <a>GestureRecognizedMessageResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.gesture.recognized().data.pulling_hand_or_two_fingers_in:</strong><br />
-<strong>print('识别到底库人员的手掌拉近手势')</strong><br />
+<strong>print('Recognize the palm close gesture of the warehouse staff')</strong><br />
 <br />
 <strong>if cyberdog.gesture.recognized().data.pulling_hand_or_two_fingers_in:</strong><br />
-<strong>print('识别到手掌拉近手势') </strong></td>
+<strong>print('Palm pull gesture recognized') </strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -12675,14 +12675,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) turn\_on\_recognition（打开识别手势功能）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) turn\_on\_recognition (turn on gesture recognition function)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12695,18 +12695,18 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.gesture.turn_on_recognition</strong>:打开识别手势功能。</p>
-<p>参数：</p>
-<p><strong>duration</strong>: 期望时间，单位秒（s），类型为整型；</p>
-<p>合法值约束：[30,300]。</p>
-<p>返回值：<a>GestureRecognizedSeviceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.gesture.turn_on_recognition</strong>: Turn on gesture recognition function. </p>
+<p>Parameters:</p>
+<p><strong>duration</strong>: expected time in seconds (s), type is integer;</p>
+<p>Legal value constraints: [30,300]. </p>
+<p>Return value: <a>GestureRecognizedSeviceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.gesture.turn_on_recognition(300).response.code == 0:</strong><br />
-<strong>print('打开手势识别功能成功') </strong></td>
+<strong>print('Gesture recognition function turned on successfully') </strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -12714,14 +12714,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) turn\_off\_recognition（关闭识别手势功能）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) turn\_off\_recognition (turn off gesture recognition function)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12733,16 +12733,16 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.gesture. turn_off_recognition</strong>:关闭识别手势功能。</p>
-<p>参数：无</p>
-<p>返回值：<a>GestureRecognizedSeviceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.gesture. turn_off_recognition</strong>: Turn off gesture recognition function. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>GestureRecognizedSeviceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.gesture.turn_off_recognition().response.code == 0:</strong><br />
-<strong>print('打开手势识别功能失败') </strong></td>
+<strong>print('Failed to turn on gesture recognition function') </strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -12750,14 +12750,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) recognized\_designated\_gesture（识别到指定手势）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) recognized\_designated\_gesture**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12771,24 +12771,24 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.gesture.recognized_designated_gesture</strong>:识别到指定手势。</p>
-<p>参数：</p>
-<p><strong>timeout</strong>: 超时时间，单位秒（s），类型为整型；</p>
-<p>合法值约束：[1,300]。</p>
-<p><strong>gesture_type</strong>: 手势类型，类型为整型，详情参见<a>GestureType</a>；</p>
-<p>指定识别目标手势。</p>
-<p>返回值：<a>GestureRecognizedMessageResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.gesture.recognized_designated_gesture</strong>: The specified gesture is recognized. </p>
+<p>Parameters:</p>
+<p><strong>timeout</strong>: timeout time, unit is seconds (s), type is integer; </p>
+<p>Legal value constraints: [1,300]. </p>
+<p><strong>gesture_type</strong>: Gesture type, type is integer. For details, see <a>GestureType</a>;</p>
+<p>Specify the recognition target gesture. </p>
+<p>Return value: <a>GestureRecognizedMessageResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-// 以识别到手掌拉近为例：<br />
+// Take the recognition of palm closeness as an example:<br />
 <strong>if cyberdog.gesture.recognized_designated_gesture(60, 1).data.pulling_hand_or_two_fingers_in:</strong><br />
-<strong>print('识别到底库人员的手掌拉近手势')</strong><br />
-// 等价于下面的调用方式<br />
+<strong>print('Recognize the palm close gesture of the warehouse staff')</strong><br />
+// Equivalent to the following calling method<br />
 <strong>if cyberdog.gesture.recognized_designated_gesture(60, GestureType.pulling_hand_or_two_fingers_in).data.pulling_hand_or_two_fingers_in:</strong><br />
-<strong>print('识别到底库人员的手掌拉近手势')</strong></td>
+<strong>print('Recognize the palm close gesture of the warehouse staff')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -12796,14 +12796,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) recognized\_any\_gesture（识别到任意手势）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) recognized\_any\_gesture**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12817,23 +12817,23 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.gesture. recognized_any_gesture</strong>:识别到任意手势。</p>
-<p>参数：</p>
-<p><strong>timeout</strong>: 超时时间，单位秒（s），类型为整型；</p>
-<p>合法值约束：[30,300]。</p>
-<p><strong>sensitivity</strong>: 灵敏度，单位秒（s），类型为整型；</p>
-<p>最近一段时间内识别到的均有效。</p>
-<p>返回值：<a>GestureRecognizedMessageResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.gesture. recognized_any_gesture</strong>: Any gesture recognized. </p>
+<p>Parameters:</p>
+<p><strong>timeout</strong>: timeout time, unit is seconds (s), type is integer; </p>
+<p>Legal value constraints: [30,300]. </p>
+<p><strong>sensitivity</strong>: sensitivity, unit second (s), type is integer; </p>
+<p>Those identified in the recent period are all valid. </p>
+<p>Return value: <a>GestureRecognizedMessageResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.gesture.recognized_any_gesture(60, 1).data.pulling_hand_or_two_fingers_in:</strong><br />
-<strong>print('识别到底库人员的手掌拉近手势')</strong><br />
+<strong>print('Recognize the palm close gesture of the warehouse staff')</strong><br />
 <br />
 <strong>if cyberdog.gesture.recognized_any_gesture(60, 1).data.pulling_hand_or_two_fingers_in:</strong><br />
-<strong>print('识别到手掌拉近手势') </strong></td>
+<strong>print('Palm pull gesture recognized') </strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -12841,16 +12841,16 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**4.4.19 🟡skeleton（骨骼点识别模块）**
+**4.4.19 🟡skeleton (skeleton point identification module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12861,9 +12861,9 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.skeleton.state</strong>: cyberdog下骨骼点识别模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.skeleton.state</strong>: The name of the interface for obtaining the status of the skeleton point recognition module under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -12877,14 +12877,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**🟢 set\_log（设置日志）**
+**🟢 set\_log (set log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12896,19 +12896,19 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.skeleton.set_log</strong>: 设置cyberdog下skeleton模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.skeleton.set_log</strong>: Set the skeleton module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.skeleton.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下skeleton模块日志')</strong></td>
+<strong>print('The skeleton module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -12916,14 +12916,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) sports\_recognition（运动识别）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) sports\_recognition (sports recognition)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -12941,34 +12941,34 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.skeleton. sports_recognition</strong>:运动识别。</p>
-<p>参数：</p>
-<p><strong>sport_type</strong>: 识别类型，类型为整型，约束参见<a>SkeletonType</a>；</p>
-<p>1 # 深蹲</p>
-<p>2 # 高抬腿</p>
-<p>3 # 仰卧起坐</p>
-<p>4 # 俯卧撑</p>
-<p>5 # 平板支撑</p>
-<p>6 # 开合跳</p>
-<p><strong>counts</strong>: 动作个数，类型为整型；</p>
-<p>申请做动作的个数，从1开始。</p>
-<p><strong>timeout</strong>: 期望时间，单位秒（s），类型为浮点型；</p>
-<p>合法值约束：[5,300]。</p>
-<p><strong>interact</strong>: 是否开启交互功能，类型为布尔值。</p>
-<p>False：关闭</p>
-<p>True：开启（默认值）</p>
-<p><strong>instantly</strong>: 是否开启立即交互立即交互功能，类型为布尔值。</p>
-<p>False：关闭</p>
-<p>True：开启（默认值）</p>
-<p><strong>volume</strong>: 辅助重定位交互音量，类型为整型，默认为50。</p>
-<p>返回值：<a>DefineSkeletonRecognizedSeviceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.skeleton. sports_recognition</strong>: Sports recognition. </p>
+<p>Parameters:</p>
+<p><strong>sport_type</strong>: Identification type, the type is integer, see <a>SkeletonType</a> for constraints;</p>
+<p>1 # Squat</p>
+<p>2 # Lift your legs high</p>
+<p>3 # sit-ups</p>
+<p>4 # push-ups</p>
+<p>5 # Plank</p>
+<p>6 # jumping jacks</p>
+<p><strong>counts</strong>: number of actions, type is integer;</p>
+<p>The number of actions requested starts from 1. </p>
+<p><strong>timeout</strong>: expected time in seconds (s), type is floating point;</p>
+<p>Legal value constraints: [5,300]. </p>
+<p><strong>interact</strong>: Whether to enable the interactive function, the type is Boolean. </p>
+<p>False: Close</p>
+<p>True: on (default value)</p>
+<p><strong>instantly</strong>: Whether to enable the immediate interaction function, the type is Boolean. </p>
+<p>False: Close</p>
+<p>True: on (default value)</p>
+<p><strong>volume</strong>: Auxiliary relocation interaction volume, type is integer, default is 50. </p>
+<p>Return value: <a>DefineSkeletonRecognizedSeviceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.skeleton.sports_recognition(SkeletonType.squat, 10, 60, True, True, 50).response.result == 0:</strong><br />
-<strong>print('开启骨骼点深蹲10个检测识别功能成功') </strong></td>
+<strong>print('The detection and recognition function of 10 bone point squats was successfully turned on') </strong></td>
 </tr>
 </tbody>
 </table>
@@ -12977,7 +12977,7 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.skeleton.sports_recognition(1, 10, 60, True, True, 50).response.result == 0:</strong><br />
-<strong>print('开启骨骼点深蹲10个检测识别功能成功') </strong></td>
+<strong>print('The detection and recognition function of 10 bone point squats was successfully turned on') </strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -12985,14 +12985,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) turn\_on\_recognition（打开识别骨骼点功能）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) turn\_on\_recognition (turn on the bone point recognition function)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -13007,27 +13007,27 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.skeleton. turn_on_recognition</strong>:打开识别骨骼（点）功能。</p>
-<p>参数：</p>
-<p><strong>sport_type</strong>: 识别类型，类型为整型，约束参见<a>SkeletonType</a>；</p>
-<p>1 # 深蹲</p>
-<p>2 # 高抬腿</p>
-<p>3 # 仰卧起坐</p>
-<p>4 # 俯卧撑</p>
-<p>5 # 平板支撑</p>
-<p>6 # 开合跳</p>
-<p><strong>counts</strong>: 动作个数，类型为整型；</p>
-<p>申请做动作的个数，从1开始。</p>
-<p><strong>timeout</strong>: 期望时间，单位秒（s），类型为浮点型；</p>
-<p>合法值约束：[5,300]。</p>
-<p>返回值：<a>DefineSkeletonRecognizedSeviceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.skeleton. turn_on_recognition</strong>: Turn on the skeleton (point) recognition function. </p>
+<p>Parameters:</p>
+<p><strong>sport_type</strong>: Identification type, the type is integer, see <a>SkeletonType</a> for constraints;</p>
+<p>1 # Squat</p>
+<p>2 # Lift your legs high</p>
+<p>3 # sit-ups</p>
+<p>4 # push-ups</p>
+<p>5 # Plank</p>
+<p>6 # jumping jacks</p>
+<p><strong>counts</strong>: number of actions, type is integer;</p>
+<p>The number of actions requested starts from 1. </p>
+<p><strong>timeout</strong>: expected time in seconds (s), type is floating point;</p>
+<p>Legal value constraints: [5,300]. </p>
+<p>Return value: <a>DefineSkeletonRecognizedSeviceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.skeleton.turn_on_recognition(SkeletonType.squat, 10, 60).response.result == 0:</strong><br />
-<strong>print('开启骨骼点深蹲10个检测识别功能成功') </strong></td>
+<strong>print('The detection and recognition function of 10 bone point squats was successfully turned on') </strong></td>
 </tr>
 </tbody>
 </table>
@@ -13036,7 +13036,7 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.skeleton.turn_on_recognition(1, 10, 60).response.result == 0:</strong><br />
-<strong>print('开启骨骼点深蹲10个检测识别功能成功') </strong></td>
+<strong>print('The detection and recognition function of 10 bone point squats was successfully turned on') </strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -13044,14 +13044,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) turn\_off\_recognition（关闭识别骨骼点功能）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) turn\_off\_recognition (turn off the function of recognizing bone points)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -13062,16 +13062,16 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.skeleton. turn_off_recognition</strong>:关闭识别骨骼（点）功能。</p>
-<p>参数：无</p>
-<p>返回值：<a>DefineSkeletonRecognizedSeviceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.skeleton. turn_off_recognition</strong>: Turn off the skeleton (point) recognition function. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>DefineSkeletonRecognizedSeviceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.skeleton.turn_off_recognition().response.result == 0:</strong><br />
-<strong>print('关闭骨骼点识别功能成功') </strong></td>
+<strong>print('Skeleton point recognition function turned off successfully') </strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -13079,14 +13079,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) blocking\_recognized（阻塞式识别到）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) blocking\_recognized**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -13099,20 +13099,20 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.skeleton.blocking_recognized</strong>:打开识别骨骼（点）功能。</p>
-<p>参数：</p>
-<p><strong>timeout</strong>: 期望时间，单位秒（s），类型为浮点型；</p>
-<p>合法值约束：[5,300]。</p>
-<p>返回值：<a>SkeletonRecognizedMessageResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.skeleton.blocking_recognized</strong>: Turn on the skeleton (point) recognition function. </p>
+<p>Parameters:</p>
+<p><strong>timeout</strong>: expected time in seconds (s), type is floating point;</p>
+<p>Legal value constraints: [5,300]. </p>
+<p>Return value: <a>SkeletonRecognizedMessageResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-// 交互，<strong>print换位语音接口就可以实现交互</strong><br />
-<strong>print('当前运动计数为', cyberdog.skeleton.blocking_recognized().response.counts，‘个’)</strong><br />
+// Interaction, <strong>print transposition voice interface can achieve interaction</strong><br />
+<strong>print('Current movement count is', cyberdog.skeleton.blocking_recognized().response.counts,')</strong><br />
 <br />
-<strong>print('当前运动时长为', cyberdog.skeleton.blocking_recognized().response.duration，‘秒’) </strong></td>
+<strong>print('The current movement duration is', cyberdog.skeleton.blocking_recognized().response.duration, 'seconds') </strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -13120,14 +13120,14 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) instant\_recognized（瞬时式识别到）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) instant\_recognized**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -13138,17 +13138,17 @@ if <strong>ret.dictionary.has_key('张三') and ret.response['张三'].emotion &
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.skeleton.instant_recognized</strong>:打开识别骨骼（点）功能。</p>
-<p>参数：无</p>
-<p>返回值：<a>SkeletonRecognizedMessageResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.skeleton.instant_recognized</strong>: Turn on the skeleton (point) recognition function. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>SkeletonRecognizedMessageResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-// 判断当前算法是否开启<br />
-if (<strong>cyberdog.skeleton.instant_recognized().response.algo_switch == 0</strong>) // 开启<br />
-if (<strong>cyberdog.skeleton.instant_recognized().response.algo_switch == 1</strong>) // 关闭</td>
+// Determine whether the current algorithm is enabled<br />
+if (<strong>cyberdog.skeleton.instant_recognized().response.algo_switch == 0</strong>) // Turn on<br />
+if (<strong>cyberdog.skeleton.instant_recognized().response.algo_switch == 1</strong>) // Close</td>
 </tr>
 </tbody>
 </table></td>
@@ -13156,16 +13156,16 @@ if (<strong>cyberdog.skeleton.instant_recognized().response.algo_switch == 1</st
 </tbody>
 </table>
 
-**4.4.20 🟡train（训练模块）**
+**4.4.20 🟡train (training module)**
 
-**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state（状态）**
+**[🟣](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#Qp608Q) state**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -13176,9 +13176,9 @@ if (<strong>cyberdog.skeleton.instant_recognized().response.algo_switch == 1</st
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.train.state</strong>: cyberdog下训练模块状态获取接口名称。</p>
-<p>类型：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.train.state</strong>: The name of the interface to obtain the status of the training module under cyberdog. </p>
+<p>Type: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -13192,14 +13192,14 @@ if (<strong>cyberdog.skeleton.instant_recognized().response.algo_switch == 1</st
 </tbody>
 </table>
 
-**🟢 set\_log（设置日志）**
+**🟢 set\_log (set log)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -13211,19 +13211,19 @@ if (<strong>cyberdog.skeleton.instant_recognized().response.algo_switch == 1</st
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.train.set_log</strong>: 设置cyberdog下train模块日志。</p>
-<p>参数：</p>
-<p><strong>log</strong>: 设置日志状态，布尔类型；</p>
-<p>True：开启cyberdog模块日志；</p>
-<p>False：关闭cyberdog模块日志。</p>
-<p>返回值：<a>State</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.train.set_log</strong>: Set the train module log under cyberdog. </p>
+<p>Parameters:</p>
+<p><strong>log</strong>: Set log status, Boolean type;</p>
+<p>True: enable cyberdog module log;</p>
+<p>False: Turn off the cyberdog module log. </p>
+<p>Return value: <a>State</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
 <strong>if cyberdog.train.set_log(False).code == StateCode.success:</strong><br />
-<strong>print('已关闭cyberdog下train模块日志')</strong></td>
+<strong>print('Train module log under cyberdog has been closed')</strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -13231,14 +13231,14 @@ if (<strong>cyberdog.skeleton.instant_recognized().response.algo_switch == 1</st
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_training\_words\_set（获取训练词集合）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) get\_training\_words\_set (get training word set)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -13250,10 +13250,10 @@ if (<strong>cyberdog.skeleton.instant_recognized().response.algo_switch == 1</st
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.train.get_training_words_set</strong>:获取训练词集合。</p>
-<p>参数：无</p>
-<p>返回值：<a>TrainingWordsRecognizedSeviceResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.train.get_training_words_set</strong>: Get the training word set. </p>
+<p>Parameters: none</p>
+<p>Return value: <a>TrainingWordsRecognizedSeviceResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -13266,14 +13266,14 @@ if (<strong>cyberdog.skeleton.instant_recognized().response.algo_switch == 1</st
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) training\_words\_recognized（识别到训练词）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) training\_words\_recognized (recognized training words)**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -13286,20 +13286,20 @@ if (<strong>cyberdog.skeleton.instant_recognized().response.algo_switch == 1</st
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>cyberdog.train.get_training_words_set</strong>:获取训练词集合。</p>
-<p>参数：</p>
-<p><strong>timeout</strong>: 期望时间，单位秒（s），类型为浮点型；</p>
-<p>合法值约束：[5,300]。</p>
-<p>返回值：<a>TrainingWordsRecognizedMessageResponse</a></p></td>
+<td><p>Interface name</p>
+<p><strong>cyberdog.train.get_training_words_set</strong>: Get the training word set. </p>
+<p>Parameters:</p>
+<p><strong>timeout</strong>: expected time in seconds (s), type is floating point;</p>
+<p>Legal value constraints: [5,300]. </p>
+<p>Return value: <a>TrainingWordsRecognizedMessageResponse</a></p></td>
 <td><table>
 <tbody>
 <tr class="odd">
 <td><br />
-<strong>print('识别到训练词：'，cyberdog. train.training_words_recognized().response.trigger)</strong><br />
+<strong>print('Training words recognized:', cyberdog. train.training_words_recognized().response.trigger)</strong><br />
 <br />
-if <strong>cyberdog. train.training_words_recognized().response.trigger == '张三'：</strong><br />
-<strong>print('识别到训练词为：张三') </strong></td>
+if <strong>cyberdog. train.training_words_recognized().response.trigger == 'Zhang San':</strong><br />
+<strong>print('The training word is recognized as: Zhang San') </strong></td>
 </tr>
 </tbody>
 </table></td>
@@ -13307,18 +13307,18 @@ if <strong>cyberdog. train.training_words_recognized().response.trigger == '张�
 </tbody>
 </table>
 
-**4.5 内置能力接口约束**
+**4.5 Built-in capability interface constraints**
 
-**4.5.1 🟡choreographer（编舞模块）**
+**4.5.1 🟡choreographer (choreographer module)**
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) moonwalk（太空步）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) moonwalk**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -13334,18 +13334,18 @@ if <strong>cyberdog. train.training_words_recognized().response.trigger == '张�
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>choreographer.moonwalk</strong>:对太空步进行编舞。</p>
-<p>参数：</p>
-<p><strong>x_velocity</strong>: X轴速度，单位米每秒（m/s），类型为浮点型；</p>
-<p>合法值约束：[-0.08, 0.08]。</p>
-<p><strong>y_velocity</strong>: Y轴速度，单位米每秒（m/s），类型为浮点型；</p>
-<p>合法值约束：[-0.05, 0.05]。</p>
-<p><strong>stride</strong>: 不幅，单位米（m），类型为浮点型；</p>
-<p>合法值约束：(0,0.065]。</p>
-<p><strong>number</strong>: 太空步重复次数，类型为整型；</p>
-<p>合法值约束：[1,10]。</p>
-<p>返回值：无</p></td>
+<td><p>Interface name</p>
+<p><strong>choreographer.moonwalk</strong>: Choreograph the moonwalk. </p>
+<p>Parameters:</p>
+<p><strong>x_velocity</strong>: X-axis velocity, unit is meters per second (m/s), type is floating point;</p>
+<p>Legal value constraints: [-0.08, 0.08]. </p>
+<p><strong>y_velocity</strong>: Y-axis velocity, unit is meters per second (m/s), type is floating point;</p>
+<p>Legal value constraints: [-0.05, 0.05]. </p>
+<p><strong>stride</strong>: No width, unit is meter (m), type is floating point;</p>
+<p>Legal value constraints: (0,0.065].</p>
+<p><strong>number</strong>: number of moonwalk repetitions, type is integer;</p>
+<p>Legal value constraints: [1,10]. </p>
+<p>Return value: None</p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -13358,14 +13358,14 @@ if <strong>cyberdog. train.training_words_recognized().response.trigger == '张�
 </tbody>
 </table>
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) push\_up（俯卧撑）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) push\_up（Push-ups）**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -13379,14 +13379,14 @@ if <strong>cyberdog. train.training_words_recognized().response.trigger == '张�
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>choreographer.moonwalk</strong>:对太空步进行编舞。</p>
-<p>参数：</p>
-<p><strong>frequency</strong>: 不幅，单位次每分钟，类型为整型；</p>
-<p>合法值约束：[10, 60]。</p>
-<p><strong>number</strong>: 俯卧撑重复次数，类型为整型；</p>
-<p>合法值约束：[2,10]。</p>
-<p>返回值：无</p></td>
+<td><p>Interface name</p>
+<p><strong>choreographer.moonwalk</strong>: Choreograph the moonwalk. </p>
+<p>Parameters:</p>
+<p><strong>frequency</strong>: No frequency, unit times per minute, type is integer;</p>
+<p>Legal value constraints: [10, 60]. </p>
+<p><strong>number</strong>: Number of push-up repetitions, type is integer;</p>
+<p>Legal value constraints: [2,10]. </p>
+<p>Return value: None</p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -13399,16 +13399,16 @@ if <strong>cyberdog. train.training_words_recognized().response.trigger == '张�
 </tbody>
 </table>
 
-**4.5.2 🟡dancer（舞蹈家模块）**
+**4.5.2 🟡dancer（Dancer module）**
 
-**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) dance（跳舞）**
+**[🟢](https://xiaomi.f.mioffice.cn/docs/dock4nUNWHVve526QMxnT4b0taf#DTXadn) dance**
 
 <table>
 <tbody>
 <tr class="odd">
-<td>协议约束</td>
-<td>协议说明</td>
-<td>举例</td>
+<td>Agreement Constraints</td>
+<td>Protocol Description</td>
+<td>Examples</td>
 </tr>
 <tr class="even">
 <td><table>
@@ -13419,10 +13419,10 @@ if <strong>cyberdog. train.training_words_recognized().response.trigger == '张�
 </tr>
 </tbody>
 </table></td>
-<td><p>接口名称</p>
-<p><strong>dancer. dance</strong>:按照编舞进行跳舞。</p>
-<p>参数：无</p>
-<p>返回值：无</p></td>
+<td><p>Interface name</p>
+<p><strong>dancer. dance</strong>: Dance according to the choreography. </p>
+<p>Parameters: none</p>
+<p>Return value: None</p></td>
 <td><table>
 <tbody>
 <tr class="odd">
@@ -13435,6 +13435,6 @@ if <strong>cyberdog. train.training_words_recognized().response.trigger == '张�
 </tbody>
 </table>
 
-**五、系统能力集**
+**5. System capability set**
 
-目前仅仅支持python3 time模块的其他功能，理论上支持python3所有其他功能，但是需要在图形化编程引擎做微调。
+Currently, it only supports other functions of the python3 time module. In theory, it supports all other functions of python3, but it requires fine-tuning in the graphical programming engine.
