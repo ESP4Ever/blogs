@@ -62,7 +62,7 @@ For more details on usage, please refer to the [official documentation](http://l
 The robot coordinate system is shown in the figure (a) below, following the right-hand rule, where the x-axis points forward, the y-axis points to the left, and the z-axis points upward. The four legs are named FR (Front-right), FL (Front-left), RR (Rear-right), and RL (Rear-left), and are numbered in this order. Each leg contains three joints: the abad joint, the hip joint, and the knee joint. The definition of the joint zero position is shown in the figure (b) below. The abad joint is horizontal, and the hip joint and knee joint constitute the electrical zero position when the leg is vertically downward (which cannot be actually achieved due to mechanical limitations of the links).
 
 
-![](./image/cyberdog_loco/coordinate.png)
+![](./image/cyberdog_loco/coordinate_en.png)
 
 
 The positive rotation direction of the joints follows the right-hand rule around the rotation axis. The joint range, maximum speed and torque are shown in the table below.
