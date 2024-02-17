@@ -16,5 +16,3 @@ The following is a list of update times
 
 - {docsify-updated}  Document Upload
 
-
-
