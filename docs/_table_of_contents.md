@@ -32,7 +32,7 @@
    - [Common tool module](en/cyberdog_common.md)
 
 - Operation control documents
-   - [Motion control module](en/cyberdog_loco.md)
+   - [Motion control (LOCOMOTION) module](en/cyberdog_loco.md)
    - [Simulation platform module](en/cyberdog_gazebo.md)
   
 - SLAM documentation
