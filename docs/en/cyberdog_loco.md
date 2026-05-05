@@ -96,7 +96,8 @@ $ ssh mi@192.168.55.1      # Login to the NX application board with password 123
 $ ssh root@192.168.44.233  # After logging into the NX application board, login to the motion control board (192.168.44 network segment)
 ```
 
-> **_Note_**: In method 2, although the developer can log in to the NX application board and the motion control board to check the robot's status, the developer cannot use the motion control interface based on LCM communication for development, since the developer's computer and the robot's motion control board are not on the same network segment.
+> **_Note_**: In Cyberdog v1, Nvidia Jetson Xavier NX module has IP 192.168.55.1 and the locomotion board - 192.168.55.233
+> In method 2, although the developer can log in to the NX application board and the motion control board to check the robot's status, the developer cannot use the motion control interface based on LCM communication for development, since the developer's computer and the robot's motion control board are not on the same network segment.
 
 If you want to use this motion control interface on your own computer, then please connect to the robot's Ethernet port as suggested in Method 1 and run the following script to configure the routing table of your computer:
 ```shell
